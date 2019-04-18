@@ -4,58 +4,33 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from matplotlib.dates import MonthLocator, WeekdayLocator, DateFormatter
+from matplotlib.ticker import MaxNLocator
 
 
-def parse_leap_data(leap_file):
-    # Import file
-    data = pd.read_csv(leap_file)
+def format_plot(date_data, plot_object):
+    axis_font_size = 8
 
-    return data
+    plot_object.set_xlim(date_data.iloc[0],
+                         date_data.iloc[-1])
+    plot_object.tick_params(labelsize=axis_font_size)
+    plot_object.set_xticks(plot_object.get_xticks()[::2])
+    plot_object.xaxis.set_major_locator(
+        MonthLocator(range(1, 13), bymonthday=1, interval=1))
+    plot_object.xaxis.set_major_formatter(DateFormatter("%Y/%m"))
 
 
-def parse_glow_daily_feeding_data(glow_file):
-    # Import file
-    data = pd.read_csv(glow_file)
-
+def convert_date(data):
     # Convert date column to datetime
     data['start_time_label'] = pd.to_datetime(
         data['start_time_label'], format='%Y/%m/%d %H:%M:%S')
+    data['end_time_label'] = pd.to_datetime(
+        data['end_time_label'], format='%Y/%m/%d %H:%M:%S')
 
-    data_normalized = data['start_time_label'].dt.normalize()
     # Find first and last entry in column
     start_date = data['start_time_label'].iloc[-1].date()
     end_date = data['start_time_label'].iloc[0].date()
 
-    # Final data
-    data_list = []
-
-    for current_date in pd.date_range(start_date, end_date):
-        # print(single_date.strftime("%Y-%m-%d"))
-
-        # Get all entires on this date
-        date_key = data['start_time_label'].dt.normalize().isin(
-            np.array([current_date]).astype('datetime64[ns]'))
-        rows_on_date = data[date_key]
-
-        # Compute statistics
-        sum_on_date = rows_on_date['bottle_ml'].sum()
-        mean_on_date = rows_on_date['bottle_ml'].mean()
-        max_on_date = rows_on_date['bottle_ml'].max()
-        min_on_date = rows_on_date['bottle_ml'].min()
-        sessions_on_date = rows_on_date['bottle_ml'].count()
-
-        # Put stats in a list
-        data_list.append([current_date, sum_on_date,
-                          mean_on_date, min_on_date, max_on_date,
-                          sessions_on_date])
-
-    # Convert list to dataframe
-    daily_data = pd.DataFrame(data_list, columns=[
-        'date', 'sum', 'mean', 'min', 'max', 'sessions'])
-
-    # daily_data.to_csv('glow_feeding_daily_stats.csv')
-
-    return daily_data
+    return data, start_date, end_date
 
 
 def parse_hatch_data(hatch_file):
@@ -73,19 +48,146 @@ def parse_hatch_data(hatch_file):
     return data
 
 
-def parse_glow_weekly_data(glow_file):
+def parse_glow_daily_diaper_sleep_data(glow_file):
     # Import file
     data = pd.read_csv(glow_file)
 
-    # Convert string in "%h %m" to timedelta in hours
-    columns_sleep = ['longest_sleep_avg', 'longest_sleep_max', 'longest_sleep_min',
-                     'total_sleep_avg', 'total_sleep_max', 'total_sleep_min']
+    # Convert the date info
+    data, start_date, end_date = convert_date(data)
 
-    for key in columns_sleep:
-        data[key] = pd.to_timedelta(
-            data[key]) / np.timedelta64(1, 'h')
+    # Separate sleep and diaper data
+    data_sleep = data.loc[data['key'] == "sleep"]
+    data_diaper = data.loc[data['key'] == "diaper"]
 
-    return data
+    # Final data
+    diaper_data_list = []
+    sleep_data_list = []
+
+    # Diaper
+    for current_date in pd.date_range(start_date, end_date):
+        # Get all entires on this date
+        date_key = data_diaper['start_time_label'].dt.normalize().isin(
+            np.array([current_date]).astype('datetime64[ns]'))
+        rows_on_date = data_diaper[date_key]
+
+        # Compute total diaper count
+        total_diaper_count = rows_on_date['val'].count()
+
+        # Separate pees and poops
+        total_pee_count = 0
+        total_poop_count = 0
+        for index, diaper_event in rows_on_date.iterrows():
+            key = diaper_event['val']
+            if (key == '65536'):  # Pee only
+                total_pee_count += 1
+            else:
+                total_pee_count += 1
+                total_poop_count += 1
+            # todo, not catching poop only cases (a few of them)
+
+        # Put stats in a list
+        diaper_data_list.append(
+            [current_date, total_diaper_count, total_pee_count, total_poop_count])
+
+    # Sleep
+    offset = 0
+
+    for current_date in pd.date_range(start_date, end_date):
+        # Get all entires on this date
+        date_key = data_sleep['start_time_label'].dt.normalize().isin(
+            np.array([current_date]).astype('datetime64[ns]'))
+        rows_on_date = data_sleep[date_key]
+
+        # Compute number of nap sessions
+        nap_sessions_on_date = 0
+
+        for index, sleep_session in rows_on_date.iterrows():
+            timestamp = sleep_session['start_time_label']
+            time7am = timestamp.replace(
+                hour=7, minute=0, second=0, microsecond=0)
+            time7pm = timestamp.replace(
+                hour=19, minute=0, second=0, microsecond=0)
+            if (timestamp > time7am) and (timestamp < time7pm):
+                nap_sessions_on_date += 1
+
+        # Total sleep
+
+        # Get duration for each row, then sum
+        elapsed_time = rows_on_date['end_time_label'] - \
+            rows_on_date['start_time_label']
+        total_sleep_duration = elapsed_time.sum().total_seconds()
+
+        # Add offset from previous day
+        total_sleep_duration += offset
+
+        # Get the first row in the block
+        start_last = rows_on_date['start_time_label'].iloc[0]
+        end_last = rows_on_date['end_time_label'].iloc[0]
+
+        # Catch session that extend past midnight
+        if(end_last.date() > start_last.date()):  # if extends to next day
+            midnight = end_last.replace(
+                hour=0, minute=0, second=0, microsecond=0)
+
+            # Subtract duration from today's total
+            offset = (end_last - midnight).total_seconds()
+            total_sleep_duration -= offset
+            # Keep the offset to add to tomorrow's total
+
+        # Convert to hours
+        total_sleep_duration = total_sleep_duration // 3600
+
+        # Longest session
+        longest_session = elapsed_time.max().total_seconds() // 3600
+
+        # Put stats in a list
+        sleep_data_list.append(
+            [current_date, nap_sessions_on_date, total_sleep_duration, longest_session])
+
+    # Convert list to dataframe
+    daily_diaper_data = pd.DataFrame(
+        diaper_data_list, columns=['date', 'total_diaper_count', 'pee_count', 'poop_count'])
+    daily_sleep_data = pd.DataFrame(
+        sleep_data_list, columns=['date', 'total_naps', 'total_sleep_duration', 'longest_session'])
+
+    return daily_diaper_data, daily_sleep_data
+
+
+def parse_glow_daily_feeding_data(glow_file):
+    # Import file
+    data = pd.read_csv(glow_file)
+
+    # Convert the date info
+    data, start_date, end_date = convert_date(data)
+
+    # Final data
+    diaper_data_list = []
+
+    for current_date in pd.date_range(start_date, end_date):
+        # print(single_date.strftime("%Y-%m-%d"))
+
+        # Get all entires on this date
+        date_key = data['start_time_label'].dt.normalize().isin(
+            np.array([current_date]).astype('datetime64[ns]'))
+        rows_on_date = data[date_key]
+
+        # Compute statistics
+        sum_on_date = rows_on_date['bottle_ml'].sum()
+        mean_on_date = rows_on_date['bottle_ml'].mean()
+        max_on_date = rows_on_date['bottle_ml'].max()
+        min_on_date = rows_on_date['bottle_ml'].min()
+        sessions_on_date = rows_on_date['bottle_ml'].count()
+
+        # Put stats in a list
+        diaper_data_list.append([current_date, sum_on_date,
+                                 mean_on_date, min_on_date, max_on_date,
+                                 sessions_on_date])
+
+    # Convert list to dataframe
+    daily_diaper_data = pd.DataFrame(diaper_data_list, columns=[
+        'date', 'sum', 'mean', 'min', 'max', 'sessions'])
+
+    return daily_diaper_data
 
 
 def main():
@@ -96,47 +198,121 @@ def main():
     alpha_value = 0.3
 
     sns.set(style="darkgrid")
-    f, axarr = plt.subplots(2, 2)
+    f, axarr = plt.subplots(3, 3)
 
     # Import data
 
-    glow_weekly_data = parse_glow_weekly_data('data/glow_weekly.csv')
     glow_daily_feeding_data = parse_glow_daily_feeding_data(
         'data/glow_daily_feeding.csv')
+    daily_diaper_data, daily_sleep_data = parse_glow_daily_diaper_sleep_data(
+        'data/glow_sleep_diaper_sleep.csv')
     hatch_data = parse_hatch_data('data/hatch.csv')
-    leap_data = parse_leap_data('data/leap_calendar.csv')
 
-    # Chart 1 - Eat: Average Number of Feeding Sessions Per Day
+    # Chart 1 - Eat: Daily, Average Consumed Per Day(mL)
     axarr[0, 0].plot(glow_daily_feeding_data['date'],
-                     glow_daily_feeding_data['sessions'])
-    axarr[0, 0].set_title('Eat: Number of Feeding Sessions',
+                     glow_daily_feeding_data['mean'])
+    axarr[0, 0].set_title('Eat: Average Volume Per Session (mL)',
                           fontsize=title_font_size)
-    axarr[0, 0].set_xlabel('Time (Weeks)', fontsize=axis_font_size)
-    axarr[0, 0].set_ylabel('Number of Feeding Sessions',
-                           fontsize=axis_font_size)
-    axarr[0, 0].tick_params(labelsize=axis_font_size)
-    axarr[0, 0].set_xticks(axarr[0, 0].get_xticks()[::2])
+    axarr[0, 0].set_xlabel('Date', fontsize=axis_font_size)
+    axarr[0, 0].set_ylabel(
+        'Average Volume Per Session (mL)', fontsize=axis_font_size)
+    format_plot(glow_daily_feeding_data['date'], axarr[0, 0])
 
-    # Chart 2 - Eat: Daily, Average Consumed Per Day(mL)
+    # Chart 2 - Eat: Average Number of Feeding Sessions Per Day
     axarr[0, 1].plot(glow_daily_feeding_data['date'],
-                     glow_daily_feeding_data['sum'])
-    axarr[0, 1].set_title('Eat: Daily Total (mL)',
+                     glow_daily_feeding_data['sessions'])
+    axarr[0, 1].set_title('Eat: Number of Feeding Sessions',
                           fontsize=title_font_size)
-    axarr[0, 1].set_xlabel('Date', fontsize=axis_font_size)
-    axarr[0, 1].set_ylabel('Daily Total (mL)', fontsize=axis_font_size)
-    axarr[0, 1].tick_params(labelsize=axis_font_size)
-    axarr[0, 1].set_xticks(axarr[0, 1].get_xticks()[::2])
+    axarr[0, 1].set_xlabel('Time', fontsize=axis_font_size)
+    axarr[0, 1].set_ylabel('Number of Feeding Sessions',
+                           fontsize=axis_font_size)
+    format_plot(glow_daily_feeding_data['date'], axarr[0, 1])
 
     # Chart 3 - Eat: Daily, Average Consumed Per Day(mL)
-    axarr[1, 0].plot(glow_daily_feeding_data['date'],
-                     glow_daily_feeding_data['mean'])
-    axarr[1, 0].set_title('Average Volume Per Session (mL)',
+    axarr[0, 2].plot(glow_daily_feeding_data['date'],
+                     glow_daily_feeding_data['sum'])
+    axarr[0, 2].set_title('Eat: Daily Total (mL)',
+                          fontsize=title_font_size)
+    axarr[0, 2].set_xlabel('Date', fontsize=axis_font_size)
+    axarr[0, 2].set_ylabel('Daily Total (mL)', fontsize=axis_font_size)
+    format_plot(glow_daily_feeding_data['date'], axarr[0, 2])
+
+    # Chart 4 - Sleep: Average Number of Naps Per Day (6am to 10pm)
+    axarr[1, 0].plot(daily_sleep_data['date'],
+                     daily_sleep_data['total_naps'])
+    axarr[1, 0].set_title('Sleep: Total Naps (6am to 10pm)',
                           fontsize=title_font_size)
     axarr[1, 0].set_xlabel('Date', fontsize=axis_font_size)
     axarr[1, 0].set_ylabel(
-        'Average Volume Per Session (mL)', fontsize=axis_font_size)
-    axarr[1, 0].tick_params(labelsize=axis_font_size)
-    axarr[1, 0].set_xticks(axarr[1, 0].get_xticks()[::2])
+        'Total Naps', fontsize=axis_font_size)
+    format_plot(daily_sleep_data['date'], axarr[1, 0])
+
+    # Chart 5 - Sleep: Longest Duration of Uninterrupted Sleep (Hours)
+    axarr[1, 1].plot(daily_sleep_data['date'],
+                     daily_sleep_data['longest_session'])
+    axarr[1, 1].set_title('Sleep: Longest Sleep Duration (Hr)',
+                          fontsize=title_font_size)
+    axarr[1, 1].set_xlabel('Date', fontsize=axis_font_size)
+    axarr[1, 1].set_ylabel(
+        'Longest Sleep Duration (Hr)', fontsize=axis_font_size)
+    format_plot(daily_sleep_data['date'], axarr[1, 1])
+
+    # Chart 6 - Sleep: Total Sleep Per Day (Hours)
+    axarr[1, 2].plot(daily_sleep_data['date'],
+                     daily_sleep_data['total_sleep_duration'])
+    axarr[1, 2].set_title('Sleep: Total Sleep (Hr)',
+                          fontsize=title_font_size)
+    axarr[1, 2].set_xlabel('Date', fontsize=axis_font_size)
+    axarr[1, 2].set_ylabel(
+        'Total Sleep (Hr)', fontsize=axis_font_size)
+    format_plot(daily_sleep_data['date'], axarr[1, 2])
+
+    # Chart 7 - Diaper: Total Pees Per Day
+    axarr[2, 0].plot(daily_diaper_data['date'],
+                     daily_diaper_data['pee_count'])
+    axarr[2, 0].set_title('Diaper: Total Pees',
+                          fontsize=title_font_size)
+    axarr[2, 0].set_xlabel('Date', fontsize=axis_font_size)
+    axarr[2, 0].set_ylabel(
+        'Total Pees', fontsize=axis_font_size)
+    format_plot(daily_diaper_data['date'], axarr[2, 0])
+
+    # Chart 8 - Diaper: Total Poops Per Day
+    axarr[2, 1].plot(daily_diaper_data['date'],
+                     daily_diaper_data['poop_count'])
+    axarr[2, 1].set_title('Diaper: Total Poops',
+                          fontsize=title_font_size)
+    axarr[2, 1].set_xlabel('Date', fontsize=axis_font_size)
+    axarr[2, 1].set_ylabel(
+        'Total Poops', fontsize=axis_font_size)
+    format_plot(daily_diaper_data['date'], axarr[2, 1])
+
+    # Chart 9.a - Weight
+
+    axarr[2, 2].plot(hatch_data['Start Time'], hatch_data['Amount'])
+    axarr[2, 2].set_title('Weight (kg) / Percentile (%)',
+                          fontsize=title_font_size)
+    axarr[2, 2].set_xlabel('Date', fontsize=axis_font_size)
+    axarr[2, 2].set_ylabel('Weight (kg)', fontsize=axis_font_size)
+    axarr[2, 2].set_xlim(hatch_data['Start Time'].iloc[0],
+                         hatch_data['Start Time'].iloc[-1])
+    axarr[2, 2].tick_params(labelsize=axis_font_size)
+
+    # Chart 9.b - Percentile
+
+    axarr[2, 2] = axarr[2, 2].twinx()
+    axarr[2, 2].plot(hatch_data['Start Time'],
+                     hatch_data['Percentile'] * 100, 'r')
+    axarr[2, 2].set_ylabel(
+        'Percentile (%)', color='r', fontsize=axis_font_size)
+    axarr[2, 2].set_xlim(hatch_data['Start Time'].iloc[0],
+                         hatch_data['Start Time'].iloc[-1])
+    axarr[2, 2].spines['right'].set_color('r')
+    axarr[2, 2].yaxis.label.set_color('r')
+    axarr[2, 2].tick_params(labelsize=axis_font_size, color='r')
+    axarr[2, 2].xaxis.set_major_locator(
+        MonthLocator(range(1, 13), bymonthday=1, interval=1))
+    axarr[2, 2].xaxis.set_major_formatter(DateFormatter("%Y/%m"))
 
     # Export
 
