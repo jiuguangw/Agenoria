@@ -161,7 +161,7 @@ def parse_glow_daily_feeding_data(glow_file):
     data, start_date, end_date = convert_date(data)
 
     # Final data
-    diaper_data_list = []
+    feeding_data_list = []
 
     for current_date in pd.date_range(start_date, end_date):
         # print(single_date.strftime("%Y-%m-%d"))
@@ -179,15 +179,15 @@ def parse_glow_daily_feeding_data(glow_file):
         sessions_on_date = rows_on_date['bottle_ml'].count()
 
         # Put stats in a list
-        diaper_data_list.append([current_date, sum_on_date,
-                                 mean_on_date, min_on_date, max_on_date,
-                                 sessions_on_date])
+        feeding_data_list.append([current_date, sum_on_date,
+                                  mean_on_date, min_on_date, max_on_date,
+                                  sessions_on_date])
 
     # Convert list to dataframe
-    daily_diaper_data = pd.DataFrame(diaper_data_list, columns=[
+    daily_feeding_data = pd.DataFrame(feeding_data_list, columns=[
         'date', 'sum', 'mean', 'min', 'max', 'sessions'])
 
-    return daily_diaper_data
+    return daily_feeding_data
 
 
 def main():
@@ -211,14 +211,21 @@ def main():
     # Chart 1 - Eat: Daily, Average Consumed Per Day(mL)
     axarr[0, 0].plot(glow_daily_feeding_data['date'],
                      glow_daily_feeding_data['mean'])
-    axarr[0, 0].set_title('Eat: Average Volume Per Session (mL)',
+    axarr[0, 0].fill_between(
+        glow_daily_feeding_data['date'].values, glow_daily_feeding_data['mean'],
+        glow_daily_feeding_data['max'], alpha=alpha_value)
+    axarr[0, 0].fill_between(
+        glow_daily_feeding_data['date'].values, glow_daily_feeding_data['mean'],
+        glow_daily_feeding_data['min'], alpha=alpha_value)
+    axarr[0, 0].set_title('Eat: Daily Volume Per Session (mL)',
                           fontsize=title_font_size)
     axarr[0, 0].set_xlabel('Date', fontsize=axis_font_size)
     axarr[0, 0].set_ylabel(
         'Average Volume Per Session (mL)', fontsize=axis_font_size)
+    axarr[0, 0].yaxis.set_ticks(np.arange(0, 240, 30))
     format_plot(glow_daily_feeding_data['date'], axarr[0, 0])
 
-    # Chart 2 - Eat: Average Number of Feeding Sessions Per Day
+    # Chart 2 - Eat: Number of Feeding Sessions Per Day
     axarr[0, 1].plot(glow_daily_feeding_data['date'],
                      glow_daily_feeding_data['sessions'])
     axarr[0, 1].set_title('Eat: Number of Feeding Sessions',
@@ -226,21 +233,22 @@ def main():
     axarr[0, 1].set_xlabel('Time', fontsize=axis_font_size)
     axarr[0, 1].set_ylabel('Number of Feeding Sessions',
                            fontsize=axis_font_size)
+    axarr[0, 1].yaxis.set_ticks(np.arange(4, 13, 2))
     format_plot(glow_daily_feeding_data['date'], axarr[0, 1])
 
-    # Chart 3 - Eat: Daily, Average Consumed Per Day(mL)
+    # Chart 3 - Eat: Daily, Daily Total Volume (mL)
     axarr[0, 2].plot(glow_daily_feeding_data['date'],
                      glow_daily_feeding_data['sum'])
-    axarr[0, 2].set_title('Eat: Daily Total (mL)',
+    axarr[0, 2].set_title('Eat: Daily Total Volume (mL)',
                           fontsize=title_font_size)
     axarr[0, 2].set_xlabel('Date', fontsize=axis_font_size)
     axarr[0, 2].set_ylabel('Daily Total (mL)', fontsize=axis_font_size)
     format_plot(glow_daily_feeding_data['date'], axarr[0, 2])
 
-    # Chart 4 - Sleep: Average Number of Naps Per Day (6am to 10pm)
+    # Chart 4 - Sleep: Total Naps (7:00-19:00)
     axarr[1, 0].plot(daily_sleep_data['date'],
                      daily_sleep_data['total_naps'])
-    axarr[1, 0].set_title('Sleep: Total Naps (6am to 10pm)',
+    axarr[1, 0].set_title('Sleep: Total Naps (7:00-19:00)',
                           fontsize=title_font_size)
     axarr[1, 0].set_xlabel('Date', fontsize=axis_font_size)
     axarr[1, 0].set_ylabel(
@@ -255,6 +263,7 @@ def main():
     axarr[1, 1].set_xlabel('Date', fontsize=axis_font_size)
     axarr[1, 1].set_ylabel(
         'Longest Sleep Duration (Hr)', fontsize=axis_font_size)
+    axarr[1, 1].yaxis.set_ticks(np.arange(0, 9, 1))
     format_plot(daily_sleep_data['date'], axarr[1, 1])
 
     # Chart 6 - Sleep: Total Sleep Per Day (Hours)
@@ -265,6 +274,7 @@ def main():
     axarr[1, 2].set_xlabel('Date', fontsize=axis_font_size)
     axarr[1, 2].set_ylabel(
         'Total Sleep (Hr)', fontsize=axis_font_size)
+    axarr[1, 2].yaxis.set_ticks(np.arange(11, 21, 2))
     format_plot(daily_sleep_data['date'], axarr[1, 2])
 
     # Chart 7 - Diaper: Total Pees Per Day
@@ -275,6 +285,7 @@ def main():
     axarr[2, 0].set_xlabel('Date', fontsize=axis_font_size)
     axarr[2, 0].set_ylabel(
         'Total Pees', fontsize=axis_font_size)
+    axarr[2, 0].yaxis.set_ticks(np.arange(4, 20, 2))
     format_plot(daily_diaper_data['date'], axarr[2, 0])
 
     # Chart 8 - Diaper: Total Poops Per Day
@@ -285,6 +296,7 @@ def main():
     axarr[2, 1].set_xlabel('Date', fontsize=axis_font_size)
     axarr[2, 1].set_ylabel(
         'Total Poops', fontsize=axis_font_size)
+    axarr[2, 1].yaxis.set_ticks(np.arange(0, 10, 1))
     format_plot(daily_diaper_data['date'], axarr[2, 1])
 
     # Chart 9.a - Weight
