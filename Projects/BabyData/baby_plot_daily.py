@@ -85,8 +85,8 @@ def parse_glow_sleep_data(glow_file):
     end_date = data_sleep['Begin time'].iloc[0].date()
 
     # For debugging, drill down to specific dates
-    # start_date = dt.datetime(2019, 8, 1, 0, 0, 0)
-    # end_date = dt.datetime(2019, 8, 3, 0, 0, 0)
+    # start_date = dt.datetime(2019, 2, 13, 0, 0, 0)
+    # end_date = dt.datetime(2019, 2, 15, 0, 0, 0)
 
     sleep_data_list = []
     offset = 0
@@ -313,7 +313,7 @@ def main():
     axarr[0, 1].set_xlabel('Time', fontsize=axis_font_size)
     axarr[0, 1].set_ylabel('Number of Feeding Sessions',
                            fontsize=axis_font_size)
-    axarr[0, 1].yaxis.set_ticks(np.arange(4, 13, 2))
+    axarr[0, 1].yaxis.set_ticks(np.arange(4, 15, 2))
     format_plot(glow_bottle_data['date'], axarr[0, 1])
 
     # Chart 3 - Eat: Daily, Daily Total Volume (mL)
@@ -343,6 +343,7 @@ def main():
     axarr[1, 1].set_xlabel('Date', fontsize=axis_font_size)
     axarr[1, 1].set_ylabel(
         'Total Naps', fontsize=axis_font_size)
+    axarr[1, 1].yaxis.set_ticks(np.arange(0, 16, 2))
     format_plot(daily_sleep_data['date'], axarr[1, 1])
 
     # Chart 6 - Sleep: Daily Longest Duration of Uninterrupted Sleep (Hours)
@@ -353,7 +354,7 @@ def main():
     axarr[1, 2].set_xlabel('Date', fontsize=axis_font_size)
     axarr[1, 2].set_ylabel(
         'Longest Sleep Duration (Hr)', fontsize=axis_font_size)
-    axarr[1, 2].yaxis.set_ticks(np.arange(0, 9, 1))
+    axarr[1, 2].yaxis.set_ticks(np.arange(0, 11, 1))
     format_plot(daily_sleep_data['date'], axarr[1, 2])
 
     # Chart 7 - Sleep: Daily Total Sleep (Hours)
@@ -395,7 +396,7 @@ def main():
     axarr[3, 0].set_xlabel('Date', fontsize=axis_font_size)
     axarr[3, 0].set_ylabel(
         'Total Pees', fontsize=axis_font_size)
-    axarr[3, 0].yaxis.set_ticks(np.arange(4, 20, 2))
+    axarr[3, 0].yaxis.set_ticks(np.arange(2, 20, 2))
     format_plot(daily_diaper_data['date'], axarr[3, 0])
 
     # Chart 11 - Diaper: Daily Total Poops
@@ -406,7 +407,7 @@ def main():
     axarr[3, 1].set_xlabel('Date', fontsize=axis_font_size)
     axarr[3, 1].set_ylabel(
         'Total Poops', fontsize=axis_font_size)
-    axarr[3, 1].yaxis.set_ticks(np.arange(0, 10, 1))
+    axarr[3, 1].yaxis.set_ticks(np.arange(0, 11, 2))
     format_plot(daily_diaper_data['date'], axarr[3, 1])
 
     # Chart 12.a - Weight
@@ -438,7 +439,7 @@ def main():
 
     # Export
 
-    f.subplots_adjust(wspace=0.35, hspace=0.5)
+    f.subplots_adjust(wspace=0.2, hspace=0.5)
     f.set_size_inches(17, 11)  # Tabloid size
     f.savefig("Baby_Stats_daily.pdf", bbox_inches='tight')
     f.clf()
