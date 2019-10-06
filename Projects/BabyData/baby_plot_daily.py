@@ -7,17 +7,37 @@ from matplotlib.dates import MonthLocator, WeekdayLocator, DateFormatter
 from matplotlib.ticker import MaxNLocator
 from pandas.plotting import register_matplotlib_converters
 
+DEBUG = False
+
+# Cold Formula
+# DEBUG_START_DATE = dt.datetime(2019, 7, 14, 0, 0, 0)
+# DEBUG_END_DATE = dt.datetime(2019, 7, 25, 0, 0, 0)
+
+# AOM 2019
+# DEBUG_START_DATE = dt.datetime(2019, 8, 6, 0, 0, 0)
+# DEBUG_END_DATE = dt.datetime(2019, 8, 18, 0, 0, 0)
+
+# Weight loss (daycare)
+DEBUG_START_DATE = dt.datetime(2019, 8, 17, 0, 0, 0)
+DEBUG_END_DATE = dt.datetime(2019, 9, 27, 0, 0, 0)
+
 
 def format_plot(date_data, plot_object):
     axis_font_size = 8
 
     plot_object.set_xlim(date_data.iloc[0],
                          date_data.iloc[-1])
-    plot_object.tick_params(labelsize=axis_font_size)
-    plot_object.set_xticks(plot_object.get_xticks()[::2])
-    plot_object.xaxis.set_major_locator(
-        MonthLocator(range(1, 13), bymonthday=1, interval=1))
-    plot_object.xaxis.set_major_formatter(DateFormatter("\'%y/%m"))
+
+    if(DEBUG):
+        plot_object.tick_params(labelsize=axis_font_size)
+        plot_object.set_xticks(plot_object.get_xticks()[::1])
+        plot_object.xaxis.set_major_formatter(DateFormatter("%m/%d"))
+    else:
+        plot_object.tick_params(labelsize=axis_font_size)
+        plot_object.set_xticks(plot_object.get_xticks()[::2])
+        plot_object.xaxis.set_major_locator(
+            MonthLocator(range(1, 13), bymonthday=1, interval=1))
+        plot_object.xaxis.set_major_formatter(DateFormatter("\'%y/%m"))
 
 
 def parse_glow_diaper_data(glow_file):
@@ -31,6 +51,10 @@ def parse_glow_diaper_data(glow_file):
     # Find first and last entry in column
     start_date = data_diaper['Diaper time'].iloc[-1].date()
     end_date = data_diaper['Diaper time'].iloc[0].date()
+
+    if (DEBUG):
+        start_date = DEBUG_START_DATE
+        end_date = DEBUG_END_DATE
 
     # Final data
     diaper_data_list = []
@@ -84,9 +108,9 @@ def parse_glow_sleep_data(glow_file):
     start_date = data_sleep['Begin time'].iloc[-1].date()
     end_date = data_sleep['Begin time'].iloc[0].date()
 
-    # For debugging, drill down to specific dates
-    # start_date = dt.datetime(2019, 2, 13, 0, 0, 0)
-    # end_date = dt.datetime(2019, 2, 15, 0, 0, 0)
+    if (DEBUG):
+        start_date = DEBUG_START_DATE
+        end_date = DEBUG_END_DATE
 
     sleep_data_list = []
     offset = 0
@@ -167,21 +191,6 @@ def parse_glow_sleep_data(glow_file):
     return daily_sleep_data
 
 
-def parse_hatch_data(hatch_file):
-    # Import file
-    data = pd.read_csv(hatch_file)
-
-    # Keep date only, remove time
-    hatch_dates = data['Start Time'].astype(str).str[0: 10]
-    # Convert to datetime
-    data['Start Time'] = pd.to_datetime(hatch_dates, format='%m/%d/%Y')
-    # Sort and remove duplicates
-    data = data.sort_values(by=['Start Time'], ascending=True)
-    data = data.drop_duplicates(subset=['Start Time'], keep=False)
-
-    return data
-
-
 def parse_glow_feeding_bottle_data(glow_file):
     # Import file
     data = pd.read_csv(glow_file)
@@ -193,6 +202,10 @@ def parse_glow_feeding_bottle_data(glow_file):
     # Find first and last entry in column
     start_date = data['Time of feeding'].iloc[-1].date()
     end_date = data['Time of feeding'].iloc[0].date()
+
+    if (DEBUG):
+        start_date = DEBUG_START_DATE
+        end_date = DEBUG_END_DATE
 
     # Final data
     feeding_data_list = []
@@ -233,6 +246,10 @@ def parse_glow_feeding_solid_data(glow_file):
     # Find first and last entry in column
     start_date = data['Time of feeding'].iloc[-1].date()
     end_date = data['Time of feeding'].iloc[0].date()
+
+    if (DEBUG):
+        start_date = DEBUG_START_DATE
+        end_date = DEBUG_END_DATE
 
     # Final data
     feeding_data_list = []
@@ -286,7 +303,6 @@ def main():
         'data/glow_diaper.csv')
     daily_sleep_data = parse_glow_sleep_data(
         'data/glow_sleep.csv')
-    hatch_data = parse_hatch_data('data/hatch.csv')
 
     # Chart 1 - Eat: Daily, Average Consumed Per Day(mL)
     axarr[0, 0].plot(glow_bottle_data['date'],
@@ -354,7 +370,7 @@ def main():
     axarr[1, 2].set_xlabel('Date', fontsize=axis_font_size)
     axarr[1, 2].set_ylabel(
         'Longest Sleep Duration (Hr)', fontsize=axis_font_size)
-    axarr[1, 2].yaxis.set_ticks(np.arange(0, 11, 1))
+    axarr[1, 2].yaxis.set_ticks(np.arange(0, 13, 2))
     format_plot(daily_sleep_data['date'], axarr[1, 2])
 
     # Chart 7 - Sleep: Daily Total Sleep (Hours)
@@ -410,36 +426,12 @@ def main():
     axarr[3, 1].yaxis.set_ticks(np.arange(0, 11, 2))
     format_plot(daily_diaper_data['date'], axarr[3, 1])
 
-    # Chart 12.a - Weight
-
-    axarr[3, 2].plot(hatch_data['Start Time'], hatch_data['Amount'])
-    axarr[3, 2].set_title('Weight (kg) / Percentile (%)',
-                          fontsize=title_font_size)
-    axarr[3, 2].set_xlabel('Date', fontsize=axis_font_size)
-    axarr[3, 2].set_ylabel('Weight (kg)', fontsize=axis_font_size)
-    axarr[3, 2].set_xlim(hatch_data['Start Time'].iloc[0],
-                         hatch_data['Start Time'].iloc[-1])
-    axarr[3, 2].tick_params(labelsize=axis_font_size)
-
-    # Chart 12.b - Percentile
-
-    axarr[3, 2] = axarr[3, 2].twinx()
-    axarr[3, 2].plot(hatch_data['Start Time'],
-                     hatch_data['Percentile'] * 100, 'r')
-    axarr[3, 2].set_ylabel(
-        'Percentile (%)', color='r', fontsize=axis_font_size)
-    axarr[3, 2].set_xlim(hatch_data['Start Time'].iloc[0],
-                         hatch_data['Start Time'].iloc[-1])
-    axarr[3, 2].spines['right'].set_color('r')
-    axarr[3, 2].yaxis.label.set_color('r')
-    axarr[3, 2].tick_params(labelsize=axis_font_size, color='r')
-    axarr[3, 2].xaxis.set_major_locator(
-        MonthLocator(range(1, 13), bymonthday=1, interval=1))
-    axarr[3, 2].xaxis.set_major_formatter(DateFormatter("\'%y/%m"))
-
     # Export
 
     f.subplots_adjust(wspace=0.2, hspace=0.5)
+    # if (DEBUG):
+    #     f.set_size_inches(11, 8.5)  # US Letter
+    # else:
     f.set_size_inches(17, 11)  # Tabloid size
     f.savefig("Baby_Stats_daily.pdf", bbox_inches='tight')
     f.clf()
