@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# Copyright 2019 by Jiuguang Wang (www.robo.guru)
+# All rights reserved.
+# This file is part of Agenoria and is released under the  MIT License.
+# Please see the LICENSE file that should have been included as part of
+# this package.
+
 import datetime as dt
 import matplotlib.pyplot as plt
 import numpy as np
@@ -287,7 +295,7 @@ def main():
     # Export
     f.subplots_adjust(wspace=0.25, hspace=0.35)
     f.set_size_inches(17, 11)  # Tabloid size
-    f.savefig("Baby_Growth_Chart.pdf", bbox_inches='tight')
+    f.savefig("Agenoria_Growth_Charts.pdf", bbox_inches='tight')
     f.clf()
 
 

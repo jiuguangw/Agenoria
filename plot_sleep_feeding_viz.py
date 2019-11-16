@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# Copyright 2019 by Jiuguang Wang (www.robo.guru)
+# All rights reserved.
+# This file is part of Agenoria and is released under the  MIT License.
+# Please see the LICENSE file that should have been included as part of
+# this package.
+
 import datetime as dt
 import matplotlib.pyplot as plt
 import numpy as np
@@ -7,7 +15,6 @@ from matplotlib.dates import MonthLocator, WeekdayLocator, DateFormatter
 from matplotlib.ticker import MaxNLocator
 
 import matplotlib.dates as dt
-
 
 def enumerate_labels():
     hour_labels = []
@@ -187,13 +194,13 @@ def main():
     sleep_figure = plt.figure()
     plot_sleep(sleep_figure)
     sleep_figure.set_size_inches(17, 11)
-    sleep_figure.savefig("Baby_Stats_sleep.pdf", bbox_inches='tight')
+    sleep_figure.savefig("Agenoria_Sleep_Viz.pdf", bbox_inches='tight')
     sleep_figure.clf()
 
     feeding_figure = plt.figure()
     plot_feeding(feeding_figure)
     feeding_figure.set_size_inches(17, 11)
-    feeding_figure.savefig("Baby_Stats_feeding.pdf", bbox_inches='tight')
+    feeding_figure.savefig("Agenoria_Feeding_Viz.pdf", bbox_inches='tight')
     feeding_figure.clf()
 
 

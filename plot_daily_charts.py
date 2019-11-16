@@ -1,3 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# Copyright 2019 by Jiuguang Wang (www.robo.guru)
+# All rights reserved.
+# This file is part of Agenoria and is released under the  MIT License.
+# Please see the LICENSE file that should have been included as part of
+# this package.
+
 import datetime as dt
 import matplotlib.pyplot as plt
 import numpy as np
@@ -433,7 +441,7 @@ def main():
     #     f.set_size_inches(11, 8.5)  # US Letter
     # else:
     f.set_size_inches(17, 11)  # Tabloid size
-    f.savefig("Baby_Stats_daily.pdf", bbox_inches='tight')
+    f.savefig("Agenoria_Daily_Charts.pdf", bbox_inches='tight')
     f.clf()
 
 
