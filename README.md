@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="images/logo.png" width="154">
+  <img src="docs/logo.png" width="154">
   <h1 align="center">Agenoria</h1>
   <p align="center">
     <a href="https://github.com/jiuguangw/Agenoria/blob/master/LICENSE">
@@ -36,20 +36,41 @@ Agenoria was critical in visualizing the data and identifying abnormal behaviors
 
 Here are some of the visualizations that Agenoria produces.
 
+### Daily statistics
+
 ![Daily Visualization](docs/daily.png?raw=true "Daily Visualization")
 
-* Eat: Daily Volume Per Session (mL)
-* Eat: Daily Number of Feeding Sessions
-* Eat: Daily Total Volume (mL)
-* Eat: Daily Total Solid Feeding (oz)
-* Eat: Daily Total Bottle + Solid (oz)
-* Sleep: Daily Total Naps (7:00-19:00)
-* Sleep: Daily Longest Sleep Duration (Hr)
-* Sleep: Daily Total Sleep (Hr)
-* Daily Maximum Awake Duration (Hr)
-* Diaper: Total Diapers (Cumulative)
-* Diaper: Daily Total Pees
-* Diaper: Daily Total Poops
+The panels include:
+
+* Daily Volume Per Session (mL) - bottle size in mean, max, and min
+* Daily Number of Feeding Sessions - total number of feeding sessions per day
+* Daily Total Volume - total daily consumed formula volume, in mL
+* Daily Total Solid Feeding - total daily consumed solid foods, in oz
+* Daily Total Bottle + Solid - total consumed food (formula and solid), in oz
+* Daily Total Naps - number of daytime (7:00-19:00) naps per day
+* Daily Longest Sleep Duration - longest uninterrupted sleep session, in hours
+* Daily Total Sleep - total sleep per day, in hours
+* Daily Maximum Awake Duration - maximum awake time in between sleep, in hours
+* Total Diapers - a cumulative count of diapers used over time
+* Daily Total Pees - total number of pees
+* Daily Total Poops - total number of poops
+
+A few interesting observations:
+
+* Max bottle size increased to about 200 mL, then plateaued
+* Feed sessions stabilized to an average of 5 around March, but then due to feeding difficulties, started to fluctuate
+* Average daily volume for formula was about 1000 mL, with mysterious bouts of low appetite June, July, October, November
+* Solid feeding was pitful for the first 5 months, then suddenly started to increase around October
+* Daily total food consumption was mostly increasing, until November
+* Naps continue to stabilize over time
+* Longest uninterrupted sleep improved around April, then again around October when the 10:30pm feeding was dropped. Various points of sleep regression.
+* Total sleep per day mostly hovering around 13 hours
+* Maximum awake time continue to increase as daytime naps stabilized.
+* Used close to 2500 diapers in the first year, a whopping $500 at $0.2 each
+* Gradually required less diaper changes until September (daycare requires diaper check every two hours)
+* Bouts of constipation around March, April, June, September (poop = 0)
+
+### 24-hour sleep visualization
 
 ![Sleep Visualization](docs/sleep.png?raw=true "Sleep Visualization")
 
@@ -62,6 +83,8 @@ A 24 hour visualization of sleep - blue is asleep, white is awake. A few interes
 * Stopping of a 10:30pm dream feed around Week 44
 * Small 5 minute catnaps where he simply fell asleep in the car
 
+### 24-hour feeding visualization
+
 ![Feeding Visualization](docs/feeding.png?raw=true "Feeding Visualization")
 
 A 24 hour visualization of feeding.
@@ -69,7 +92,9 @@ A 24 hour visualization of feeding.
 * Stopping of overnight feedings (midnight to 7:00am) around Week 20.
 * Stopping of 10:30pm dream feeds around Week 44.
 
-![Diaper Visualization](docs/diapers.png?raw=true "Feeding Visualization")
+### 24-hour diaper visualization
+
+![Diaper Visualization](docs/diapers.png?raw=true "Diaper Visualization")
 
 A 24 hour visualization of diaper changes.
 
@@ -77,6 +102,8 @@ A 24 hour visualization of diaper changes.
 * Blue: poop in yellow
 * Green: poop in green
 * Red: poop in an abnormal color
+
+### Growth charts - weight, height, head circumference
 
 ![Growth Visualization](docs/growth.png?raw=true "Growth Visualization")
 
