@@ -78,13 +78,13 @@ def parse_hatch_data(hatch_file):
     # Convert to oz
     data['Weight Average RoC'] = data['Weight Average RoC'] * 35.274
 
-    data.to_csv('test.csv')
+    # data.to_csv('test.csv')
 
     return data
 
 
 def plot_weight_roc(plot_object):
-    hatch_data = parse_hatch_data('data/hatch.csv')
+    hatch_data = parse_hatch_data('../data/zw/hatch.csv')
 
     plot_object.plot(hatch_data['Age'],
                      hatch_data['Weight Average RoC'], color='red', linewidth=2)
@@ -104,8 +104,8 @@ def plot_weight_roc(plot_object):
 
 def plot_weight_age(plot_object):
     # Import data
-    data = pd.read_csv('data_cdc/wtageinf.csv')
-    hatch_data = parse_hatch_data('data/hatch.csv')
+    data = pd.read_csv('../data/cdc_growth_curves/wtageinf.csv')
+    hatch_data = parse_hatch_data('../data/zw/hatch.csv')
 
     # Extract by sex
     data = data.loc[data['Sex'] == CDC_SEX]
@@ -136,7 +136,7 @@ def plot_weight_age(plot_object):
 
 
 def plot_weight_percentile(plot_object):
-    hatch_data = parse_hatch_data('data/hatch.csv')
+    hatch_data = parse_hatch_data('../data/zw/hatch.csv')
 
     plot_object.plot(hatch_data['Age'],
                      hatch_data['Percentile'] * 100, color='red')
@@ -153,8 +153,8 @@ def plot_weight_percentile(plot_object):
 
 def plot_length_age(plot_object):
     # Import data
-    data = pd.read_csv('data_cdc/lenageinf.csv')
-    data_height, data_head = parse_glow_data('data/glow_growth.csv')
+    data = pd.read_csv('../data/cdc_growth_curves/lenageinf.csv')
+    data_height, data_head = parse_glow_data('../data/zw/glow_growth.csv')
 
     # Extract by sex
     data = data.loc[data['Sex'] == CDC_SEX]
@@ -185,8 +185,8 @@ def plot_length_age(plot_object):
 
 def plot_head_circumference_age(plot_object):
     # Import data
-    data = pd.read_csv('data_cdc/hcageinf.csv')
-    data_height, data_head = parse_glow_data('data/glow_growth.csv')
+    data = pd.read_csv('../data/cdc_growth_curves/hcageinf.csv')
+    data_height, data_head = parse_glow_data('../data/zw/glow_growth.csv')
 
     # Extract by sex
     data = data.loc[data['Sex'] == CDC_SEX]
@@ -217,9 +217,9 @@ def plot_head_circumference_age(plot_object):
 
 def plot_weight_length(plot_object):
     # Import data
-    data = pd.read_csv('data_cdc/wtleninf.csv')
-    data_height, data_head = parse_glow_data('data/glow_growth.csv')
-    hatch_data = parse_hatch_data('data/hatch.csv')
+    data = pd.read_csv('../data/cdc_growth_curves/wtleninf.csv')
+    data_height, data_head = parse_glow_data('../data/zw/glow_growth.csv')
+    hatch_data = parse_hatch_data('../data/zw/hatch.csv')
 
     weight_length = []
 
@@ -295,7 +295,7 @@ def main():
     # Export
     f.subplots_adjust(wspace=0.25, hspace=0.35)
     f.set_size_inches(17, 11)  # Tabloid size
-    f.savefig("Agenoria_Growth_Charts.pdf", bbox_inches='tight')
+    f.savefig("../build/Agenoria_Growth_Charts.pdf", bbox_inches='tight')
     f.clf()
 
 

@@ -1,41 +1,213 @@
-# Agenoria
+<p align="center">
+  <img src="images/logo.svg" width="154">
+  <h1 align="center">Agenoria</h1>
+  <p align="center">
+    <a href="https://github.com/jiuguangw/Agenoria/blob/master/LICENSE">
+      <img src="https://img.shields.io/badge/License-MIT-yellow.svg" />
+    </a>
+    <a href="https://github.com/jiuguangw/Agenoria/blob/master/LICENSE">
+      <img src="https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg" />
+    </a>
+    </a>
+    <a href="https://www.python.org/">
+        <img src="https://img.shields.io/badge/built%20with-Python3-red.svg" />
+    </a>
+    <a href="https://travis-ci.org/jiuguangw/Agenoria">
+    <img src="https://travis-ci.org/jiuguangw/Agenoria.svg?branch=master">
+    </a>
+  </p>
+</p>
 
-Agenoria is a small utility for visualizing and analyzing the data from the Glow Baby app.
+## Overview and etymology
 
-## Getting Started
+Agenoria is a small utility, written in Python, for visualizing and analyzing growth data from a newborn's first year. It computes and plots statistics on feeding, diapering, sleep, and growth (such as weight, head circumference, and length), recorded in the [Glow Baby](https://glowing.com/baby) and [Hatch Baby](https://shop.hatchbaby.com/products/grow?variant=23706934597) apps.
 
-Anaconda Python 3 is required.
+The name Agenoria comes from the [Roman goddess](https://en.wikipedia.org/wiki/Agenoria_(mythology)) of activity, one of the deities who endows the child with a developmental capacity, such as walking, singing, reasoning, and learning to count.
 
+## Background
+
+When my wife and I were expecting our first child in late 2018, I came across a [post](https://www.reddit.com/r/dataisbeautiful/comments/6s0ba9/months_3_to_17_of_my_babys_sleep_and/) by Reddit user u/jitney86 in r/dataisbeautiful, with a graph visualizing his baby's sleep patterns. I was inspired to do the same and to improve upon jitney86's results (which included only sleep data, from month 3-17), by recording not just sleep, but every aspect of the baby's activities in the first year.
+
+What started as a fun project became immensely useful in diagnosing some medical issues. Since Month 5, we've encountered significant feeding difficulties - he would often push away the bottle and refuse to eat, even when he seems hungry. We relied on accurate daily record keeping to gauge whether or not he has had sufficient amount to eat - 1000 mL or 32 oz daily, plus pureed foods after Month 6. Despite of these efforts, while his absolute weight grew in the first 9 months, his weight percentile continued to drop, from 82% at birth, to the lowest of 27% around Month 10. Several periods of slow weight gain (or even weight loss) was associated with low appetite that lasted close to a week each. But then from Month 9-10, his weigh gain slowed to a crawl, even as he was eating more than ever. Mysterious low appetite, worsening feeding aversion, slow weight gain, plus frequent (few times a month) projectile vomiting, constipation, and eczema - prompted us to seek the attention of specialists, even though his pediatrician was not convinced that there was any issues at all.
+
+The result - he was diagnosed with a non-IgE mediated allergy to cow's milk, which prompted us to remove all dairy from his diet, leading to immediate weight gain from Month 11. Agenoria was critical in visualizing the data and identifying abnormal behaviors early.
+
+
+## Data collection
+
+I utilized the app [Glow Baby](https://glowing.com/baby) in recording feeding, diapering, and sleep data. The app allows the export of the raw data in CSV, which is parsed and visualized by Agenoria. For weight, I used the data recorded in the [Hatch Baby Grow](https://shop.hatchbaby.com/products/grow?variant=23706934597) scale, combined with the growth curves data from the CDC to plot the growth charts.
+
+
+### Sleep
+
+
+### Feeding
+
+
+### Diapering
+
+
+### Weight
+
+### Daily - vomit/daycare
+
+# Example Charts
+
+![Sleep Visualization](docs/sleep.png?raw=true "Sleep Visualization")
+![Feeding Visualization](docs/feeding.png?raw=true "Feeding Visualization")
+![Daily Visualization](docs/daily.png?raw=true "Daily Visualization")
+![Growth Visualization](docs/growth.png?raw=true "Growth Visualization")
+
+## Data format
+
+The growth chart data located in [data_cdc](data_cdc) are taken from the Centers for Disease Control and Prevention ([source](https://www.cdc.gov/growthcharts/percentile_data_files.htm)), initially released on May 30, 2000.
+
+
+# Getting Started
+
+## Installing Anaconda Python
+
+All perquisites are installed as a part of [Anaconda Python](https://www.anaconda.com/distribution/#download-section).
+
+Supported Configurations:
+
+| OS      | Python version |
+| ------- | -------------- |
+| MacOS   | 3.7  |
+| Ubuntu  | 3.7  |
+| Windows | 3.7  |
+
+
+## (Optional) Create a virtual environment
+
+I strongly recommend using a virtual environment to ensure dependencies are  installed safely. This is an optional setup, but if you have trouble running the scripts, try this first.
+
+The instructions below assume you are using Conda, though Virtualenv is essentially interchangeable. To create a new Python 3.7 environment, run:
+
+```bash
+conda create --name agenoria python=3.7
+conda activate agenoria
 ```
+
+The shell should now look like `(agenoria) $`. To deactivate the environment, run:
+
+```bash
+(agenoria)$ conda deactivate
+```
+
+The prompt will return back to `$ ` or `(base)$`.
+
+Note: Older versions of conda may use `source activate agenoria` and `source
+deactivate` (`activate agenoria` and `deactivate` on Windows).
+
+
+## Cloning the repo
+
+To checkout the repo:
+
+```bash
 git clone git@github.com:jiuguangw/Agenoria.git
-
 ```
 
-## Running the scripts
-```
-python plot_daily_charts
-python plot_growth_charts
-python plot_sleep_feeding_viz
+## Placing the source data
 
+The [data](data) directory contains the raw CSV data collected from Glow Baby and Hatch Baby.
+
+The Glow Baby data can be generated by going to "Export Report" - "CSV", choose time frame, select "All", and clicking "Export". A zip file is sent via email, which contains several CSV files:
+
+* glow_diaper.csv - contains diaper data
+* glow_feed_bottle.csv - contains feeding data for formula/bottle
+* glow_feed_solid.csv - contains feeding data for solids
+* glow_sleep.csv - contains sleep data
+* glow_growth.csv - contains growth data such as head circumference, weight, and length
+
+Note:
+
+* As of late 2019, the CSV export functionality is only available via a Glow Premium subscription.
+* Even with Glow Premium, the system will only generate 5000 rows of data at a time. Once you exceed this limit, you'll have to manually export multiple times to cover all the months, then merge the CSV together.
+* Due to this limitation, I renamed the final, merged CSVs as described above.
+
+The Hatch Baby data can be generated by going to "More" - "Share Hatch Baby" - "Export Your Baby's Data". It contains a single CSV file with weight and weight percentile measurements.
+
+The columns of both the Glow and Hatch CSVs are sufficiently self explanatory. It's foreseeable that in the future, Glow might change their data format (has already changed once). If you have a different format, it should be easy to copy paste the data into the corresponding column.
+
+
+## Plotting
+```bash
+cd source
+python plot_daily_charts.py
+python plot_growth_charts.py
+python plot_sleep_feeding_viz.py
 ```
+
+Note: if you don't execute the scripts from the "source" directory, you will get an error about missing data.
+
+The charts (in PDF) are produced in a directory called "build". The PDFs are ready for printing on paper sized 17 by 11 inches (Tabloid paper).
 
 # License
 
+## License terms
+
 There are two components of Agenoria, covered by two different licenses:
 
-- The scripts (in Python) are released under the MIT License.
+- The scripts in the [source](source) and [test](test) subdirectories are released under the MIT License.
 - The raw data in CSV (under the [data](data) subdirectory) are released under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0).
 
 The full license details can be found in [LICENSE](LICENSE).
 
-For attribution, something along the lines of
+To recap, you are free to use or reference the scripts/code for any purpose. The data, however, is under a stricter license because it has taken me a lot of time and energy to collect.
+
+In short, I intend to grant you every freedom in using the data if it is for personal, educational, academic research, conference/journal publication, or otherwise clearly not for profit / non-commercial purposes. All I ask for is an attribution, as required by the CC licensing terms (see the [Attribution](#Attribution) section below).
+
+Generally, I encourage the users to self-determine if their project fits within the scope of the CC BY-NC-SA license. I'm not capable of personally examining your organization's tax-filing status or determine whether or not a financial transaction takes place. Rule of thumb - if you stand to make money by including this data/charts/images/analysis in your work, if you charge your audience for access, or if you are from a large organization - then it's highly likely it falls under commercial use.
+
+For a commercial license, please contact me by email (contact information can be found below). An electronic invoice for the license fee will be issued by my studio and payable by credit card online. A signed copyright release is available by request.
+
+
+## Attribution
+
+If you are using the data under the Creative Commons license, an attribution  along the lines of
 
 Jiuguang Wang (www.robo.guru), used under CC BY-NC-SA 4.0.
 
 ...would be sufficient.
 
+
+# Contribute
+
+## Technical contributions
+
+I welcome bug fixes, feature additions, and other ways to improve the project. If you'd like to contribute your child's data, I'm happy to host it here, assuming it is in the same format and anonymized.
+
+Please send me pull requests, issues, etc, and contact me if you'd like to be added as a collaborator to the repo.
+
+For others without the time or skills to contribute, I'd also appreciate your help in spreading the word via Facebook, Twitter, etc.
+
+## Donation
+
+Please support the project by making a donation via PayPal or crypto:
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=N49BVZZLEXU4G&source=url)
+
+![Bitcoin](https://img.shields.io/badge/Bitcoin-367dGyWPSfSjiP6Nh8oSmdCG9MPkMB58Ad-orange.svg?style=flat-square)
+![Ethereum](https://img.shields.io/badge/Ethereum-0x4617f57f8b0e3D09Be50CcB32451A2CD20651262-orange.svg?style=flat-square)
+![Bitcoin Cash](https://img.shields.io/badge/Bitcoin%20Cash-qrz4e6n3g7e2q6gqz4wetxlgk5eztskxag7tss982j-orange.svg?style=flat-square)
+![Litecoin](https://img.shields.io/badge/Litecoin-MVdpa3uXnqoLkZFoarqNnGB9KHr6TL8xst-orange.svg?style=flat-square)
+
+
 # Acknowledgments
 
-# Authors
+* I'm grateful to Reddit user jitney86 for inspiring this project. His original post can be found [here](https://www.reddit.com/r/dataisbeautiful/comments/6s0ba9/months_3_to_17_of_my_babys_sleep_and/), and the code/data can be found [here](https://nbviewer.jupyter.org/github/jitney86/Baby-data-viz/blob/master/baby_sleep_and_feed_plot.ipynb).
+* Many thanks to Brynn at Glow, Inc for providing the raw CSV data from the Glow Baby app before the CSV export functionality was included as a standard feature.
+* Many thanks to the CDC for providing the growth curves data in the public domain ([source](https://www.cdc.gov/growthcharts/percentile_data_files.htm))
+* The project logo is made by [Freepik](https://www.flaticon.com/authors/freepik")
 
-* Jiuguang Wang (http://www.robo.guru/)
+# Contact
+
+- Jiuguang Wang
+- [jw@robo.guru](jw@robo.guru)
+- [www.robo.guru]( www.robo.guru)
+
+I'd love to hear what people are doing with Agenoria. Please drop me a line!
+
+
