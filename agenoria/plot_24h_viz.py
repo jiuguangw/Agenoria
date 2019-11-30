@@ -16,6 +16,7 @@ from matplotlib.ticker import MaxNLocator
 
 import matplotlib.dates as dt
 
+
 def enumerate_labels():
     hour_labels = []
     for num in range(0, 24):
@@ -53,6 +54,7 @@ def format_axis(ax, date_num, title):
     ax.xaxis.set_ticks(np.arange(1, date_num, 7))
     ax.set_xticklabels(week_labels)
 
+
 def get_feeding_data(filename):
      # Import data
     data_feeding = pd.read_csv(filename)
@@ -67,6 +69,7 @@ def get_feeding_data(filename):
 
     return data_feeding, start_date, end_date
 
+
 def get_diaper_data(filename):
      # Import data
     data_diaper = pd.read_csv(filename)
@@ -80,6 +83,7 @@ def get_diaper_data(filename):
     end_date = data_diaper['Diaper time'].iloc[0].date()
 
     return data_diaper, start_date, end_date
+
 
 def get_sleep_data(filename):
      # Import data
@@ -98,10 +102,9 @@ def get_sleep_data(filename):
     return data_sleep, start_date, end_date
 
 
-def plot_sleep(figure):
+def plot_sleep(file_sleep, figure):
     # Import and extract sleep data
-    data_sleep, start_date, end_date = get_sleep_data(
-        '../data/zw/glow_sleep.csv')
+    data_sleep, start_date, end_date = get_sleep_data(file_sleep)
 
     # Plot setup
     ax = figure.add_subplot(111)
@@ -153,10 +156,9 @@ def plot_sleep(figure):
     format_axis(ax, date_num, 'Sleep')
 
 
-def plot_feeding(figure):
+def plot_feeding(file_feeding, figure):
     # Import and extract feeding data
-    data_feeding, start_date, end_date = get_feeding_data(
-        '../data/zw/glow_feed_bottle.csv')
+    data_feeding, start_date, end_date = get_feeding_data(file_feeding)
 
     # Plot setup
     ax = figure.add_subplot(111)
@@ -186,10 +188,10 @@ def plot_feeding(figure):
     # Format plot
     format_axis(ax, date_num, 'Feeding')
 
-def plot_diapers(figure):
+
+def plot_diapers(file_diaper, figure):
     # Import and extract feeding data
-    data_diaper, start_date, end_date = get_diaper_data(
-        '../data/zw/glow_diaper.csv')
+    data_diaper, start_date, end_date = get_diaper_data(file_diaper)
 
     # Plot setup
     ax = figure.add_subplot(111)
@@ -212,15 +214,15 @@ def plot_diapers(figure):
             start_hour = start_timestamp.hour + start_timestamp.minute / 60
 
             # Draw
-            if (color == 'yellow'): # poop, yello
+            if (color == 'yellow'):  # poop, yello
                 ax.plot(date_num, start_hour, marker='o', color='b')
-            elif (color == 'green'): # poop, green
+            elif (color == 'green'):  # poop, green
                 ax.plot(date_num, start_hour, marker='o', color='g')
-            elif (color == 'brown'): # poop, brown
+            elif (color == 'brown'):  # poop, brown
                 ax.plot(date_num, start_hour, marker='o', color='m')
-            elif (pd.isnull(color)): # pee only, yellow
+            elif (pd.isnull(color)):  # pee only, yellow
                 ax.plot(date_num, start_hour, marker='o', color='y')
-            else: # poop, other colors
+            else:  # poop, other colors
                 ax.plot(date_num, start_hour, marker='o', color='r')
 
         # Increment date
@@ -230,26 +232,24 @@ def plot_diapers(figure):
     format_axis(ax, date_num, 'Diapers')
 
 
-def main():
+def plot_24h_viz(file_sleep, file_feeding, file_diaper, output_sleep_viz, output_feeding_viz, output_diaper_viz):
     # Plot settings
     sns.set(style="darkgrid")
 
     sleep_figure = plt.figure()
-    plot_sleep(sleep_figure)
+    plot_sleep(file_sleep, sleep_figure)
     sleep_figure.set_size_inches(17, 11)
-    sleep_figure.savefig("../build/Agenoria_Sleep_Viz.pdf", bbox_inches='tight')
+    sleep_figure.savefig(output_sleep_viz, bbox_inches='tight')
     sleep_figure.clf()
 
     feeding_figure = plt.figure()
-    plot_feeding(feeding_figure)
+    plot_feeding(file_feeding, feeding_figure)
     feeding_figure.set_size_inches(17, 11)
-    feeding_figure.savefig("../build/Agenoria_Feeding_Viz.pdf", bbox_inches='tight')
+    feeding_figure.savefig(output_feeding_viz, bbox_inches='tight')
     feeding_figure.clf()
 
     diaper_figure = plt.figure()
-    plot_diapers(diaper_figure)
+    plot_diapers(file_diaper, diaper_figure)
     diaper_figure.set_size_inches(17, 11)
-    diaper_figure.savefig("../build/Agenoria_Diaper_Viz.pdf", bbox_inches='tight')
+    diaper_figure.savefig(output_diaper_viz, bbox_inches='tight')
     diaper_figure.clf()
-
-main()

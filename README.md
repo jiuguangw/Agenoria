@@ -12,8 +12,8 @@
     <a href="https://www.python.org/">
         <img src="https://img.shields.io/badge/built%20with-Python3-red.svg" />
     </a>
-    <a href="https://travis-ci.org/jiuguangw/Agenoria">
-    <img src="https://travis-ci.org/jiuguangw/Agenoria.svg?branch=master">
+    <a href="https://travis-ci.com/jiuguangw/Agenoria">
+    <img src="https://travis-ci.com/jiuguangw/Agenoria.svg?branch=master">
     </a>
   </p>
 </p>
@@ -228,15 +228,10 @@ The columns of both the Glow and Hatch CSVs are sufficiently self explanatory. I
 
 ### Plotting
 ```bash
-cd source
-python plot_daily_charts.py
-python plot_growth_charts.py
-python plot_sleep_feeding_viz.py
+python agenoria.py
 ```
 
-Note: if you don't execute the scripts from the "source" directory, you will get an error about missing data.
-
-The charts (in PDF) are produced in a directory called "build". The PDFs are ready for printing on paper sized 17 by 11 inches (Tabloid paper).
+By default, the charts (in PDF) are produced in a directory called "build". The PDFs are ready for printing on paper sized 17 by 11 inches (Tabloid paper).
 
 ## License
 

@@ -83,8 +83,8 @@ def parse_hatch_data(hatch_file):
     return data
 
 
-def plot_weight_roc(plot_object):
-    hatch_data = parse_hatch_data('../data/zw/hatch.csv')
+def plot_weight_roc(file_hatch, plot_object):
+    hatch_data = parse_hatch_data(file_hatch)
 
     plot_object.plot(hatch_data['Age'],
                      hatch_data['Weight Average RoC'], color='red', linewidth=2)
@@ -102,10 +102,10 @@ def plot_weight_roc(plot_object):
     plot_object.yaxis.set_major_locator(ticker.MultipleLocator(0.2))
 
 
-def plot_weight_age(plot_object):
+def plot_weight_age(file_hatch, file_wtageinf, plot_object):
     # Import data
-    data = pd.read_csv('../data/cdc_growth_curves/wtageinf.csv')
-    hatch_data = parse_hatch_data('../data/zw/hatch.csv')
+    data = pd.read_csv(file_wtageinf)
+    hatch_data = parse_hatch_data(file_hatch)
 
     # Extract by sex
     data = data.loc[data['Sex'] == CDC_SEX]
@@ -135,8 +135,8 @@ def plot_weight_age(plot_object):
     plot_object.yaxis.set_major_locator(ticker.MultipleLocator(1))
 
 
-def plot_weight_percentile(plot_object):
-    hatch_data = parse_hatch_data('../data/zw/hatch.csv')
+def plot_weight_percentile(file_hatch, plot_object):
+    hatch_data = parse_hatch_data(file_hatch)
 
     plot_object.plot(hatch_data['Age'],
                      hatch_data['Percentile'] * 100, color='red')
@@ -151,10 +151,10 @@ def plot_weight_percentile(plot_object):
     plot_object.set_ylim(25, 80)
 
 
-def plot_length_age(plot_object):
+def plot_length_age(file_glow, file_lenageinf, plot_object):
     # Import data
-    data = pd.read_csv('../data/cdc_growth_curves/lenageinf.csv')
-    data_height, data_head = parse_glow_data('../data/zw/glow_growth.csv')
+    data = pd.read_csv(file_lenageinf)
+    data_height, data_head = parse_glow_data(file_glow)
 
     # Extract by sex
     data = data.loc[data['Sex'] == CDC_SEX]
@@ -183,10 +183,10 @@ def plot_length_age(plot_object):
     plot_object.xaxis.set_major_locator(ticker.MultipleLocator(1))
 
 
-def plot_head_circumference_age(plot_object):
+def plot_head_circumference_age(file_glow, file_hcageinf, plot_object):
     # Import data
-    data = pd.read_csv('../data/cdc_growth_curves/hcageinf.csv')
-    data_height, data_head = parse_glow_data('../data/zw/glow_growth.csv')
+    data = pd.read_csv(file_hcageinf)
+    data_height, data_head = parse_glow_data(file_glow)
 
     # Extract by sex
     data = data.loc[data['Sex'] == CDC_SEX]
@@ -215,11 +215,11 @@ def plot_head_circumference_age(plot_object):
     plot_object.xaxis.set_major_locator(ticker.MultipleLocator(1))
 
 
-def plot_weight_length(plot_object):
+def plot_weight_length(file_hatch, file_glow, file_wtleninf, plot_object):
     # Import data
-    data = pd.read_csv('../data/cdc_growth_curves/wtleninf.csv')
-    data_height, data_head = parse_glow_data('../data/zw/glow_growth.csv')
-    hatch_data = parse_hatch_data('../data/zw/hatch.csv')
+    data = pd.read_csv(file_wtleninf)
+    data_height, data_head = parse_glow_data(file_glow)
+    hatch_data = parse_hatch_data(file_hatch)
 
     weight_length = []
 
@@ -261,7 +261,8 @@ def plot_weight_length(plot_object):
     plot_object.xaxis.set_major_locator(ticker.MultipleLocator(5))
 
 
-def main():
+def plot_growth_charts(file_hatch, file_glow, file_output, file_wtageinf,
+                       file_lenageinf, file_hcageinf, file_wtleninf):
 
     register_matplotlib_converters()
 
@@ -275,28 +276,25 @@ def main():
     f, axarr = plt.subplots(2, 3)
 
     # Chart 1 - Weight / Age
-    plot_weight_age(axarr[0, 0])
+    plot_weight_age(file_hatch, file_wtageinf, axarr[0, 0])
 
     # Chart 2 - Weight Percentile / Age
-    plot_weight_percentile(axarr[0, 1])
+    plot_weight_percentile(file_hatch, axarr[0, 1])
 
     # Chart 2 - Weight Rate of Change / Age
-    plot_weight_roc(axarr[0, 2])
+    plot_weight_roc(file_hatch, axarr[0, 2])
 
     # Chart 4 - Length / Age
-    plot_length_age(axarr[1, 0])
+    plot_length_age(file_glow, file_lenageinf, axarr[1, 0])
 
     # Chart 5 - Head Circumference / Age
-    plot_head_circumference_age(axarr[1, 1])
+    plot_head_circumference_age(file_glow, file_hcageinf, axarr[1, 1])
 
     # Chart 6 - Weight / Length
-    plot_weight_length(axarr[1, 2])
+    plot_weight_length(file_hatch, file_glow, file_wtleninf, axarr[1, 2])
 
     # Export
     f.subplots_adjust(wspace=0.25, hspace=0.35)
     f.set_size_inches(17, 11)  # Tabloid size
-    f.savefig("../build/Agenoria_Growth_Charts.pdf", bbox_inches='tight')
+    f.savefig(file_output, bbox_inches='tight')
     f.clf()
-
-
-main()

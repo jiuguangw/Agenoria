@@ -286,6 +286,7 @@ def parse_glow_feeding_solid_data(glow_file):
 
     return daily_solid_data
 
+
 def combine_bottle_solid(glow_bottle_data, glow_solid_data):
     # Compute the difference in size between bottle and solids
     size_missing = glow_bottle_data['date'].size - glow_solid_data['date'].size
@@ -294,7 +295,8 @@ def combine_bottle_solid(glow_bottle_data, glow_solid_data):
     zero_data = pd.DataFrame(0, index=np.arange(size_missing), columns=['sum'])
 
     # Append it to the front of the solid data
-    solid_new = pd.concat([zero_data['sum'], glow_solid_data['sum']], axis=0, ignore_index=True)
+    solid_new = pd.concat(
+        [zero_data['sum'], glow_solid_data['sum']], axis=0, ignore_index=True)
 
     # Convert bottle feeding from mL to oz and add the solids
     combined = glow_bottle_data['sum'] / 29.5735 + solid_new
@@ -302,7 +304,8 @@ def combine_bottle_solid(glow_bottle_data, glow_solid_data):
     # Return combined data
     return combined
 
-def main():
+
+def plot_daily_charts(file_bottle, file_solid, file_diaper, file_sleep, output_daily_charts):
     # Matplotlib converters
 
     register_matplotlib_converters()
@@ -318,15 +321,12 @@ def main():
 
     # Import data
 
-    glow_bottle_data = parse_glow_feeding_bottle_data(
-        '../data/zw/glow_feed_bottle.csv')
-    glow_solid_data = parse_glow_feeding_solid_data(
-        '../data/zw/glow_feed_solid.csv')
-    daily_diaper_data = parse_glow_diaper_data(
-        '../data/zw/glow_diaper.csv')
-    daily_sleep_data = parse_glow_sleep_data(
-        '../data/zw/glow_sleep.csv')
-    glow_combined_feeding_data = combine_bottle_solid(glow_bottle_data, glow_solid_data)
+    glow_bottle_data = parse_glow_feeding_bottle_data(file_bottle)
+    glow_solid_data = parse_glow_feeding_solid_data(file_solid)
+    daily_diaper_data = parse_glow_diaper_data(file_diaper)
+    daily_sleep_data = parse_glow_sleep_data(file_sleep)
+    glow_combined_feeding_data = combine_bottle_solid(
+        glow_bottle_data, glow_solid_data)
 
     # Chart 1 - Eat: Daily, Average Consumed Per Day(mL)
     axarr[0, 0].plot(glow_bottle_data['date'],
@@ -385,7 +385,6 @@ def main():
     axarr[1, 1].set_ylabel(
         'Daily Total Bottle + Solid (oz)', fontsize=axis_font_size)
     format_plot(glow_bottle_data['date'], axarr[1, 1])
-
 
     # Chart 6 - Sleep: Daily Total Naps (7:00-19:00)
     axarr[1, 2].plot(daily_sleep_data['date'],
@@ -469,8 +468,5 @@ def main():
     #     f.set_size_inches(11, 8.5)  # US Letter
     # else:
     f.set_size_inches(17, 11)  # Tabloid size
-    f.savefig("../build/Agenoria_Daily_Charts.pdf", bbox_inches='tight')
+    f.savefig(output_daily_charts, bbox_inches='tight')
     f.clf()
-
-
-main()
