@@ -18,7 +18,7 @@ def test_daily_charts():
     file_diaper = 'data/zw/glow_diaper.csv'
     file_sleep = 'data/zw/glow_sleep.csv'
 
-    output_daily_charts = 'build/Agenoria_Daily_Charts.pdf'
+    output_daily_charts = 'Agenoria_Daily_Charts.pdf'
 
     agenoria.plot_daily_charts(file_bottle, file_solid, file_diaper,
                                file_sleep, output_daily_charts)
@@ -37,9 +37,9 @@ def test_24h_viz():
     file_feeding = 'data/zw/glow_feed_bottle.csv'
     file_diaper = 'data/zw/glow_diaper.csv'
 
-    output_sleep_viz = 'build/Agenoria_Sleep_Viz.pdf'
-    output_feeding_viz = 'build/Agenoria_Feeding_Viz.pdf'
-    output_diaper_viz = 'build/Agenoria_Diaper_Viz.pdf'
+    output_sleep_viz = 'Agenoria_Sleep_Viz.pdf'
+    output_feeding_viz = 'Agenoria_Feeding_Viz.pdf'
+    output_diaper_viz = 'Agenoria_Diaper_Viz.pdf'
 
     agenoria.plot_24h_viz(file_sleep, file_feeding, file_diaper,
                           output_sleep_viz, output_feeding_viz, output_diaper_viz)
@@ -60,12 +60,13 @@ def test_growth_charts():
 
     file_hatch = 'data/zw/hatch.csv'
     file_glow = 'data/zw/glow_growth.csv'
-    file_output = 'build/Agenoria_Growth_Charts.pdf'
 
     file_wtageinf = 'data/cdc_growth_curves/wtageinf.csv'
     file_lenageinf = 'data/cdc_growth_curves/lenageinf.csv'
     file_hcageinf = 'data/cdc_growth_curves/hcageinf.csv'
     file_wtleninf = 'data/cdc_growth_curves/wtleninf.csv'
+
+    file_output = 'Agenoria_Growth_Charts.pdf'
 
     agenoria.plot_growth_charts(file_hatch, file_glow, file_output,
                                 file_wtageinf, file_lenageinf, file_hcageinf, file_wtleninf)
