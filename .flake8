@@ -1,0 +1,6 @@
+[flake8]
+ignore =
+    E501, # line length
+show_source = True
+statistics = True
+count = True
