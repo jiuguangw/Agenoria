@@ -6,15 +6,10 @@
 # Please see the LICENSE file that should have been included as part of
 # this package.
 
-import datetime as dt
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from matplotlib.dates import MonthLocator, WeekdayLocator, DateFormatter
-from matplotlib.ticker import MaxNLocator
-
-import matplotlib.dates as dt
 
 
 def enumerate_labels():
@@ -32,7 +27,7 @@ def enumerate_labels():
 
 
 def format_axis(ax, date_num, title):
-        # Figure settings
+    # Figure settings
     TITLE_FONT_SIZE = 25
     AXIS_FONT_SIZE = 15
     TITLE_HEIGHT_ADJUST = 1.05
@@ -56,7 +51,7 @@ def format_axis(ax, date_num, title):
 
 
 def get_feeding_data(filename):
-     # Import data
+    # Import data
     data_feeding = pd.read_csv(filename)
 
     # Convert the date columns into datetime
@@ -71,7 +66,7 @@ def get_feeding_data(filename):
 
 
 def get_diaper_data(filename):
-     # Import data
+    # Import data
     data_diaper = pd.read_csv(filename)
 
     # Convert the date columns into datetime
@@ -86,7 +81,7 @@ def get_diaper_data(filename):
 
 
 def get_sleep_data(filename):
-     # Import data
+    # Import data
     data_sleep = pd.read_csv(filename)
 
     # Convert the date columns into datetime

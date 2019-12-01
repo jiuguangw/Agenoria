@@ -11,8 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from matplotlib.dates import MonthLocator, WeekdayLocator, DateFormatter
-from matplotlib.ticker import MaxNLocator
+from matplotlib.dates import MonthLocator, DateFormatter
 from pandas.plotting import register_matplotlib_converters
 
 DEBUG = False

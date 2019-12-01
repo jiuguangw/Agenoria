@@ -11,8 +11,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from matplotlib.dates import MonthLocator, WeekdayLocator, DateFormatter
-from matplotlib.ticker import MaxNLocator
 from pandas.plotting import register_matplotlib_converters
 import matplotlib.ticker as ticker
 
@@ -267,11 +265,6 @@ def plot_growth_charts(file_hatch, file_glow, file_output, file_wtageinf,
     register_matplotlib_converters()
 
     # Settings
-
-    title_font_size = 10
-    axis_font_size = 8
-    alpha_value = 0.3
-
     sns.set(style="darkgrid")
     f, axarr = plt.subplots(2, 3)
 

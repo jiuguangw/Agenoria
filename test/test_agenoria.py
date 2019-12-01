@@ -7,7 +7,6 @@
 # this package.
 
 import agenoria
-import pytest
 import os
 
 
