@@ -58,6 +58,9 @@ def test_24h_viz():
 def test_growth_charts():
     # Plot growth charts
 
+    sex = 1    # 1 for Boy, 2 for Girl
+    birthday = (2018, 11, 21)  # Birthday Year/Month/Date
+
     file_hatch = 'data/zw/hatch.csv'
     file_glow = 'data/zw/glow_growth.csv'
 
@@ -68,7 +71,7 @@ def test_growth_charts():
 
     file_output = 'Agenoria_Growth_Charts.pdf'
 
-    agenoria.plot_growth_charts(file_hatch, file_glow, file_output,
+    agenoria.plot_growth_charts(file_hatch, file_glow, file_output, sex, birthday,
                                 file_wtageinf, file_lenageinf, file_hcageinf, file_wtleninf)
 
     # Get the file size of the output PDF

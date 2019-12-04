@@ -15,14 +15,12 @@ from pandas.plotting import register_matplotlib_converters
 import matplotlib.ticker as ticker
 
 
-CDC_SEX = 1    # 1 for Boy, 2 for Girl
-BIRTHDAY = dt.datetime(2018, 11, 21, 0, 0, 0)
 TITLE_FONT_SIZE = 14
 AXIS_FONT_SIZE = 10
 LINE_ALPHA = 0.4
 
 
-def parse_glow_data(glow_file):
+def parse_glow_data(glow_file, birthday):
     # Import file
     data = pd.read_csv(glow_file)
 
@@ -30,7 +28,7 @@ def parse_glow_data(glow_file):
     data['Date'] = pd.to_datetime(data['Date'], format='%Y/%m/%d')
 
     # Compute age
-    data['Age'] = (data['Date'] - BIRTHDAY) / np.timedelta64(1, 'M')
+    data['Age'] = (data['Date'] - birthday) / np.timedelta64(1, 'M')
 
     # Get date and height columns
     data_height = data[data['Height(cm)'].notnull()][[
@@ -41,7 +39,7 @@ def parse_glow_data(glow_file):
     return data_height, data_head
 
 
-def parse_hatch_data(hatch_file):
+def parse_hatch_data(hatch_file, birthday):
     # Import file
     data = pd.read_csv(hatch_file)
 
@@ -61,7 +59,7 @@ def parse_hatch_data(hatch_file):
         idx).rename_axis('Start Time').reset_index()
 
     # Compute Age
-    data['Age'] = (data['Start Time'] - BIRTHDAY) / \
+    data['Age'] = (data['Start Time'] - birthday) / \
         np.timedelta64(1, 'M')
 
     # Compute diff
@@ -81,8 +79,8 @@ def parse_hatch_data(hatch_file):
     return data
 
 
-def plot_weight_roc(file_hatch, plot_object):
-    hatch_data = parse_hatch_data(file_hatch)
+def plot_weight_roc(file_hatch, birthday, plot_object):
+    hatch_data = parse_hatch_data(file_hatch, birthday)
 
     plot_object.plot(hatch_data['Age'],
                      hatch_data['Weight Average RoC'], color='red', linewidth=2)
@@ -94,19 +92,19 @@ def plot_weight_roc(file_hatch, plot_object):
     plot_object.set_ylabel('Average Daily Weight Gain (oz)',
                            fontsize=AXIS_FONT_SIZE)
 
-    plot_object.set_xlim(0, 12)
+    plot_object.set_xlim(hatch_data['Age'].iloc[0], hatch_data['Age'].iloc[-1])
     plot_object.set_ylim(-0.5, 1)
     plot_object.xaxis.set_major_locator(ticker.MultipleLocator(1))
     plot_object.yaxis.set_major_locator(ticker.MultipleLocator(0.2))
 
 
-def plot_weight_age(file_hatch, file_wtageinf, plot_object):
+def plot_weight_age(file_hatch, sex, birthday, file_wtageinf, plot_object):
     # Import data
     data = pd.read_csv(file_wtageinf)
-    hatch_data = parse_hatch_data(file_hatch)
+    hatch_data = parse_hatch_data(file_hatch, birthday)
 
     # Extract by sex
-    data = data.loc[data['Sex'] == CDC_SEX]
+    data = data.loc[data['Sex'] == sex]
 
     # Plot percentile lines
     plot_object.plot(data['Agemos'], data['P3'], alpha=LINE_ALPHA)
@@ -127,14 +125,14 @@ def plot_weight_age(file_hatch, file_wtageinf, plot_object):
     plot_object.set_xlabel('Age (months)', fontsize=AXIS_FONT_SIZE)
     plot_object.set_ylabel('Weight (kg)', fontsize=AXIS_FONT_SIZE)
 
-    plot_object.set_xlim(0, 12)
+    plot_object.set_xlim(hatch_data['Age'].iloc[0], hatch_data['Age'].iloc[-1])
     plot_object.set_ylim(3, 10)
     plot_object.xaxis.set_major_locator(ticker.MultipleLocator(1))
     plot_object.yaxis.set_major_locator(ticker.MultipleLocator(1))
 
 
-def plot_weight_percentile(file_hatch, plot_object):
-    hatch_data = parse_hatch_data(file_hatch)
+def plot_weight_percentile(file_hatch, birthday, plot_object):
+    hatch_data = parse_hatch_data(file_hatch, birthday)
 
     plot_object.plot(hatch_data['Age'],
                      hatch_data['Percentile'] * 100, color='red')
@@ -144,18 +142,18 @@ def plot_weight_percentile(file_hatch, plot_object):
         'Weight Percentile (%)', fontsize=AXIS_FONT_SIZE)
     plot_object.set_xlabel('Age (months)', fontsize=AXIS_FONT_SIZE)
 
-    plot_object.set_xlim(0, 12)
+    plot_object.set_xlim(hatch_data['Age'].iloc[0], hatch_data['Age'].iloc[-1])
     plot_object.xaxis.set_major_locator(ticker.MultipleLocator(1))
     plot_object.set_ylim(25, 80)
 
 
-def plot_length_age(file_glow, file_lenageinf, plot_object):
+def plot_length_age(file_glow, sex, birthday, file_lenageinf, plot_object):
     # Import data
     data = pd.read_csv(file_lenageinf)
-    data_height, data_head = parse_glow_data(file_glow)
+    data_height, data_head = parse_glow_data(file_glow, birthday)
 
     # Extract by sex
-    data = data.loc[data['Sex'] == CDC_SEX]
+    data = data.loc[data['Sex'] == sex]
 
     # Plot percentile lines
     plot_object.plot(data['Agemos'], data['P3'], alpha=LINE_ALPHA)
@@ -176,18 +174,19 @@ def plot_length_age(file_glow, file_lenageinf, plot_object):
     plot_object.set_xlabel('Age (months)', fontsize=AXIS_FONT_SIZE)
     plot_object.set_ylabel('Length (cm)', fontsize=AXIS_FONT_SIZE)
 
-    plot_object.set_xlim(0, 12)
+    plot_object.set_xlim(
+        data_height['Age'].iloc[0], data_height['Age'].iloc[-1])
     plot_object.set_ylim(53, 80)
     plot_object.xaxis.set_major_locator(ticker.MultipleLocator(1))
 
 
-def plot_head_circumference_age(file_glow, file_hcageinf, plot_object):
+def plot_head_circumference_age(file_glow, sex, birthday, file_hcageinf, plot_object):
     # Import data
     data = pd.read_csv(file_hcageinf)
-    data_height, data_head = parse_glow_data(file_glow)
+    data_height, data_head = parse_glow_data(file_glow, birthday)
 
     # Extract by sex
-    data = data.loc[data['Sex'] == CDC_SEX]
+    data = data.loc[data['Sex'] == sex]
 
     # Plot percentile lines
     plot_object.plot(data['Agemos'], data['P3'], alpha=LINE_ALPHA)
@@ -208,16 +207,16 @@ def plot_head_circumference_age(file_glow, file_hcageinf, plot_object):
     plot_object.set_xlabel('Age (months)', fontsize=AXIS_FONT_SIZE)
     plot_object.set_ylabel('Head Circumference (cm)', fontsize=AXIS_FONT_SIZE)
 
-    plot_object.set_xlim(0, 12)
+    plot_object.set_xlim(data_head['Age'].iloc[0], data_head['Age'].iloc[-1])
     plot_object.set_ylim(35, 48)
     plot_object.xaxis.set_major_locator(ticker.MultipleLocator(1))
 
 
-def plot_weight_length(file_hatch, file_glow, file_wtleninf, plot_object):
+def plot_weight_length(file_hatch, file_glow, sex, birthday, file_wtleninf, plot_object):
     # Import data
     data = pd.read_csv(file_wtleninf)
-    data_height, data_head = parse_glow_data(file_glow)
-    hatch_data = parse_hatch_data(file_hatch)
+    data_height, data_head = parse_glow_data(file_glow, birthday)
+    hatch_data = parse_hatch_data(file_hatch, birthday)
 
     weight_length = []
 
@@ -234,7 +233,7 @@ def plot_weight_length(file_hatch, file_glow, file_wtleninf, plot_object):
         weight_length, columns=['Date', 'Age', 'Height(cm)', 'Weight'])
 
     # Extract by sex
-    data = data.loc[data['Sex'] == CDC_SEX]
+    data = data.loc[data['Sex'] == sex]
 
     # Plot percentile lines
     plot_object.plot(data['Length'], data['P3'], alpha=LINE_ALPHA)
@@ -259,7 +258,7 @@ def plot_weight_length(file_hatch, file_glow, file_wtleninf, plot_object):
     plot_object.xaxis.set_major_locator(ticker.MultipleLocator(5))
 
 
-def plot_growth_charts(file_hatch, file_glow, file_output, file_wtageinf,
+def plot_growth_charts(file_hatch, file_glow, file_output, sex, birthday, file_wtageinf,
                        file_lenageinf, file_hcageinf, file_wtleninf):
 
     register_matplotlib_converters()
@@ -268,23 +267,27 @@ def plot_growth_charts(file_hatch, file_glow, file_output, file_wtageinf,
     sns.set(style="darkgrid")
     f, axarr = plt.subplots(2, 3)
 
+    birthday_date = dt.datetime(birthday[0], birthday[1], birthday[2], 0, 0, 0)
+
     # Chart 1 - Weight / Age
-    plot_weight_age(file_hatch, file_wtageinf, axarr[0, 0])
+    plot_weight_age(file_hatch, sex, birthday_date, file_wtageinf, axarr[0, 0])
 
     # Chart 2 - Weight Percentile / Age
-    plot_weight_percentile(file_hatch, axarr[0, 1])
+    plot_weight_percentile(file_hatch, birthday_date, axarr[0, 1])
 
     # Chart 2 - Weight Rate of Change / Age
-    plot_weight_roc(file_hatch, axarr[0, 2])
+    plot_weight_roc(file_hatch, birthday_date, axarr[0, 2])
 
     # Chart 4 - Length / Age
-    plot_length_age(file_glow, file_lenageinf, axarr[1, 0])
+    plot_length_age(file_glow, sex, birthday_date, file_lenageinf, axarr[1, 0])
 
     # Chart 5 - Head Circumference / Age
-    plot_head_circumference_age(file_glow, file_hcageinf, axarr[1, 1])
+    plot_head_circumference_age(
+        file_glow, sex, birthday_date, file_hcageinf, axarr[1, 1])
 
     # Chart 6 - Weight / Length
-    plot_weight_length(file_hatch, file_glow, file_wtleninf, axarr[1, 2])
+    plot_weight_length(file_hatch, file_glow, sex,
+                       birthday_date, file_wtleninf, axarr[1, 2])
 
     # Export
     f.subplots_adjust(wspace=0.25, hspace=0.35)

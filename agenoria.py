@@ -7,6 +7,12 @@
 # this package.
 
 import agenoria
+import os
+
+# Create the output directory
+if not os.path.exists('build'):
+    os.makedirs('build')
+
 
 # Plot daily charts
 
@@ -35,6 +41,9 @@ agenoria.plot_24h_viz(file_sleep, file_feeding, file_diaper,
 
 # Plot growth charts
 
+sex = 1    # 1 for Boy, 2 for Girl
+birthday = (2018, 11, 21)  # Birthday Year/Month/Date
+
 file_hatch = 'data/zw/hatch.csv'
 file_glow = 'data/zw/glow_growth.csv'
 file_output = 'build/Agenoria_Growth_Charts.pdf'
@@ -44,5 +53,5 @@ file_lenageinf = 'data/cdc_growth_curves/lenageinf.csv'
 file_hcageinf = 'data/cdc_growth_curves/hcageinf.csv'
 file_wtleninf = 'data/cdc_growth_curves/wtleninf.csv'
 
-agenoria.plot_growth_charts(file_hatch, file_glow, file_output,
+agenoria.plot_growth_charts(file_hatch, file_glow, file_output, sex, birthday,
                             file_wtageinf, file_lenageinf, file_hcageinf, file_wtleninf)

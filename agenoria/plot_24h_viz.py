@@ -12,14 +12,14 @@ import pandas as pd
 import seaborn as sns
 
 
-def enumerate_labels():
+def enumerate_labels(date_num):
     hour_labels = []
     for num in range(0, 24):
         label = str(num) + ':00'
         hour_labels.append(label)
 
     week_labels = []
-    for num in range(0, 53):
+    for num in range(0, int(round(date_num / 7))):
         label = str(num)
         week_labels.append(label)
 
@@ -32,7 +32,7 @@ def format_axis(ax, date_num, title):
     AXIS_FONT_SIZE = 15
     TITLE_HEIGHT_ADJUST = 1.05
 
-    hour_labels, week_labels = enumerate_labels()
+    hour_labels, week_labels = enumerate_labels(date_num)
 
     ax.set_title(title, fontsize=TITLE_FONT_SIZE, y=TITLE_HEIGHT_ADJUST)
     ax.set_xlabel('Age (weeks)', fontsize=AXIS_FONT_SIZE)
