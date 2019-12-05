@@ -10,6 +10,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from .parse_config import parse_json_config
+
+config = []
 
 
 def enumerate_labels(date_num):
@@ -82,9 +85,9 @@ def get_sleep_data(filename):
     return data_sleep, start_date, end_date
 
 
-def plot_sleep(file_sleep, figure):
+def plot_sleep(figure):
     # Import and extract sleep data
-    data_sleep, start_date, end_date = get_sleep_data(file_sleep)
+    data_sleep, start_date, end_date = get_sleep_data(config['data_sleep'])
 
     # Plot setup
     ax = figure.add_subplot(111)
@@ -136,10 +139,10 @@ def plot_sleep(file_sleep, figure):
     format_axis(ax, date_num, 'Sleep')
 
 
-def plot_feeding(file_feeding, figure):
+def plot_feeding(figure):
     # Import and extract feeding data
     data_feeding, start_date, end_date = parse_raw_data(
-        file_feeding, 'Time of feeding')
+        config['data_feed_bottle'], 'Time of feeding')
 
     # Plot setup
     ax = figure.add_subplot(111)
@@ -170,10 +173,10 @@ def plot_feeding(file_feeding, figure):
     format_axis(ax, date_num, 'Feeding')
 
 
-def plot_diapers(file_diaper, figure):
+def plot_diapers(figure):
     # Import and extract feeding data
     data_diaper, start_date, end_date = parse_raw_data(
-        file_diaper, 'Diaper time')
+        config['data_diaper'], 'Diaper time')
 
     # Plot setup
     ax = figure.add_subplot(111)
@@ -214,24 +217,28 @@ def plot_diapers(file_diaper, figure):
     format_axis(ax, date_num, 'Diapers')
 
 
-def plot_24h_viz(file_sleep, file_feeding, file_diaper, output_sleep_viz, output_feeding_viz, output_diaper_viz):
+def plot_24h_viz(config_file):
+    # Import data
+    global config
+    config = parse_json_config(config_file)
+
     # Plot settings
     sns.set(style="darkgrid")
 
     sleep_figure = plt.figure()
-    plot_sleep(file_sleep, sleep_figure)
+    plot_sleep(sleep_figure)
     sleep_figure.set_size_inches(17, 11)
-    sleep_figure.savefig(output_sleep_viz, bbox_inches='tight')
+    sleep_figure.savefig(config['output_sleep_viz'], bbox_inches='tight')
     sleep_figure.clf()
 
     feeding_figure = plt.figure()
-    plot_feeding(file_feeding, feeding_figure)
+    plot_feeding(feeding_figure)
     feeding_figure.set_size_inches(17, 11)
-    feeding_figure.savefig(output_feeding_viz, bbox_inches='tight')
+    feeding_figure.savefig(config['output_feeding_viz'], bbox_inches='tight')
     feeding_figure.clf()
 
     diaper_figure = plt.figure()
-    plot_diapers(file_diaper, diaper_figure)
+    plot_diapers(diaper_figure)
     diaper_figure.set_size_inches(17, 11)
-    diaper_figure.savefig(output_diaper_viz, bbox_inches='tight')
+    diaper_figure.savefig(config['output_diaper_viz'], bbox_inches='tight')
     diaper_figure.clf()

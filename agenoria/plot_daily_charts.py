@@ -13,6 +13,7 @@ import pandas as pd
 import seaborn as sns
 from matplotlib.dates import MonthLocator, DateFormatter
 from pandas.plotting import register_matplotlib_converters
+from .parse_config import parse_json_config
 
 DEBUG = False
 
@@ -27,6 +28,8 @@ DEBUG = False
 # Weight loss (daycare)
 DEBUG_START_DATE = dt.datetime(2019, 8, 17, 0, 0, 0)
 DEBUG_END_DATE = dt.datetime(2019, 9, 27, 0, 0, 0)
+
+config = []
 
 
 def format_plot(date_data, plot_object):
@@ -47,9 +50,9 @@ def format_plot(date_data, plot_object):
         plot_object.xaxis.set_major_formatter(DateFormatter("%b"))
 
 
-def parse_glow_diaper_data(glow_file):
+def parse_glow_diaper_data():
     # Import file
-    data_diaper = pd.read_csv(glow_file)
+    data_diaper = pd.read_csv(config['data_diaper'])
 
     # Convert date column to datetime
     data_diaper['Diaper time'] = pd.to_datetime(
@@ -101,9 +104,9 @@ def parse_glow_diaper_data(glow_file):
     return daily_diaper_data
 
 
-def parse_glow_sleep_data(glow_file):
+def parse_glow_sleep_data():
     # Import file
-    data_sleep = pd.read_csv(glow_file)
+    data_sleep = pd.read_csv(config['data_sleep'])
 
     # Convert date column to datetime
     data_sleep['Begin time'] = pd.to_datetime(
@@ -198,9 +201,9 @@ def parse_glow_sleep_data(glow_file):
     return daily_sleep_data
 
 
-def parse_dates(data_raw):
-    # Make a copy
-    data = data_raw
+def parse_dates(file_name):
+    # Import file
+    data = pd.read_csv(file_name)
 
     # Convert date column to datetime
     data['Time of feeding'] = pd.to_datetime(
@@ -217,12 +220,9 @@ def parse_dates(data_raw):
     return data, start_date, end_date
 
 
-def parse_glow_feeding_bottle_data(glow_file):
-    # Import file
-    data_raw = pd.read_csv(glow_file)
-
-    # Convert dates to datetime
-    data, start_date, end_date = parse_dates(data_raw)
+def parse_glow_feeding_bottle_data():
+    # Parse data
+    data, start_date, end_date = parse_dates(config['data_feed_bottle'])
 
     # Final data
     feeding_data_list = []
@@ -252,12 +252,9 @@ def parse_glow_feeding_bottle_data(glow_file):
     return daily_bottle_data
 
 
-def parse_glow_feeding_solid_data(glow_file):
-    # Import file
-    data_raw = pd.read_csv(glow_file)
-
-    # Convert dates to datetime
-    data, start_date, end_date = parse_dates(data_raw)
+def parse_glow_feeding_solid_data():
+    # Parse data
+    data, start_date, end_date = parse_dates(config['data_feed_solid'])
 
     # Final data
     feeding_data_list = []
@@ -305,26 +302,28 @@ def combine_bottle_solid(glow_bottle_data, glow_solid_data):
     return combined
 
 
-def plot_daily_charts(file_bottle, file_solid, file_diaper, file_sleep, output_daily_charts):
+def plot_daily_charts(config_file):
     # Matplotlib converters
-
     register_matplotlib_converters()
 
     # Settings
-
     title_font_size = 10
     axis_font_size = 8
     alpha_value = 0.3
 
+    # Style
     sns.set(style="darkgrid")
     f, axarr = plt.subplots(4, 3)
 
     # Import data
+    global config
+    config = parse_json_config(config_file)
 
-    glow_bottle_data = parse_glow_feeding_bottle_data(file_bottle)
-    glow_solid_data = parse_glow_feeding_solid_data(file_solid)
-    daily_diaper_data = parse_glow_diaper_data(file_diaper)
-    daily_sleep_data = parse_glow_sleep_data(file_sleep)
+    # Parse data
+    glow_bottle_data = parse_glow_feeding_bottle_data()
+    glow_solid_data = parse_glow_feeding_solid_data()
+    daily_diaper_data = parse_glow_diaper_data()
+    daily_sleep_data = parse_glow_sleep_data()
     glow_combined_feeding_data = combine_bottle_solid(
         glow_bottle_data, glow_solid_data)
 
@@ -468,5 +467,5 @@ def plot_daily_charts(file_bottle, file_solid, file_diaper, file_sleep, output_d
     #     f.set_size_inches(11, 8.5)  # US Letter
     # else:
     f.set_size_inches(17, 11)  # Tabloid size
-    f.savefig(output_daily_charts, bbox_inches='tight')
+    f.savefig(config['output_daily_charts'], bbox_inches='tight')
     f.clf()

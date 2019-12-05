@@ -13,45 +13,14 @@ import os
 if not os.path.exists('build'):
     os.makedirs('build')
 
+# Config file
+config_file = 'config.json'
 
 # Plot daily charts
-
-file_bottle = 'data/zw/glow_feed_bottle.csv'
-file_solid = 'data/zw/glow_feed_solid.csv'
-file_diaper = 'data/zw/glow_diaper.csv'
-file_sleep = 'data/zw/glow_sleep.csv'
-
-output_daily_charts = 'build/Agenoria_Daily_Charts.pdf'
-
-agenoria.plot_daily_charts(file_bottle, file_solid, file_diaper,
-                           file_sleep, output_daily_charts)
+agenoria.plot_daily_charts(config_file)
 
 # Plot 24h viz
-
-file_sleep = 'data/zw/glow_sleep.csv'
-file_feeding = 'data/zw/glow_feed_bottle.csv'
-file_diaper = 'data/zw/glow_diaper.csv'
-
-output_sleep_viz = 'build/Agenoria_Sleep_Viz.pdf'
-output_feeding_viz = 'build/Agenoria_Feeding_Viz.pdf'
-output_diaper_viz = 'build/Agenoria_Diaper_Viz.pdf'
-
-agenoria.plot_24h_viz(file_sleep, file_feeding, file_diaper,
-                      output_sleep_viz, output_feeding_viz, output_diaper_viz)
+agenoria.plot_24h_viz(config_file)
 
 # Plot growth charts
-
-sex = 1    # 1 for Boy, 2 for Girl
-birthday = (2018, 11, 21)  # Birthday Year/Month/Date
-
-file_hatch = 'data/zw/hatch.csv'
-file_glow = 'data/zw/glow_growth.csv'
-file_output = 'build/Agenoria_Growth_Charts.pdf'
-
-file_wtageinf = 'data/cdc_growth_curves/wtageinf.csv'
-file_lenageinf = 'data/cdc_growth_curves/lenageinf.csv'
-file_hcageinf = 'data/cdc_growth_curves/hcageinf.csv'
-file_wtleninf = 'data/cdc_growth_curves/wtleninf.csv'
-
-agenoria.plot_growth_charts(file_hatch, file_glow, file_output, sex, birthday,
-                            file_wtageinf, file_lenageinf, file_hcageinf, file_wtleninf)
+agenoria.plot_growth_charts(config_file)

@@ -11,13 +11,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from pandas.plotting import register_matplotlib_converters
 import matplotlib.ticker as ticker
-
+from .parse_config import parse_json_config
 
 TITLE_FONT_SIZE = 14
 AXIS_FONT_SIZE = 10
 LINE_ALPHA = 0.4
+
+config = []
 
 
 def compute_age(date, birthday):
@@ -33,7 +34,8 @@ def parse_glow_data(glow_file, birthday):
     data['Date'] = pd.to_datetime(data['Date'], format='%Y/%m/%d')
 
     # Compute age
-    data['Age'] = compute_age(data['Date'], birthday)
+    birthday_date = dt.datetime.strptime(config['birthday'], '%m-%d-%Y')
+    data['Age'] = compute_age(data['Date'], birthday_date)
 
     # Get date and height columns
     data_height = data[data['Height(cm)'].notnull()][[
@@ -64,7 +66,8 @@ def parse_hatch_data(hatch_file, birthday):
         idx).rename_axis('Start Time').reset_index()
 
     # Compute Age
-    data['Age'] = compute_age(data['Start Time'], birthday)
+    birthday_date = dt.datetime.strptime(config['birthday'], '%m-%d-%Y')
+    data['Age'] = compute_age(data['Start Time'], birthday_date)
 
     # Compute diff
     data['ROC'] = data['Amount'].diff()
@@ -83,11 +86,12 @@ def parse_hatch_data(hatch_file, birthday):
     return data
 
 
-def plot_growth_curves(curve_file, sex, index, plot_object):
+def plot_growth_curves(curve_file, gender, index, plot_object):
     # Import growth curves data file
     data_raw = pd.read_csv(curve_file)
 
     # Extract by sex
+    sex = 1 if (gender == "boy") else 2
     data = data_raw.loc[data_raw['Sex'] == sex]
 
     # Plot percentile lines
@@ -102,9 +106,11 @@ def plot_growth_curves(curve_file, sex, index, plot_object):
     plot_object.plot(data[index], data['P97'], alpha=LINE_ALPHA)
 
 
-def plot_weight_roc(file_hatch, birthday, plot_object):
-    hatch_data = parse_hatch_data(file_hatch, birthday)
+def plot_weight_roc(plot_object):
+    # Parse weight data
+    hatch_data = parse_hatch_data(config['file_weight'], config['birthday'])
 
+    # Plot
     plot_object.plot(hatch_data['Age'],
                      hatch_data['Weight Average RoC'], color='red', linewidth=2)
 
@@ -120,13 +126,13 @@ def plot_weight_roc(file_hatch, birthday, plot_object):
     plot_object.yaxis.set_major_locator(ticker.MultipleLocator(0.2))
 
 
-def plot_weight_age(file_hatch, sex, birthday, file_wtageinf, plot_object):
+def plot_weight_age(plot_object):
     # Plot growth curves
-    index = 'Agemos'
-    plot_growth_curves(file_wtageinf, sex, index, plot_object)
+    plot_growth_curves(config['growth_curve_weight'],
+                       config['gender'], 'Agemos', plot_object)
 
     # Import data
-    hatch_data = parse_hatch_data(file_hatch, birthday)
+    hatch_data = parse_hatch_data(config['file_weight'], config['birthday'])
 
     # Plot data
     plot_object.plot(hatch_data['Age'],
@@ -143,8 +149,8 @@ def plot_weight_age(file_hatch, sex, birthday, file_wtageinf, plot_object):
     plot_object.yaxis.set_major_locator(ticker.MultipleLocator(1))
 
 
-def plot_weight_percentile(file_hatch, birthday, plot_object):
-    hatch_data = parse_hatch_data(file_hatch, birthday)
+def plot_weight_percentile(plot_object):
+    hatch_data = parse_hatch_data(config['file_weight'], config['birthday'])
 
     plot_object.plot(hatch_data['Age'],
                      hatch_data['Percentile'] * 100, color='red')
@@ -159,13 +165,14 @@ def plot_weight_percentile(file_hatch, birthday, plot_object):
     plot_object.set_ylim(25, 80)
 
 
-def plot_length_age(file_glow, sex, birthday, file_lenageinf, plot_object):
+def plot_length_age(plot_object):
     # Plot growth curves
-    index = 'Agemos'
-    plot_growth_curves(file_lenageinf, sex, index, plot_object)
+    plot_growth_curves(config['growth_curve_length'],
+                       config['gender'], 'Agemos', plot_object)
 
     # Import data
-    data_height, data_head = parse_glow_data(file_glow, birthday)
+    data_height, data_head = parse_glow_data(
+        config['file_growth'], config['birthday'])
 
     # Plot data
     plot_object.plot(data_height['Age'],
@@ -182,13 +189,14 @@ def plot_length_age(file_glow, sex, birthday, file_lenageinf, plot_object):
     plot_object.xaxis.set_major_locator(ticker.MultipleLocator(1))
 
 
-def plot_head_circumference_age(file_glow, sex, birthday, file_hcageinf, plot_object):
+def plot_head_circumference_age(plot_object):
     # Plot growth curves
-    index = "Agemos"
-    plot_growth_curves(file_hcageinf, sex, index, plot_object)
+    plot_growth_curves(config['growth_curve_head'],
+                       config['gender'], 'Agemos', plot_object)
 
     # Import data
-    data_height, data_head = parse_glow_data(file_glow, birthday)
+    data_height, data_head = parse_glow_data(
+        config['file_growth'], config['birthday'])
 
     # Plot data
     plot_object.plot(data_head['Age'],
@@ -205,14 +213,15 @@ def plot_head_circumference_age(file_glow, sex, birthday, file_hcageinf, plot_ob
     plot_object.xaxis.set_major_locator(ticker.MultipleLocator(1))
 
 
-def plot_weight_length(file_hatch, file_glow, sex, birthday, file_wtleninf, plot_object):
+def plot_weight_length(plot_object):
     # Plot growth curves
-    index = 'Length'
-    plot_growth_curves(file_wtleninf, sex, index, plot_object)
+    plot_growth_curves(config['growth_curve_weight_length'],
+                       config['gender'], 'Length', plot_object)
 
     # Import data
-    data_height, data_head = parse_glow_data(file_glow, birthday)
-    hatch_data = parse_hatch_data(file_hatch, birthday)
+    data_height, data_head = parse_glow_data(
+        config['file_growth'], config['birthday'])
+    hatch_data = parse_hatch_data(config['file_weight'], config['birthday'])
 
     weight_length = []
 
@@ -242,40 +251,35 @@ def plot_weight_length(file_hatch, file_glow, sex, birthday, file_wtleninf, plot
     plot_object.xaxis.set_major_locator(ticker.MultipleLocator(5))
 
 
-def plot_growth_charts(file_hatch, file_glow, file_output, sex, birthday, file_wtageinf,
-                       file_lenageinf, file_hcageinf, file_wtleninf):
-
-    register_matplotlib_converters()
+def plot_growth_charts(config_file):
+    # Import data
+    global config
+    config = parse_json_config(config_file)
 
     # Settings
     sns.set(style="darkgrid")
     f, axarr = plt.subplots(2, 3)
 
-    # Convert birthday tuple into datetime
-    birthday_date = dt.datetime(birthday[0], birthday[1], birthday[2], 0, 0, 0)
-
     # Chart 1 - Weight / Age
-    plot_weight_age(file_hatch, sex, birthday_date, file_wtageinf, axarr[0, 0])
+    plot_weight_age(axarr[0, 0])
 
     # Chart 2 - Weight Percentile / Age
-    plot_weight_percentile(file_hatch, birthday_date, axarr[0, 1])
+    plot_weight_percentile(axarr[0, 1])
 
     # Chart 2 - Weight Rate of Change / Age
-    plot_weight_roc(file_hatch, birthday_date, axarr[0, 2])
+    plot_weight_roc(axarr[0, 2])
 
     # Chart 4 - Length / Age
-    plot_length_age(file_glow, sex, birthday_date, file_lenageinf, axarr[1, 0])
+    plot_length_age(axarr[1, 0])
 
     # Chart 5 - Head Circumference / Age
-    plot_head_circumference_age(
-        file_glow, sex, birthday_date, file_hcageinf, axarr[1, 1])
+    plot_head_circumference_age(axarr[1, 1])
 
     # Chart 6 - Weight / Length
-    plot_weight_length(file_hatch, file_glow, sex,
-                       birthday_date, file_wtleninf, axarr[1, 2])
+    plot_weight_length(axarr[1, 2])
 
     # Export
     f.subplots_adjust(wspace=0.25, hspace=0.35)
     f.set_size_inches(17, 11)  # Tabloid size
-    f.savefig(file_output, bbox_inches='tight')
+    f.savefig(config['output_growth'], bbox_inches='tight')
     f.clf()
