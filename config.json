@@ -15,5 +15,7 @@
     "output_sleep_viz": "build/Agenoria_Sleep_Viz.pdf",
     "output_feeding_viz": "build/Agenoria_Feeding_Viz.pdf",
     "output_diaper_viz": "build/Agenoria_Diaper_Viz.pdf",
-    "output_growth": "build/Agenoria_Growth_Charts.pdf"
+    "output_growth": "build/Agenoria_Growth_Charts.pdf",
+    "output_dim_x": 17,
+    "output_dim_y": 11
 }

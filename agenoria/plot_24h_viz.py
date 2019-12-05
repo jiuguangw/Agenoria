@@ -227,18 +227,21 @@ def plot_24h_viz(config_file):
 
     sleep_figure = plt.figure()
     plot_sleep(sleep_figure)
-    sleep_figure.set_size_inches(17, 11)
+    sleep_figure.set_size_inches(
+        config['output_dim_x'], config['output_dim_y'])
     sleep_figure.savefig(config['output_sleep_viz'], bbox_inches='tight')
     sleep_figure.clf()
 
     feeding_figure = plt.figure()
     plot_feeding(feeding_figure)
-    feeding_figure.set_size_inches(17, 11)
+    feeding_figure.set_size_inches(
+        config['output_dim_x'], config['output_dim_y'])
     feeding_figure.savefig(config['output_feeding_viz'], bbox_inches='tight')
     feeding_figure.clf()
 
     diaper_figure = plt.figure()
     plot_diapers(diaper_figure)
-    diaper_figure.set_size_inches(17, 11)
+    diaper_figure.set_size_inches(
+        config['output_dim_x'], config['output_dim_y'])
     diaper_figure.savefig(config['output_diaper_viz'], bbox_inches='tight')
     diaper_figure.clf()

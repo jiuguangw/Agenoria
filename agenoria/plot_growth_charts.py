@@ -171,7 +171,7 @@ def plot_length_age(plot_object):
                        config['gender'], 'Agemos', plot_object)
 
     # Import data
-    data_height, data_head = parse_glow_data(
+    data_height, _ = parse_glow_data(
         config['file_growth'], config['birthday'])
 
     # Plot data
@@ -195,7 +195,7 @@ def plot_head_circumference_age(plot_object):
                        config['gender'], 'Agemos', plot_object)
 
     # Import data
-    data_height, data_head = parse_glow_data(
+    _, data_head = parse_glow_data(
         config['file_growth'], config['birthday'])
 
     # Plot data
@@ -280,6 +280,6 @@ def plot_growth_charts(config_file):
 
     # Export
     f.subplots_adjust(wspace=0.25, hspace=0.35)
-    f.set_size_inches(17, 11)  # Tabloid size
+    f.set_size_inches(config['output_dim_x'], config['output_dim_y'])
     f.savefig(config['output_growth'], bbox_inches='tight')
     f.clf()
