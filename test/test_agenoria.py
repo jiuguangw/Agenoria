@@ -11,6 +11,10 @@ import os
 
 
 def test_daily_charts():
+    # Create the output directory
+    if not os.path.exists('build'):
+        os.makedirs('build')
+
     # Config file
     config_file = 'config.json'
     config = agenoria.parse_json_config(config_file)
@@ -26,6 +30,10 @@ def test_daily_charts():
 
 
 def test_24h_viz():
+    # Create the output directory
+    if not os.path.exists('build'):
+        os.makedirs('build')
+
     # Config file
     config_file = 'config.json'
     config = agenoria.parse_json_config(config_file)
@@ -45,6 +53,10 @@ def test_24h_viz():
 
 
 def test_growth_charts():
+    # Create the output directory
+    if not os.path.exists('build'):
+        os.makedirs('build')
+
     # Config file
     config_file = 'config.json'
     config = agenoria.parse_json_config(config_file)
