@@ -15,6 +15,12 @@
     <a href="https://travis-ci.com/jiuguangw/Agenoria">
     <img src="https://travis-ci.com/jiuguangw/Agenoria.svg?branch=master">
     </a>
+    <a href="https://codeclimate.com/github/jiuguangw/Agenoria">
+    <img src="https://img.shields.io/codeclimate/maintainability/jiuguangw/Agenoria">
+    </a>
+    <a href="https://codeclimate.com/github/jiuguangw/Agenoria">
+    <img src="https://img.shields.io/codeclimate/issues/jiuguangw/Agenoria">
+    </a>
   </p>
 </p>
 

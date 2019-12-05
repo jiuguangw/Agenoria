@@ -198,9 +198,9 @@ def parse_glow_sleep_data(glow_file):
     return daily_sleep_data
 
 
-def parse_glow_feeding_bottle_data(glow_file):
-    # Import file
-    data = pd.read_csv(glow_file)
+def parse_dates(data_raw):
+    # Make a copy
+    data = data_raw
 
     # Convert date column to datetime
     data['Time of feeding'] = pd.to_datetime(
@@ -213,6 +213,16 @@ def parse_glow_feeding_bottle_data(glow_file):
     if (DEBUG):
         start_date = DEBUG_START_DATE
         end_date = DEBUG_END_DATE
+
+    return data, start_date, end_date
+
+
+def parse_glow_feeding_bottle_data(glow_file):
+    # Import file
+    data_raw = pd.read_csv(glow_file)
+
+    # Convert dates to datetime
+    data, start_date, end_date = parse_dates(data_raw)
 
     # Final data
     feeding_data_list = []
@@ -244,19 +254,10 @@ def parse_glow_feeding_bottle_data(glow_file):
 
 def parse_glow_feeding_solid_data(glow_file):
     # Import file
-    data = pd.read_csv(glow_file)
+    data_raw = pd.read_csv(glow_file)
 
-    # Convert date column to datetime
-    data['Time of feeding'] = pd.to_datetime(
-        data['Time of feeding'], format='%m/%d/%Y %I:%M:%S %p')
-
-    # Find first and last entry in column
-    start_date = data['Time of feeding'].iloc[-1].date()
-    end_date = data['Time of feeding'].iloc[0].date()
-
-    if (DEBUG):
-        start_date = DEBUG_START_DATE
-        end_date = DEBUG_END_DATE
+    # Convert dates to datetime
+    data, start_date, end_date = parse_dates(data_raw)
 
     # Final data
     feeding_data_list = []

@@ -50,34 +50,19 @@ def format_axis(ax, date_num, title):
     ax.set_xticklabels(week_labels)
 
 
-def get_feeding_data(filename):
+def parse_raw_data(filename, key):
     # Import data
-    data_feeding = pd.read_csv(filename)
+    data = pd.read_csv(filename)
 
     # Convert the date columns into datetime
-    data_feeding['Time of feeding'] = pd.to_datetime(
-        data_feeding['Time of feeding'], format='%m/%d/%Y %I:%M:%S %p')
+    data[key] = pd.to_datetime(
+        data[key], format='%m/%d/%Y %I:%M:%S %p')
 
     # Get start and end dates
-    start_date = data_feeding['Time of feeding'].iloc[-1].date()
-    end_date = data_feeding['Time of feeding'].iloc[0].date()
+    start_date = data[key].iloc[-1].date()
+    end_date = data[key].iloc[0].date()
 
-    return data_feeding, start_date, end_date
-
-
-def get_diaper_data(filename):
-    # Import data
-    data_diaper = pd.read_csv(filename)
-
-    # Convert the date columns into datetime
-    data_diaper['Diaper time'] = pd.to_datetime(
-        data_diaper['Diaper time'], format='%m/%d/%Y %I:%M:%S %p')
-
-    # Get start and end dates
-    start_date = data_diaper['Diaper time'].iloc[-1].date()
-    end_date = data_diaper['Diaper time'].iloc[0].date()
-
-    return data_diaper, start_date, end_date
+    return data, start_date, end_date
 
 
 def get_sleep_data(filename):
@@ -153,7 +138,8 @@ def plot_sleep(file_sleep, figure):
 
 def plot_feeding(file_feeding, figure):
     # Import and extract feeding data
-    data_feeding, start_date, end_date = get_feeding_data(file_feeding)
+    data_feeding, start_date, end_date = parse_raw_data(
+        file_feeding, 'Time of feeding')
 
     # Plot setup
     ax = figure.add_subplot(111)
@@ -186,7 +172,8 @@ def plot_feeding(file_feeding, figure):
 
 def plot_diapers(file_diaper, figure):
     # Import and extract feeding data
-    data_diaper, start_date, end_date = get_diaper_data(file_diaper)
+    data_diaper, start_date, end_date = parse_raw_data(
+        file_diaper, 'Diaper time')
 
     # Plot setup
     ax = figure.add_subplot(111)

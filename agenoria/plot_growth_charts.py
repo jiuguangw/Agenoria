@@ -20,6 +20,11 @@ AXIS_FONT_SIZE = 10
 LINE_ALPHA = 0.4
 
 
+def compute_age(date, birthday):
+    age = (date - birthday) / np.timedelta64(1, 'M')
+    return age
+
+
 def parse_glow_data(glow_file, birthday):
     # Import file
     data = pd.read_csv(glow_file)
@@ -28,7 +33,7 @@ def parse_glow_data(glow_file, birthday):
     data['Date'] = pd.to_datetime(data['Date'], format='%Y/%m/%d')
 
     # Compute age
-    data['Age'] = (data['Date'] - birthday) / np.timedelta64(1, 'M')
+    data['Age'] = compute_age(data['Date'], birthday)
 
     # Get date and height columns
     data_height = data[data['Height(cm)'].notnull()][[
@@ -59,8 +64,7 @@ def parse_hatch_data(hatch_file, birthday):
         idx).rename_axis('Start Time').reset_index()
 
     # Compute Age
-    data['Age'] = (data['Start Time'] - birthday) / \
-        np.timedelta64(1, 'M')
+    data['Age'] = compute_age(data['Start Time'], birthday)
 
     # Compute diff
     data['ROC'] = data['Amount'].diff()
@@ -79,6 +83,25 @@ def parse_hatch_data(hatch_file, birthday):
     return data
 
 
+def plot_growth_curves(curve_file, sex, index, plot_object):
+    # Import growth curves data file
+    data_raw = pd.read_csv(curve_file)
+
+    # Extract by sex
+    data = data_raw.loc[data_raw['Sex'] == sex]
+
+    # Plot percentile lines
+    plot_object.plot(data[index], data['P3'], alpha=LINE_ALPHA)
+    plot_object.plot(data[index], data['P5'], alpha=LINE_ALPHA)
+    plot_object.plot(data[index], data['P10'], alpha=LINE_ALPHA)
+    plot_object.plot(data[index], data['P25'], alpha=LINE_ALPHA)
+    plot_object.plot(data[index], data['P50'], alpha=LINE_ALPHA)
+    plot_object.plot(data[index], data['P75'], alpha=LINE_ALPHA)
+    plot_object.plot(data[index], data['P90'], alpha=LINE_ALPHA)
+    plot_object.plot(data[index], data['P95'], alpha=LINE_ALPHA)
+    plot_object.plot(data[index], data['P97'], alpha=LINE_ALPHA)
+
+
 def plot_weight_roc(file_hatch, birthday, plot_object):
     hatch_data = parse_hatch_data(file_hatch, birthday)
 
@@ -91,7 +114,6 @@ def plot_weight_roc(file_hatch, birthday, plot_object):
     plot_object.set_xlabel('Age (months)', fontsize=AXIS_FONT_SIZE)
     plot_object.set_ylabel('Average Daily Weight Gain (oz)',
                            fontsize=AXIS_FONT_SIZE)
-
     plot_object.set_xlim(hatch_data['Age'].iloc[0], hatch_data['Age'].iloc[-1])
     plot_object.set_ylim(-0.5, 1)
     plot_object.xaxis.set_major_locator(ticker.MultipleLocator(1))
@@ -99,23 +121,14 @@ def plot_weight_roc(file_hatch, birthday, plot_object):
 
 
 def plot_weight_age(file_hatch, sex, birthday, file_wtageinf, plot_object):
+    # Plot growth curves
+    index = 'Agemos'
+    plot_growth_curves(file_wtageinf, sex, index, plot_object)
+
     # Import data
-    data = pd.read_csv(file_wtageinf)
     hatch_data = parse_hatch_data(file_hatch, birthday)
 
-    # Extract by sex
-    data = data.loc[data['Sex'] == sex]
-
-    # Plot percentile lines
-    plot_object.plot(data['Agemos'], data['P3'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Agemos'], data['P5'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Agemos'], data['P10'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Agemos'], data['P25'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Agemos'], data['P50'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Agemos'], data['P75'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Agemos'], data['P90'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Agemos'], data['P95'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Agemos'], data['P97'], alpha=LINE_ALPHA)
+    # Plot data
     plot_object.plot(hatch_data['Age'],
                      hatch_data['Amount'], color='red', linewidth=2)
 
@@ -124,7 +137,6 @@ def plot_weight_age(file_hatch, sex, birthday, file_wtageinf, plot_object):
                           fontsize=TITLE_FONT_SIZE)
     plot_object.set_xlabel('Age (months)', fontsize=AXIS_FONT_SIZE)
     plot_object.set_ylabel('Weight (kg)', fontsize=AXIS_FONT_SIZE)
-
     plot_object.set_xlim(hatch_data['Age'].iloc[0], hatch_data['Age'].iloc[-1])
     plot_object.set_ylim(3, 10)
     plot_object.xaxis.set_major_locator(ticker.MultipleLocator(1))
@@ -148,23 +160,14 @@ def plot_weight_percentile(file_hatch, birthday, plot_object):
 
 
 def plot_length_age(file_glow, sex, birthday, file_lenageinf, plot_object):
+    # Plot growth curves
+    index = 'Agemos'
+    plot_growth_curves(file_lenageinf, sex, index, plot_object)
+
     # Import data
-    data = pd.read_csv(file_lenageinf)
     data_height, data_head = parse_glow_data(file_glow, birthday)
 
-    # Extract by sex
-    data = data.loc[data['Sex'] == sex]
-
-    # Plot percentile lines
-    plot_object.plot(data['Agemos'], data['P3'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Agemos'], data['P5'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Agemos'], data['P10'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Agemos'], data['P25'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Agemos'], data['P50'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Agemos'], data['P75'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Agemos'], data['P90'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Agemos'], data['P95'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Agemos'], data['P97'], alpha=LINE_ALPHA)
+    # Plot data
     plot_object.plot(data_height['Age'],
                      data_height['Height(cm)'], color='red', linewidth=2)
 
@@ -173,31 +176,21 @@ def plot_length_age(file_glow, sex, birthday, file_lenageinf, plot_object):
                           fontsize=TITLE_FONT_SIZE)
     plot_object.set_xlabel('Age (months)', fontsize=AXIS_FONT_SIZE)
     plot_object.set_ylabel('Length (cm)', fontsize=AXIS_FONT_SIZE)
-
     plot_object.set_xlim(
-        data_height['Age'].iloc[0], data_height['Age'].iloc[-1])
+        data_height['Age'].iloc[-1], data_height['Age'].iloc[0])
     plot_object.set_ylim(53, 80)
     plot_object.xaxis.set_major_locator(ticker.MultipleLocator(1))
 
 
 def plot_head_circumference_age(file_glow, sex, birthday, file_hcageinf, plot_object):
+    # Plot growth curves
+    index = "Agemos"
+    plot_growth_curves(file_hcageinf, sex, index, plot_object)
+
     # Import data
-    data = pd.read_csv(file_hcageinf)
     data_height, data_head = parse_glow_data(file_glow, birthday)
 
-    # Extract by sex
-    data = data.loc[data['Sex'] == sex]
-
-    # Plot percentile lines
-    plot_object.plot(data['Agemos'], data['P3'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Agemos'], data['P5'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Agemos'], data['P10'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Agemos'], data['P25'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Agemos'], data['P50'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Agemos'], data['P75'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Agemos'], data['P90'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Agemos'], data['P95'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Agemos'], data['P97'], alpha=LINE_ALPHA)
+    # Plot data
     plot_object.plot(data_head['Age'],
                      data_head['Head Circ.(cm)'], color='red', linewidth=2)
 
@@ -207,14 +200,17 @@ def plot_head_circumference_age(file_glow, sex, birthday, file_hcageinf, plot_ob
     plot_object.set_xlabel('Age (months)', fontsize=AXIS_FONT_SIZE)
     plot_object.set_ylabel('Head Circumference (cm)', fontsize=AXIS_FONT_SIZE)
 
-    plot_object.set_xlim(data_head['Age'].iloc[0], data_head['Age'].iloc[-1])
+    plot_object.set_xlim(data_head['Age'].iloc[-1], data_head['Age'].iloc[0])
     plot_object.set_ylim(35, 48)
     plot_object.xaxis.set_major_locator(ticker.MultipleLocator(1))
 
 
 def plot_weight_length(file_hatch, file_glow, sex, birthday, file_wtleninf, plot_object):
+    # Plot growth curves
+    index = 'Length'
+    plot_growth_curves(file_wtleninf, sex, index, plot_object)
+
     # Import data
-    data = pd.read_csv(file_wtleninf)
     data_height, data_head = parse_glow_data(file_glow, birthday)
     hatch_data = parse_hatch_data(file_hatch, birthday)
 
@@ -229,22 +225,11 @@ def plot_weight_length(file_hatch, file_glow, sex, birthday, file_wtleninf, plot
             weight_length.append([row['Date'],
                                   row['Age'], row['Height(cm)'], weight])
 
+    # Assemble into dataframe
     data_weight_length = pd.DataFrame(
         weight_length, columns=['Date', 'Age', 'Height(cm)', 'Weight'])
 
-    # Extract by sex
-    data = data.loc[data['Sex'] == sex]
-
-    # Plot percentile lines
-    plot_object.plot(data['Length'], data['P3'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Length'], data['P5'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Length'], data['P10'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Length'], data['P25'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Length'], data['P50'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Length'], data['P75'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Length'], data['P90'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Length'], data['P95'], alpha=LINE_ALPHA)
-    plot_object.plot(data['Length'], data['P97'], alpha=LINE_ALPHA)
+    # Plot data
     plot_object.plot(data_weight_length['Height(cm)'],
                      data_weight_length['Weight'], color='red', linewidth=2)
     # Labels
@@ -252,7 +237,6 @@ def plot_weight_length(file_hatch, file_glow, sex, birthday, file_wtleninf, plot
                           fontsize=TITLE_FONT_SIZE)
     plot_object.set_xlabel('Length (cm)', fontsize=AXIS_FONT_SIZE)
     plot_object.set_ylabel('Weight (kg)', fontsize=AXIS_FONT_SIZE)
-
     plot_object.set_xlim(53, 80)
     plot_object.set_ylim(3.5, 10)
     plot_object.xaxis.set_major_locator(ticker.MultipleLocator(5))
@@ -267,6 +251,7 @@ def plot_growth_charts(file_hatch, file_glow, file_output, sex, birthday, file_w
     sns.set(style="darkgrid")
     f, axarr = plt.subplots(2, 3)
 
+    # Convert birthday tuple into datetime
     birthday_date = dt.datetime(birthday[0], birthday[1], birthday[2], 0, 0, 0)
 
     # Chart 1 - Weight / Age
