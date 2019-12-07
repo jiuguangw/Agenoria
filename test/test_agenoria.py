@@ -69,3 +69,22 @@ def test_growth_charts():
 
     # Check the size is greater than 40 KB
     assert file_size > 30 * 1024, "Test failed - growth charts"
+
+
+def test_medical_charts():
+    # Create the output directory
+    if not os.path.exists('build'):
+        os.makedirs('build')
+
+    # Config file
+    config_file = 'config.json'
+    config = agenoria.parse_json_config(config_file)
+
+    # Plot
+    agenoria.plot_medical_charts(config_file)
+
+    # Get the file size of the output PDF
+    file_size = os.path.getsize(config['output_medical_charts'])
+
+    # Check the size is greater than 40 KB
+    assert file_size > 10 * 1024, "Test failed - medical charts"

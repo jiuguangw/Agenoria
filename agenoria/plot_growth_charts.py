@@ -108,7 +108,7 @@ def plot_growth_curves(curve_file, gender, index, plot_object):
 
 def plot_weight_roc(plot_object):
     # Parse weight data
-    hatch_data = parse_hatch_data(config['file_weight'], config['birthday'])
+    hatch_data = parse_hatch_data(config['data_weight'], config['birthday'])
 
     # Plot
     plot_object.plot(hatch_data['Age'],
@@ -132,7 +132,7 @@ def plot_weight_age(plot_object):
                        config['gender'], 'Agemos', plot_object)
 
     # Import data
-    hatch_data = parse_hatch_data(config['file_weight'], config['birthday'])
+    hatch_data = parse_hatch_data(config['data_weight'], config['birthday'])
 
     # Plot data
     plot_object.plot(hatch_data['Age'],
@@ -150,7 +150,7 @@ def plot_weight_age(plot_object):
 
 
 def plot_weight_percentile(plot_object):
-    hatch_data = parse_hatch_data(config['file_weight'], config['birthday'])
+    hatch_data = parse_hatch_data(config['data_weight'], config['birthday'])
 
     plot_object.plot(hatch_data['Age'],
                      hatch_data['Percentile'] * 100, color='red')
@@ -172,7 +172,7 @@ def plot_length_age(plot_object):
 
     # Import data
     data_height, _ = parse_glow_data(
-        config['file_growth'], config['birthday'])
+        config['data_growth'], config['birthday'])
 
     # Plot data
     plot_object.plot(data_height['Age'],
@@ -196,7 +196,7 @@ def plot_head_circumference_age(plot_object):
 
     # Import data
     _, data_head = parse_glow_data(
-        config['file_growth'], config['birthday'])
+        config['data_growth'], config['birthday'])
 
     # Plot data
     plot_object.plot(data_head['Age'],
@@ -220,8 +220,8 @@ def plot_weight_length(plot_object):
 
     # Import data
     data_height, data_head = parse_glow_data(
-        config['file_growth'], config['birthday'])
-    hatch_data = parse_hatch_data(config['file_weight'], config['birthday'])
+        config['data_growth'], config['birthday'])
+    hatch_data = parse_hatch_data(config['data_weight'], config['birthday'])
 
     weight_length = []
 

@@ -61,9 +61,12 @@ def parse_raw_data(filename, key):
     data[key] = pd.to_datetime(
         data[key], format='%m/%d/%Y %I:%M:%S %p')
 
+    # Make a new column data date component only
+    data['Date'] = data[key].dt.normalize()
+
     # Get start and end dates
-    start_date = data[key].iloc[-1].date()
-    end_date = data[key].iloc[0].date()
+    start_date = data['Date'].iloc[-1]
+    end_date = data['Date'].iloc[0]
 
     return data, start_date, end_date
 
@@ -78,9 +81,12 @@ def get_sleep_data(filename):
     data_sleep['End time'] = pd.to_datetime(
         data_sleep['End time'], format='%m/%d/%Y %I:%M:%S %p')
 
+    # Make a new column with date component only
+    data_sleep['Date'] = data_sleep['Begin time'].dt.normalize()
+
     # Get start and end dates
-    start_date = data_sleep['Begin time'].iloc[-1].date()
-    end_date = data_sleep['Begin time'].iloc[0].date()
+    start_date = data_sleep['Date'].iloc[-1]
+    end_date = data_sleep['Date'].iloc[0]
 
     return data_sleep, start_date, end_date
 
@@ -99,9 +105,7 @@ def plot_sleep(figure):
     # Loop through the start-end dates
     for current_date in pd.date_range(start_date, end_date):
         # Get all entires on this date
-        date_key = data_sleep['Begin time'].dt.normalize().isin(
-            np.array([current_date]).astype('datetime64[ns]'))
-        rows_on_date = data_sleep[date_key]
+        rows_on_date = data_sleep[data_sleep['Date'].isin([current_date])]
 
         # Plot offset from previous day, with offset as duration from midnight
         if (offset != 0):
@@ -151,9 +155,7 @@ def plot_feeding(figure):
     # Loop through the start-end dates
     for current_date in pd.date_range(start_date, end_date):
         # Get all entires on this date
-        date_key = data_feeding['Time of feeding'].dt.normalize().isin(
-            np.array([current_date]).astype('datetime64[ns]'))
-        rows_on_date = data_feeding[date_key]
+        rows_on_date = data_feeding[data_feeding['Date'].isin([current_date])]
 
         # Loop through each row under current day, plot each session
         for index, row in rows_on_date.iterrows():
@@ -185,9 +187,7 @@ def plot_diapers(figure):
     # Loop through the start-end dates
     for current_date in pd.date_range(start_date, end_date):
         # Get all entires on this date
-        date_key = data_diaper['Diaper time'].dt.normalize().isin(
-            np.array([current_date]).astype('datetime64[ns]'))
-        rows_on_date = data_diaper[date_key]
+        rows_on_date = data_diaper[data_diaper['Date'].isin([current_date])]
 
         # Loop through each row under current day, plot each diaper
         for index, row in rows_on_date.iterrows():

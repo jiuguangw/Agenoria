@@ -24,3 +24,6 @@ agenoria.plot_24h_viz(config_file)
 
 # Plot growth charts
 agenoria.plot_growth_charts(config_file)
+
+# Plot medical charts
+agenoria.plot_medical_charts(config_file)

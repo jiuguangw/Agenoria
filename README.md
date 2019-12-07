@@ -156,8 +156,6 @@ Since Month 3, we've consolidated the daily weight check to the first thing in t
 
 ### Vomit and Daycare
 
-(this data is not yet available)
-
 I recorded by hand a list of dates where he projectile vomited a significant amount. 1 indicates he vomited.
 
 I recorded by hand all the days he attended daycare. I intend to use this to flag days were feeding and sleep data is unreliable.
@@ -247,7 +245,7 @@ By default, the charts (in PDF) are produced in a directory called "build". The 
 
 There are two components of Agenoria, covered by two different licenses:
 
-- The scripts in the [source](source) and [test](test) subdirectories are released under the MIT License.
+- The scripts in the [agenoria](agenoria) and [test](test) subdirectories are released under the MIT License.
 - The raw data in CSV (under the [data](data) subdirectory) are released under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0).
 
 The full license details can be found in [LICENSE](LICENSE).
@@ -302,8 +300,8 @@ Please support the project by making a donation via PayPal or crypto:
 ## Contact
 
 - Jiuguang Wang
-- [jw@robo.guru](jw@robo.guru)
-- [www.robo.guru]( www.robo.guru)
+- [jw@robo.guru](mailto:jw@robo.guru?subject=Agenoria)
+- [www.robo.guru](https://www.robo.guru)
 
 I'd love to hear what people are doing with Agenoria. Please drop me a line!
 

@@ -38,17 +38,15 @@ config = []
 
 
 def format_plot(date_data, plot_object):
-    axis_font_size = 8
-
     plot_object.set_xlim(date_data.iloc[0],
                          date_data.iloc[-1])
 
     if(DEBUG):
-        plot_object.tick_params(labelsize=axis_font_size)
+        plot_object.tick_params(labelsize=AXIS_FONT_SIZE)
         plot_object.set_xticks(plot_object.get_xticks()[::1])
         plot_object.xaxis.set_major_formatter(DateFormatter("%m/%d"))
     else:
-        plot_object.tick_params(labelsize=axis_font_size)
+        plot_object.tick_params(labelsize=AXIS_FONT_SIZE)
         plot_object.set_xticks(plot_object.get_xticks()[::1])
         plot_object.xaxis.set_major_locator(
             MonthLocator(range(1, 13), bymonthday=1, interval=1))
@@ -63,9 +61,12 @@ def parse_glow_diaper_data(file_name):
     data_diaper['Diaper time'] = pd.to_datetime(
         data_diaper['Diaper time'], format='%m/%d/%Y %I:%M:%S %p')
 
+    # Make a new column with date component only
+    data_diaper['Date'] = data_diaper['Diaper time'].dt.normalize()
+
     # Find first and last entry in column
-    start_date = data_diaper['Diaper time'].iloc[-1].date()
-    end_date = data_diaper['Diaper time'].iloc[0].date()
+    start_date = data_diaper['Date'].iloc[-1]
+    end_date = data_diaper['Date'].iloc[0]
 
     if (DEBUG):
         start_date = DEBUG_START_DATE
@@ -78,9 +79,7 @@ def parse_glow_diaper_data(file_name):
     # Diaper
     for current_date in pd.date_range(start_date, end_date):
         # Get all entires on this date
-        date_key = data_diaper['Diaper time'].dt.normalize().isin(
-            np.array([current_date]).astype('datetime64[ns]'))
-        rows_on_date = data_diaper[date_key]
+        rows_on_date = data_diaper[data_diaper['Date'].isin([current_date])]
 
         # Compute total diaper count
         total_diaper_count += rows_on_date['In the diaper'].count()
@@ -102,9 +101,9 @@ def parse_glow_diaper_data(file_name):
         diaper_data_list.append(
             [current_date, total_diaper_count, total_pee_count, total_poop_count])
 
-        # Convert list to dataframe
-        daily_diaper_data = pd.DataFrame(
-            diaper_data_list, columns=['date', 'total_diaper_count', 'pee_count', 'poop_count'])
+    # Convert list to dataframe
+    daily_diaper_data = pd.DataFrame(
+        diaper_data_list, columns=['date', 'total_diaper_count', 'pee_count', 'poop_count'])
 
     return daily_diaper_data
 
@@ -119,9 +118,12 @@ def parse_glow_sleep_data(file_name):
     data_sleep['End time'] = pd.to_datetime(
         data_sleep['End time'], format='%m/%d/%Y %I:%M:%S %p')
 
+    # Make a new column with date component only
+    data_sleep['Date'] = data_sleep['Begin time'].dt.normalize()
+
     # Find first and last entry in column
-    start_date = data_sleep['Begin time'].iloc[-1].date()
-    end_date = data_sleep['Begin time'].iloc[0].date()
+    start_date = data_sleep['Date'].iloc[-1]
+    end_date = data_sleep['Date'].iloc[0]
 
     if (DEBUG):
         start_date = DEBUG_START_DATE
@@ -132,9 +134,7 @@ def parse_glow_sleep_data(file_name):
 
     for current_date in pd.date_range(start_date, end_date):
         # Get all entires on this date
-        date_key = data_sleep['Begin time'].dt.normalize().isin(
-            np.array([current_date]).astype('datetime64[ns]'))
-        rows_on_date = data_sleep[date_key]
+        rows_on_date = data_sleep[data_sleep['Date'].isin([current_date])]
 
         # For some reason raw sleep data is not sorted by time
         rows_on_date = rows_on_date.sort_values(
@@ -214,9 +214,12 @@ def parse_glow_feeding_data(file_name, key_amount):
     data['Time of feeding'] = pd.to_datetime(
         data['Time of feeding'], format='%m/%d/%Y %I:%M:%S %p')
 
+    # Make a new column with date component only
+    data['Date'] = data['Time of feeding'].dt.normalize()
+
     # Find first and last entry in column
-    start_date = data['Time of feeding'].iloc[-1].date()
-    end_date = data['Time of feeding'].iloc[0].date()
+    start_date = data['Date'].iloc[-1]
+    end_date = data['Date'].iloc[0]
 
     if (DEBUG):
         start_date = DEBUG_START_DATE
@@ -227,9 +230,7 @@ def parse_glow_feeding_data(file_name, key_amount):
 
     for current_date in pd.date_range(start_date, end_date):
         # Get all entires on this date
-        date_key = data['Time of feeding'].dt.normalize().isin(
-            np.array([current_date]).astype('datetime64[ns]'))
-        rows_on_date = data[date_key]
+        rows_on_date = data[data['Date'].isin([current_date])]
 
         # Compute statistics
         sum_on_date = rows_on_date[key_amount].sum()

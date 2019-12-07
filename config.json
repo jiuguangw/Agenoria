@@ -5,8 +5,9 @@
     "data_feed_solid": "data/zw/glow_feed_solid.csv",
     "data_diaper": "data/zw/glow_diaper.csv",
     "data_sleep": "data/zw/glow_sleep.csv",
-    "file_growth": "data/zw/glow_growth.csv",
-    "file_weight": "data/zw/hatch.csv",
+    "data_growth": "data/zw/glow_growth.csv",
+    "data_weight": "data/zw/hatch.csv",
+    "data_misc": "data/zw/misc.csv",
     "growth_curve_weight": "data/cdc_growth_curves/wtageinf.csv",
     "growth_curve_length": "data/cdc_growth_curves/lenageinf.csv",
     "growth_curve_head": "data/cdc_growth_curves/hcageinf.csv",
@@ -16,6 +17,7 @@
     "output_feeding_viz": "build/Agenoria_Feeding_Viz.pdf",
     "output_diaper_viz": "build/Agenoria_Diaper_Viz.pdf",
     "output_growth": "build/Agenoria_Growth_Charts.pdf",
+    "output_medical_charts": "build/Agenoria_Medical_Charts.pdf",
     "output_dim_x": 17,
     "output_dim_y": 11
 }
