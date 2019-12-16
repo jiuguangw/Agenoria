@@ -38,89 +38,35 @@ What started as a fun project became immensely useful in diagnosing some medical
 
 Agenoria was critical in visualizing the data and identifying abnormal behaviors early. In case it is helpful to another data-obsessed parent - I'm making Agenoria freely available on the web, which includes several Python scripts for statistics and visualization, as well as a dataset containing nearly 10,000 observations (2391 diaper changes, 2574 bottle feeding, 603 solid feeding, and 4203 sleep sessions). For terms of use, see the [License](#License) section below.
 
-## Example Charts
+## Gallery
 
 Here are some of the visualizations that Agenoria produces.
 
 ### Daily statistics
 
-![Daily Visualization](docs/daily.png?raw=true "Daily Visualization")
+![Daily Sleep and Feeding Statistics](docs/daily_sleep_feeding.png?raw=true "Daily Sleep and Feeding Statistics")
 
-The panels include:
-
-* Daily Volume Per Session (mL) - bottle size in mean, max, and min
-* Daily Number of Feeding Sessions - total number of feeding sessions per day
-* Daily Total Volume - total daily consumed formula volume, in mL
-* Daily Total Solid Feeding - total daily consumed solid foods, in oz
-* Daily Total Bottle + Solid - total consumed food (formula and solid), in oz
-* Daily Total Naps - number of daytime (7:00-19:00) naps per day
-* Daily Longest Sleep Duration - longest uninterrupted sleep session, in hours
-* Daily Total Sleep - total sleep per day, in hours
-* Daily Maximum Awake Duration - maximum awake time in between sleep, in hours
-* Total Diapers - a cumulative count of diapers used over time
-* Daily Total Pees - total number of pees
-* Daily Total Poops - total number of poops
-
-A few interesting observations:
-
-* Max bottle size increased to about 200 mL, then plateaued
-* Feed sessions stabilized to an average of 5 around March, but then due to feeding difficulties, started to fluctuate
-* Average daily volume for formula was about 1000 mL, with mysterious bouts of low appetite June, July, October, November
-* Solid feeding was pitful for the first 5 months, then suddenly started to increase around October
-* Daily total food consumption was mostly increasing, until November
-* Naps continue to stabilize over time
-* Longest uninterrupted sleep improved around April, then again around October when the 10:30pm feeding was dropped. Various points of sleep regression.
-* Total sleep per day mostly hovering around 13 hours
-* Maximum awake time continue to increase as daytime naps stabilized.
-* Used close to 2500 diapers in the first year, a whopping $500 at $0.2 each
-* Gradually required less diaper changes until September (daycare requires diaper check every two hours)
-* Bouts of constipation around March, April, June, September (poop = 0)
+![Daily Diaper Statistics](docs/daily_diaper.png?raw=true "Daily Diaper Statistics")
 
 ### 24-hour sleep visualization
 
 ![Sleep Visualization](docs/sleep.png?raw=true "Sleep Visualization")
 
-A 24 hour visualization of sleep - blue is asleep, white is awake. A few interesting observations:
-
-* Sleep was all over the place in the initial few months, but slowly settled down overnight.
-* Day time sleep consolidated to two naps, then by Week 40, one nap.
-* Sleep regression was present at 4 months, 10 month, and 12 month
-* Several periods where we tried to enforce at 7am wake up time
-* Stopping of a 10:30pm dream feed around Week 44
-* Small 5 minute catnaps where he simply fell asleep in the car
-
 ### 24-hour feeding visualization
 
 ![Feeding Visualization](docs/feeding.png?raw=true "Feeding Visualization")
-
-A 24 hour visualization of feeding.
-
-* Stopping of overnight feedings (midnight to 7:00am) around Week 20.
-* Stopping of 10:30pm dream feeds around Week 44.
 
 ### 24-hour diaper visualization
 
 ![Diaper Visualization](docs/diapers.png?raw=true "Diaper Visualization")
 
-A 24 hour visualization of diaper changes.
-
-* Yellow: pee / wet
-* Blue: poop in yellow
-* Green: poop in green
-* Red: poop in an abnormal color
-
 ### Growth charts - weight, height, head circumference
 
 ![Growth Visualization](docs/growth.png?raw=true "Growth Visualization")
 
-Plots of growth statistics.
+### Medical charts - vomit
 
-* Weight vs age: plotted on CDC growth curves
-* Weight percentile vs age: plotted linearly
-* Average daily weight gain vs age: daily weight gain, averaged over a 14-day window
-* Length vs age: plotted on CDC growth curves
-* Head circumference vs age: plotted on CDC growth curves
-* Weight vs length: plotted on CDC growth curves
+![Medical Issues Visualization](docs/medical.png?raw=true "Medical Issues Visualization")
 
 ## Data collection
 

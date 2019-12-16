@@ -10,7 +10,7 @@ import agenoria
 import os
 
 
-def test_daily_charts():
+def test_diaper_charts():
     # Create the output directory
     if not os.path.exists('build'):
         os.makedirs('build')
@@ -20,13 +20,32 @@ def test_daily_charts():
     config = agenoria.parse_json_config(config_file)
 
     # Plot
-    agenoria.plot_daily_charts(config_file)
+    agenoria.plot_diaper_charts(config_file)
 
     # Get the file size of the output PDF
-    file_size = os.path.getsize(config['output_daily_charts'])
+    file_size = os.path.getsize(config['output_daily_diaper_charts'])
 
     # Check the size is greater than 40 KB
-    assert file_size > 40 * 1024, "Test failed - daily charts"
+    assert file_size > 20 * 1024, "Test failed - diaper charts"
+
+
+def test_sleep_feeding_charts():
+    # Create the output directory
+    if not os.path.exists('build'):
+        os.makedirs('build')
+
+    # Config file
+    config_file = 'config.json'
+    config = agenoria.parse_json_config(config_file)
+
+    # Plot
+    agenoria.plot_sleep_feeding_charts(config_file)
+
+    # Get the file size of the output PDF
+    file_size = os.path.getsize(config['output_daily_sleep_feeding_charts'])
+
+    # Check the size is greater than 40 KB
+    assert file_size > 40 * 1024, "Test failed - diaper charts"
 
 
 def test_24h_viz():

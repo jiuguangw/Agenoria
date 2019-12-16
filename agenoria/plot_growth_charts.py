@@ -28,10 +28,7 @@ def compute_age(date, birthday):
 
 def parse_glow_data(glow_file, birthday):
     # Import file
-    data = pd.read_csv(glow_file)
-
-    # Convert to datetime
-    data['Date'] = pd.to_datetime(data['Date'], format='%Y/%m/%d')
+    data = pd.read_csv(glow_file, parse_dates=['Date'])
 
     # Compute age
     birthday_date = dt.datetime.strptime(config['birthday'], '%m-%d-%Y')
@@ -50,7 +47,7 @@ def parse_hatch_data(hatch_file, birthday):
     # Import file
     data = pd.read_csv(hatch_file)
 
-    # Keep date only, remove time
+    # Keep date only, remove time. Hatch invalid format: redundant AM/PM
     hatch_dates = data['Start Time'].astype(str).str[0: 10]
     # Convert to datetime
     data['Start Time'] = pd.to_datetime(hatch_dates, format='%m/%d/%Y')
@@ -162,7 +159,7 @@ def plot_weight_percentile(plot_object):
 
     plot_object.set_xlim(hatch_data['Age'].iloc[0], hatch_data['Age'].iloc[-1])
     plot_object.xaxis.set_major_locator(ticker.MultipleLocator(1))
-    plot_object.set_ylim(25, 80)
+    plot_object.set_ylim(20, 80)
 
 
 def plot_length_age(plot_object):

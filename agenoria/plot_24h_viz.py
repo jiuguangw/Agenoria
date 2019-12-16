@@ -55,14 +55,10 @@ def format_axis(ax, date_num, title):
 
 def parse_raw_data(filename, key):
     # Import data
-    data = pd.read_csv(filename)
-
-    # Convert the date columns into datetime
-    data[key] = pd.to_datetime(
-        data[key], format='%m/%d/%Y %I:%M:%S %p')
+    data = pd.read_csv(filename, parse_dates=key)
 
     # Make a new column data date component only
-    data['Date'] = data[key].dt.normalize()
+    data['Date'] = data[key[0]].dt.normalize()
 
     # Get start and end dates
     start_date = data['Date'].iloc[-1]
@@ -71,29 +67,10 @@ def parse_raw_data(filename, key):
     return data, start_date, end_date
 
 
-def get_sleep_data(filename):
-    # Import data
-    data_sleep = pd.read_csv(filename)
-
-    # Convert the date columns into datetime
-    data_sleep['Begin time'] = pd.to_datetime(
-        data_sleep['Begin time'], format='%m/%d/%Y %I:%M:%S %p')
-    data_sleep['End time'] = pd.to_datetime(
-        data_sleep['End time'], format='%m/%d/%Y %I:%M:%S %p')
-
-    # Make a new column with date component only
-    data_sleep['Date'] = data_sleep['Begin time'].dt.normalize()
-
-    # Get start and end dates
-    start_date = data_sleep['Date'].iloc[-1]
-    end_date = data_sleep['Date'].iloc[0]
-
-    return data_sleep, start_date, end_date
-
-
 def plot_sleep(figure):
     # Import and extract sleep data
-    data_sleep, start_date, end_date = get_sleep_data(config['data_sleep'])
+    data_sleep, start_date, end_date = parse_raw_data(
+        config['data_sleep'], ['Begin time', 'End time'])
 
     # Plot setup
     ax = figure.add_subplot(111)
@@ -146,7 +123,7 @@ def plot_sleep(figure):
 def plot_feeding(figure):
     # Import and extract feeding data
     data_feeding, start_date, end_date = parse_raw_data(
-        config['data_feed_bottle'], 'Time of feeding')
+        config['data_feed_bottle'], ['Time of feeding'])
 
     # Plot setup
     ax = figure.add_subplot(111)
@@ -178,7 +155,7 @@ def plot_feeding(figure):
 def plot_diapers(figure):
     # Import and extract feeding data
     data_diaper, start_date, end_date = parse_raw_data(
-        config['data_diaper'], 'Diaper time')
+        config['data_diaper'], ['Diaper time'])
 
     # Plot setup
     ax = figure.add_subplot(111)

@@ -15,17 +15,8 @@ from matplotlib.dates import MonthLocator, DateFormatter
 from pandas.plotting import register_matplotlib_converters
 from .parse_config import parse_json_config
 
+# Debug option
 DEBUG = False
-
-# Cold Formula
-# DEBUG_START_DATE = dt.datetime(2019, 7, 14, 0, 0, 0)
-# DEBUG_END_DATE = dt.datetime(2019, 7, 25, 0, 0, 0)
-
-# AOM 2019
-# DEBUG_START_DATE = dt.datetime(2019, 8, 6, 0, 0, 0)
-# DEBUG_END_DATE = dt.datetime(2019, 8, 18, 0, 0, 0)
-
-# Weight loss (daycare)
 DEBUG_START_DATE = dt.datetime(2019, 8, 17, 0, 0, 0)
 DEBUG_END_DATE = dt.datetime(2019, 9, 27, 0, 0, 0)
 
@@ -53,70 +44,9 @@ def format_plot(date_data, plot_object):
         plot_object.xaxis.set_major_formatter(DateFormatter("%b"))
 
 
-def parse_glow_diaper_data(file_name):
-    # Import file
-    data_diaper = pd.read_csv(file_name)
-
-    # Convert date column to datetime
-    data_diaper['Diaper time'] = pd.to_datetime(
-        data_diaper['Diaper time'], format='%m/%d/%Y %I:%M:%S %p')
-
-    # Make a new column with date component only
-    data_diaper['Date'] = data_diaper['Diaper time'].dt.normalize()
-
-    # Find first and last entry in column
-    start_date = data_diaper['Date'].iloc[-1]
-    end_date = data_diaper['Date'].iloc[0]
-
-    if (DEBUG):
-        start_date = DEBUG_START_DATE
-        end_date = DEBUG_END_DATE
-
-    # Final data
-    diaper_data_list = []
-    total_diaper_count = 0
-
-    # Diaper
-    for current_date in pd.date_range(start_date, end_date):
-        # Get all entires on this date
-        rows_on_date = data_diaper[data_diaper['Date'].isin([current_date])]
-
-        # Compute total diaper count
-        total_diaper_count += rows_on_date['In the diaper'].count()
-
-        # Separate pees and poops
-        total_pee_count = 0
-        total_poop_count = 0
-        for index, diaper_event in rows_on_date.iterrows():
-            key = diaper_event['In the diaper']
-            if (key == 'pee'):  # Pee only
-                total_pee_count += 1
-            elif (key == 'poo'):
-                total_poop_count += 1
-            else:
-                total_pee_count += 1
-                total_poop_count += 1
-
-        # Put stats in a list
-        diaper_data_list.append(
-            [current_date, total_diaper_count, total_pee_count, total_poop_count])
-
-    # Convert list to dataframe
-    daily_diaper_data = pd.DataFrame(
-        diaper_data_list, columns=['date', 'total_diaper_count', 'pee_count', 'poop_count'])
-
-    return daily_diaper_data
-
-
 def parse_glow_sleep_data(file_name):
     # Import file
-    data_sleep = pd.read_csv(file_name)
-
-    # Convert date column to datetime
-    data_sleep['Begin time'] = pd.to_datetime(
-        data_sleep['Begin time'], format='%m/%d/%Y %I:%M:%S %p')
-    data_sleep['End time'] = pd.to_datetime(
-        data_sleep['End time'], format='%m/%d/%Y %I:%M:%S %p')
+    data_sleep = pd.read_csv(file_name, parse_dates=['Begin time', 'End time'])
 
     # Make a new column with date component only
     data_sleep['Date'] = data_sleep['Begin time'].dt.normalize()
@@ -197,22 +127,20 @@ def parse_glow_sleep_data(file_name):
 
         # Put stats in a list
         sleep_data_list.append(
-            [current_date, nap_sessions_on_date, total_sleep_duration, longest_session, max_awake_duration])
+            [current_date, nap_sessions_on_date, total_sleep_duration,
+             longest_session, max_awake_duration])
 
     # Convert list to dataframe
     daily_sleep_data = pd.DataFrame(
-        sleep_data_list, columns=['date', 'total_naps', 'total_sleep_duration', 'longest_session', 'max_awake_duration'])
+        sleep_data_list, columns=['date', 'total_naps', 'total_sleep_duration',
+                                  'longest_session', 'max_awake_duration'])
 
     return daily_sleep_data
 
 
 def parse_glow_feeding_data(file_name, key_amount):
     # Import file
-    data = pd.read_csv(file_name)
-
-    # Convert date column to datetime
-    data['Time of feeding'] = pd.to_datetime(
-        data['Time of feeding'], format='%m/%d/%Y %I:%M:%S %p')
+    data = pd.read_csv(file_name, parse_dates=['Time of feeding'])
 
     # Make a new column with date component only
     data['Date'] = data['Time of feeding'].dt.normalize()
@@ -269,13 +197,13 @@ def combine_bottle_solid(glow_bottle_data, glow_solid_data):
     return combined
 
 
-def plot_daily_charts(config_file):
+def plot_sleep_feeding_charts(config_file):
     # Matplotlib converters
     register_matplotlib_converters()
 
     # Style
     sns.set(style="darkgrid")
-    f, axarr = plt.subplots(4, 3)
+    f, axarr = plt.subplots(3, 3)
 
     # Import data
     global config
@@ -286,7 +214,6 @@ def plot_daily_charts(config_file):
         config['data_feed_bottle'], 'Amount(ml)')
     glow_solid_data = parse_glow_feeding_data(
         config['data_feed_solid'], 'Amount')
-    daily_diaper_data = parse_glow_diaper_data(config['data_diaper'])
     daily_sleep_data = parse_glow_sleep_data(config['data_sleep'])
     glow_combined_feeding_data = combine_bottle_solid(
         glow_bottle_data, glow_solid_data)
@@ -295,10 +222,10 @@ def plot_daily_charts(config_file):
     axarr[0, 0].plot(glow_bottle_data['date'],
                      glow_bottle_data['mean'])
     axarr[0, 0].fill_between(
-        glow_bottle_data['date'].values, glow_bottle_data['mean'],
+        glow_bottle_data['date'], glow_bottle_data['mean'],
         glow_bottle_data['max'], alpha=ALPHA_VALUE)
     axarr[0, 0].fill_between(
-        glow_bottle_data['date'].values, glow_bottle_data['mean'],
+        glow_bottle_data['date'], glow_bottle_data['mean'],
         glow_bottle_data['min'], alpha=ALPHA_VALUE)
     axarr[0, 0].set_title('Eat: Daily Volume Per Session (mL)',
                           fontsize=TITLE_FONT_SIZE)
@@ -392,44 +319,13 @@ def plot_daily_charts(config_file):
         'Maximum Awake Duration (Hr)', fontsize=AXIS_FONT_SIZE)
     format_plot(daily_sleep_data['date'], axarr[2, 2])
 
-    # Chart 10 - Diaper: Total Diapers (Cumulative)
-    axarr[3, 0].plot(daily_diaper_data['date'],
-                     daily_diaper_data['total_diaper_count'])
-    axarr[3, 0].set_title('Diaper: Total Diapers (Cumulative)',
-                          fontsize=TITLE_FONT_SIZE)
-    axarr[3, 0].set_xlabel('Date', fontsize=AXIS_FONT_SIZE)
-    axarr[3, 0].set_ylabel(
-        'Total Diapers', fontsize=AXIS_FONT_SIZE)
-    format_plot(daily_diaper_data['date'], axarr[3, 0])
-
-    # Chart 11 - Diaper: Daily Total Pees
-    axarr[3, 1].plot(daily_diaper_data['date'],
-                     daily_diaper_data['pee_count'])
-    axarr[3, 1].set_title('Diaper: Daily Total Pees',
-                          fontsize=TITLE_FONT_SIZE)
-    axarr[3, 1].set_xlabel('Date', fontsize=AXIS_FONT_SIZE)
-    axarr[3, 1].set_ylabel(
-        'Total Pees', fontsize=AXIS_FONT_SIZE)
-    axarr[3, 1].yaxis.set_ticks(np.arange(2, 20, 2))
-    format_plot(daily_diaper_data['date'], axarr[3, 1])
-
-    # Chart 12 - Diaper: Daily Total Poops
-    axarr[3, 2].plot(daily_diaper_data['date'],
-                     daily_diaper_data['poop_count'])
-    axarr[3, 2].set_title('Diaper: Daily Total Poops',
-                          fontsize=TITLE_FONT_SIZE)
-    axarr[3, 2].set_xlabel('Date', fontsize=AXIS_FONT_SIZE)
-    axarr[3, 2].set_ylabel(
-        'Total Poops', fontsize=AXIS_FONT_SIZE)
-    axarr[3, 2].yaxis.set_ticks(np.arange(0, 11, 2))
-    format_plot(daily_diaper_data['date'], axarr[3, 2])
-
     # Export
 
     f.subplots_adjust(wspace=0.2, hspace=0.5)
-    # if (DEBUG):
-    #     f.set_size_inches(11, 8.5)  # US Letter
-    # else:
-    f.set_size_inches(config['output_dim_x'], config['output_dim_y'])
-    f.savefig(config['output_daily_charts'], bbox_inches='tight')
-    f.clf()
+    if (DEBUG):
+        f.set_size_inches(11, 8.5)  # US Letter
+    else:
+        f.set_size_inches(config['output_dim_x'], config['output_dim_y'])
+        f.savefig(config['output_daily_sleep_feeding_charts'],
+                  bbox_inches='tight')
+        f.clf()

@@ -32,10 +32,7 @@ def format_plot(plot_object):
 
 def plot_days_between_vomit(plot_object):
     # Import file
-    data = pd.read_csv(config['data_misc'])
-
-    # Convert date column to datetime
-    data['Date'] = pd.to_datetime(data['Date'], format='%m/%d/%Y')
+    data = pd.read_csv(config['data_misc'], parse_dates=['Date'])
 
     # Find first and last entry in column
     start_date = data['Date'].iloc[0].date()
@@ -58,10 +55,7 @@ def plot_days_between_vomit(plot_object):
 
 def plot_monthly_vomit(plot_object):
     # Import file
-    data = pd.read_csv(config['data_misc'])
-
-    # Convert date column to datetime
-    data['Date'] = pd.to_datetime(data['Date'], format='%m/%d/%Y')
+    data = pd.read_csv(config['data_misc'], parse_dates=['Date'])
 
     # Fill empty cells with 0s
     data.fillna(0, inplace=True)

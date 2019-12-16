@@ -8,6 +8,11 @@
 
 import agenoria
 import os
+import timeit
+from multiprocessing import Process
+
+# Create a timer
+start = timeit.default_timer()
 
 # Create the output directory
 if not os.path.exists('build'):
@@ -16,14 +21,34 @@ if not os.path.exists('build'):
 # Config file
 config_file = 'config.json'
 
-# Plot daily charts
-agenoria.plot_daily_charts(config_file)
 
-# Plot 24h viz
-agenoria.plot_24h_viz(config_file)
+procs = []
 
-# Plot growth charts
-agenoria.plot_growth_charts(config_file)
+proc = Process(target=agenoria.plot_diaper_charts, args=(config_file,))
+procs.append(proc)
+proc.start()
 
-# Plot medical charts
-agenoria.plot_medical_charts(config_file)
+proc = Process(target=agenoria.plot_sleep_feeding_charts, args=(config_file,))
+procs.append(proc)
+proc.start()
+
+proc = Process(target=agenoria.plot_24h_viz, args=(config_file,))
+procs.append(proc)
+proc.start()
+
+proc = Process(target=agenoria.plot_growth_charts, args=(config_file,))
+procs.append(proc)
+proc.start()
+
+proc = Process(target=agenoria.plot_medical_charts, args=(config_file,))
+procs.append(proc)
+proc.start()
+
+# complete the processes
+for proc in procs:
+    proc.join()
+
+# Stop the clock
+stop = timeit.default_timer()
+
+print('Time elapsed: ', stop - start, ' seconds')
