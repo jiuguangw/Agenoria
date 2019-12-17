@@ -32,15 +32,23 @@ proc = Process(target=agenoria.plot_sleep_feeding_charts, args=(config_file,))
 procs.append(proc)
 proc.start()
 
-proc = Process(target=agenoria.plot_24h_viz, args=(config_file,))
-procs.append(proc)
-proc.start()
-
 proc = Process(target=agenoria.plot_growth_charts, args=(config_file,))
 procs.append(proc)
 proc.start()
 
 proc = Process(target=agenoria.plot_medical_charts, args=(config_file,))
+procs.append(proc)
+proc.start()
+
+proc = Process(target=agenoria.plot_sleep_24h_viz, args=(config_file,))
+procs.append(proc)
+proc.start()
+
+proc = Process(target=agenoria.plot_feeding_24h_viz, args=(config_file,))
+procs.append(proc)
+proc.start()
+
+proc = Process(target=agenoria.plot_diapers_24h_viz, args=(config_file,))
 procs.append(proc)
 proc.start()
 

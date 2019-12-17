@@ -35,8 +35,10 @@ def format_axis(ax, date_num, title):
     AXIS_FONT_SIZE = 15
     TITLE_HEIGHT_ADJUST = 1.05
 
+    # Create the tick labels
     hour_labels, week_labels = enumerate_labels(date_num)
 
+    # Set title and axis labels
     ax.set_title(title, fontsize=TITLE_FONT_SIZE, y=TITLE_HEIGHT_ADJUST)
     ax.set_xlabel('Age (weeks)', fontsize=AXIS_FONT_SIZE)
     ax.set_ylabel('Time of Day', fontsize=AXIS_FONT_SIZE)
@@ -64,161 +66,132 @@ def parse_raw_data(filename, key):
     start_date = data['Date'].iloc[-1]
     end_date = data['Date'].iloc[0]
 
-    return data, start_date, end_date
+    # Convert timesteamp to decimal hour
+    data['timestamp_hour'] = data[key[0]].dt.hour + \
+        data[key[0]].dt.minute / 60
+
+    # Convert date to day number
+    data['day_number'] = (data['Date'] - start_date).dt.days + 1
+
+    return data
 
 
-def plot_sleep(figure):
+def plot_sleep_24h_viz(config_file):
+    # Parse config file
+    config = parse_json_config(config_file)
+
     # Import and extract sleep data
-    data_sleep, start_date, end_date = parse_raw_data(
-        config['data_sleep'], ['Begin time', 'End time'])
+    data = parse_raw_data(config['data_sleep'], ['Begin time', 'End time'])
+
+    # Convert end time timestamp to decimal hours
+    data['end_timestamp_hour'] = data['End time'].dt.hour + \
+        data['End time'].dt.minute / 60
+
+    # Compute duration in decimal hours
+    data['duration'] = data['end_timestamp_hour'] - data['timestamp_hour']
+
+    # Find the index of session that extend into the next day
+    index = data['End time'].dt.normalize() > data['Begin time'].dt.normalize()
+
+    # Compute the offset duration to be plotted the next day
+    data.loc[index, 'offset'] = data['end_timestamp_hour']
+
+    # Compute the current day duration, cut off to midnight
+    data.loc[index, 'duration'] = 24 - data['timestamp_hour']
 
     # Plot setup
+    sns.set(style="darkgrid")
+    figure = plt.figure()
     ax = figure.add_subplot(111)
-
-    date_num = 1
-    offset = 0
     BAR_SIZE = 1
 
-    # Loop through the start-end dates
-    for current_date in pd.date_range(start_date, end_date):
-        # Get all entires on this date
-        rows_on_date = data_sleep[data_sleep['Date'].isin([current_date])]
+    # Find sessions with offsets and plot the offset with day_number+1
+    data.loc[index].apply(lambda row: ax.broken_barh(
+        [(row['day_number']+1, BAR_SIZE)], [0, row['offset']]), axis=1)
 
-        # Plot offset from previous day, with offset as duration from midnight
-        if (offset != 0):
-            ax.broken_barh([(date_num, BAR_SIZE)], [0, offset])
-            offset = 0
-
-        # Loop through each row under current day, plot each session
-        for index, row in rows_on_date.iterrows():
-            # Start and end timestamp
-            start_timestamp = row['Begin time']
-            end_timestamp = row['End time']
-
-            # Convert start timestamp to decimal hours
-            start_hour = start_timestamp.hour + start_timestamp.minute / 60
-
-            # if the session's end time extends to next day, calculate offset
-            if(end_timestamp.date() > start_timestamp.date()):
-                # Set end time to 24:00
-                end_hour = 24
-
-                # Calculate offset from midnight - end time
-                offset = end_timestamp.hour + end_timestamp.minute / 60
-            else:  # For same day sessions, end time is standard
-                end_hour = end_timestamp.hour + end_timestamp.minute / 60
-
-            # Calculate duration
-            duration = end_hour - start_hour
-
-            # Draw
-            ax.broken_barh([(date_num, BAR_SIZE)], [start_hour, duration])
-        # Increment date
-        date_num += 1
+    # Loop through each row and plot the duration
+    data.apply(lambda row: ax.broken_barh(
+        [(row['day_number'], BAR_SIZE)],
+        [row['timestamp_hour'], row['duration']]), axis=1)
 
     # Format plot
-    format_axis(ax, date_num, 'Sleep')
+    format_axis(ax, data['day_number'].iloc[0], 'Sleep')
+
+    # Export figure
+    figure.set_size_inches(config['output_dim_x'], config['output_dim_y'])
+    figure.savefig(config['output_sleep_viz'], bbox_inches='tight')
+    figure.clf()
 
 
-def plot_feeding(figure):
+def plot_feeding_24h_viz(config_file):
+    # Parse config file
+    config = parse_json_config(config_file)
+
     # Import and extract feeding data
-    data_feeding, start_date, end_date = parse_raw_data(
+    data = parse_raw_data(
         config['data_feed_bottle'], ['Time of feeding'])
 
     # Plot setup
+    sns.set(style="darkgrid")
+    figure = plt.figure()
     ax = figure.add_subplot(111)
-    date_num = 1
 
-    # Loop through the start-end dates
-    for current_date in pd.date_range(start_date, end_date):
-        # Get all entires on this date
-        rows_on_date = data_feeding[data_feeding['Date'].isin([current_date])]
-
-        # Loop through each row under current day, plot each session
-        for index, row in rows_on_date.iterrows():
-            # Start and end timestamp
-            start_timestamp = row['Time of feeding']
-
-            # Convert start timestamp to decimal hours
-            start_hour = start_timestamp.hour + start_timestamp.minute / 60
-
-            # Draw
-            ax.plot(date_num, start_hour, marker='o', color='r')
-
-        # Increment date
-        date_num += 1
+    # Loop through each row and plot
+    data.apply(lambda row: ax.plot(row['day_number'], row['timestamp_hour'],
+                                   marker='o', color='r'), axis=1)
 
     # Format plot
-    format_axis(ax, date_num, 'Feeding')
+    format_axis(ax, data['day_number'].iloc[0], 'Feeding')
+
+    # Export figure
+    figure.set_size_inches(config['output_dim_x'], config['output_dim_y'])
+    figure.savefig(config['output_feeding_viz'], bbox_inches='tight')
+    figure.clf()
 
 
-def plot_diapers(figure):
-    # Import and extract feeding data
-    data_diaper, start_date, end_date = parse_raw_data(
-        config['data_diaper'], ['Diaper time'])
+def map_poop_color(color):
+    # Matplotlib key
+    key = ''
 
-    # Plot setup
-    ax = figure.add_subplot(111)
-    date_num = 1
+    # Map from Glow color to matplotlib color key
+    if (color == 'yellow'):  # poop, yello
+        key = 'b'
+    elif (color == 'green'):  # poop, green
+        key = 'g'
+    elif (color == 'brown'):  # poop, brown
+        key = 'm'
+    elif (pd.isnull(color)):  # pee only, yellow
+        key = 'y'
+    else:  # poop, other colors
+        key = 'r'
 
-    # Loop through the start-end dates
-    for current_date in pd.date_range(start_date, end_date):
-        # Get all entires on this date
-        rows_on_date = data_diaper[data_diaper['Date'].isin([current_date])]
-
-        # Loop through each row under current day, plot each diaper
-        for index, row in rows_on_date.iterrows():
-            # Start and end timestamp
-            start_timestamp = row['Diaper time']
-            color = row['Color']
-
-            # Convert start timestamp to decimal hours
-            start_hour = start_timestamp.hour + start_timestamp.minute / 60
-
-            # Draw
-            if (color == 'yellow'):  # poop, yello
-                ax.plot(date_num, start_hour, marker='o', color='b')
-            elif (color == 'green'):  # poop, green
-                ax.plot(date_num, start_hour, marker='o', color='g')
-            elif (color == 'brown'):  # poop, brown
-                ax.plot(date_num, start_hour, marker='o', color='m')
-            elif (pd.isnull(color)):  # pee only, yellow
-                ax.plot(date_num, start_hour, marker='o', color='y')
-            else:  # poop, other colors
-                ax.plot(date_num, start_hour, marker='o', color='r')
-
-        # Increment date
-        date_num += 1
-
-    # Format plot
-    format_axis(ax, date_num, 'Diapers')
+    return key
 
 
-def plot_24h_viz(config_file):
-    # Import data
-    global config
+def plot_diapers_24h_viz(config_file):
+    # Parse config file
     config = parse_json_config(config_file)
 
-    # Plot settings
+    # Import and extract feeding data
+    data = parse_raw_data(
+        config['data_diaper'], ['Diaper time'])
+
+    # Go through poop colors and map to matplotlib color keys
+    data['Color key'] = data['Color'].apply(map_poop_color)
+
+    # Plot setup
     sns.set(style="darkgrid")
+    figure = plt.figure()
+    ax = figure.add_subplot(111)
 
-    sleep_figure = plt.figure()
-    plot_sleep(sleep_figure)
-    sleep_figure.set_size_inches(
-        config['output_dim_x'], config['output_dim_y'])
-    sleep_figure.savefig(config['output_sleep_viz'], bbox_inches='tight')
-    sleep_figure.clf()
+    # Loop through each row under current day, plot each diaper
+    data.apply(lambda row: ax.plot(row['day_number'], row['timestamp_hour'],
+                                   marker='o', color=row['Color key']), axis=1)
 
-    feeding_figure = plt.figure()
-    plot_feeding(feeding_figure)
-    feeding_figure.set_size_inches(
-        config['output_dim_x'], config['output_dim_y'])
-    feeding_figure.savefig(config['output_feeding_viz'], bbox_inches='tight')
-    feeding_figure.clf()
+    # Format plot
+    format_axis(ax, data['day_number'].iloc[0], 'Diapers')
 
-    diaper_figure = plt.figure()
-    plot_diapers(diaper_figure)
-    diaper_figure.set_size_inches(
-        config['output_dim_x'], config['output_dim_y'])
-    diaper_figure.savefig(config['output_diaper_viz'], bbox_inches='tight')
-    diaper_figure.clf()
+    # Export figure
+    figure.set_size_inches(config['output_dim_x'], config['output_dim_y'])
+    figure.savefig(config['output_diaper_viz'], bbox_inches='tight')
+    figure.clf()
