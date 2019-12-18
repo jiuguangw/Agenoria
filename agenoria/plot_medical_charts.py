@@ -11,23 +11,11 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from pandas.plotting import register_matplotlib_converters
-from matplotlib.dates import MonthLocator, DateFormatter
 from .parse_config import parse_json_config
+from .plot_settings import format_monthly_plot, export_figure
 
 # Settings
-TITLE_FONT_SIZE = 10
-AXIS_FONT_SIZE = 8
-ALPHA_VALUE = 0.3
-
 config = []
-
-
-def format_plot(plot_object):
-    plot_object.tick_params(labelsize=AXIS_FONT_SIZE)
-    plot_object.set_xticks(plot_object.get_xticks()[::1])
-    plot_object.xaxis.set_major_locator(
-        MonthLocator(range(1, 13), bymonthday=1, interval=1))
-    plot_object.xaxis.set_major_formatter(DateFormatter("%b"))
 
 
 def plot_days_between_vomit(plot_object):
@@ -44,13 +32,10 @@ def plot_days_between_vomit(plot_object):
 
     # Plots
     plot_object.plot(vomit_days['Date'], days_since_last_vomit)
-    plot_object.set_title('Days Since Last Vomit',
-                          fontsize=TITLE_FONT_SIZE)
-    plot_object.set_xlabel('Date', fontsize=AXIS_FONT_SIZE)
-    plot_object.set_ylabel(
-        'Days Since Last Vomit', fontsize=AXIS_FONT_SIZE)
-    plot_object.set_xlim(start_date, end_date)
-    format_plot(plot_object)
+    plot_object.set_title('Days Since Last Vomit')
+    plot_object.set_xlabel('Date')
+    plot_object.set_ylabel('Days Since Last Vomit')
+    format_monthly_plot(plot_object, start_date, end_date)
 
 
 def plot_monthly_vomit(plot_object):
@@ -64,16 +49,12 @@ def plot_monthly_vomit(plot_object):
     data = data.set_index(data['Date'])
     vomit_monthly = data['Vomit'].resample('BMS').sum()
 
-    # Bug here - if I don't subtract by one month, label is wrong
+    # Plot
     plot_object.plot(vomit_monthly.index, vomit_monthly)
-    plot_object.set_title('Total Number of Vomits by Months',
-                          fontsize=TITLE_FONT_SIZE)
-    plot_object.set_xlabel('Date', fontsize=AXIS_FONT_SIZE)
-    plot_object.set_ylabel(
-        'Total Number of Vomits', fontsize=AXIS_FONT_SIZE)
-    plot_object.set_xlim(vomit_monthly.index[0],
-                         vomit_monthly.index[-1])
-    format_plot(plot_object)
+    plot_object.set_title('Total Number of Vomits by Months')
+    plot_object.set_ylabel('Total Number of Vomits')
+    format_monthly_plot(plot_object, vomit_monthly.index[0],
+                        vomit_monthly.index[-1])
 
 
 def plot_medical_charts(config_file):
@@ -94,7 +75,5 @@ def plot_medical_charts(config_file):
     plot_days_between_vomit(axarr[0, 1])
 
     # Export
-    f.subplots_adjust(wspace=0.2, hspace=0.5)
-    f.set_size_inches(config['output_dim_x'], config['output_dim_y'])
-    f.savefig(config['output_medical_charts'], bbox_inches='tight')
-    f.clf()
+    export_figure(f, config['output_dim_x'], config['output_dim_y'],
+                  config['output_medical_charts'])

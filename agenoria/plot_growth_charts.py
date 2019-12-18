@@ -13,12 +13,12 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.ticker as ticker
 from .parse_config import parse_json_config
+from .plot_settings import format_growth_chart_plot
 
-TITLE_FONT_SIZE = 14
-AXIS_FONT_SIZE = 10
-LINE_ALPHA = 0.4
-
+# Parameters from JSON
 config = []
+
+LINE_ALPHA = 0.4
 
 
 def compute_age(date, birthday):
@@ -112,15 +112,14 @@ def plot_weight_roc(plot_object):
                      hatch_data['Weight Average RoC'], color='red', linewidth=2)
 
     # Labels
-    plot_object.set_title('Average Daily Weight Gain vs. Age',
-                          fontsize=TITLE_FONT_SIZE)
-    plot_object.set_xlabel('Age (months)', fontsize=AXIS_FONT_SIZE)
-    plot_object.set_ylabel('Average Daily Weight Gain (oz)',
-                           fontsize=AXIS_FONT_SIZE)
+    plot_object.set_title('Average Daily Weight Gain vs. Age')
+    plot_object.set_xlabel('Age (months)')
+    plot_object.set_ylabel('Average Daily Weight Gain (oz)')
     plot_object.set_xlim(hatch_data['Age'].iloc[0], hatch_data['Age'].iloc[-1])
     plot_object.set_ylim(-0.5, 1)
     plot_object.xaxis.set_major_locator(ticker.MultipleLocator(1))
     plot_object.yaxis.set_major_locator(ticker.MultipleLocator(0.2))
+    format_growth_chart_plot(plot_object)
 
 
 def plot_weight_age(plot_object):
@@ -136,14 +135,14 @@ def plot_weight_age(plot_object):
                      hatch_data['Amount'], color='red', linewidth=2)
 
     # Labels
-    plot_object.set_title('Weight vs. Age',
-                          fontsize=TITLE_FONT_SIZE)
-    plot_object.set_xlabel('Age (months)', fontsize=AXIS_FONT_SIZE)
-    plot_object.set_ylabel('Weight (kg)', fontsize=AXIS_FONT_SIZE)
+    plot_object.set_title('Weight vs. Age')
+    plot_object.set_xlabel('Age (months)')
+    plot_object.set_ylabel('Weight (kg)')
     plot_object.set_xlim(hatch_data['Age'].iloc[0], hatch_data['Age'].iloc[-1])
     plot_object.set_ylim(3, 10)
     plot_object.xaxis.set_major_locator(ticker.MultipleLocator(1))
     plot_object.yaxis.set_major_locator(ticker.MultipleLocator(1))
+    format_growth_chart_plot(plot_object)
 
 
 def plot_weight_percentile(plot_object):
@@ -151,15 +150,14 @@ def plot_weight_percentile(plot_object):
 
     plot_object.plot(hatch_data['Age'],
                      hatch_data['Percentile'] * 100, color='red')
-    plot_object.set_title('Weight Percentile vs. Age',
-                          fontsize=TITLE_FONT_SIZE)
-    plot_object.set_ylabel(
-        'Weight Percentile (%)', fontsize=AXIS_FONT_SIZE)
-    plot_object.set_xlabel('Age (months)', fontsize=AXIS_FONT_SIZE)
+    plot_object.set_title('Weight Percentile vs. Age')
+    plot_object.set_ylabel('Weight Percentile (%)')
+    plot_object.set_xlabel('Age (months)')
 
     plot_object.set_xlim(hatch_data['Age'].iloc[0], hatch_data['Age'].iloc[-1])
     plot_object.xaxis.set_major_locator(ticker.MultipleLocator(1))
     plot_object.set_ylim(20, 80)
+    format_growth_chart_plot(plot_object)
 
 
 def plot_length_age(plot_object):
@@ -168,22 +166,21 @@ def plot_length_age(plot_object):
                        config['gender'], 'Agemos', plot_object)
 
     # Import data
-    data_height, _ = parse_glow_data(
-        config['data_growth'], config['birthday'])
+    data_height, _ = parse_glow_data(config['data_growth'], config['birthday'])
 
     # Plot data
     plot_object.plot(data_height['Age'],
                      data_height['Height(cm)'], color='red', linewidth=2)
 
     # Labels
-    plot_object.set_title('Length vs. Age',
-                          fontsize=TITLE_FONT_SIZE)
-    plot_object.set_xlabel('Age (months)', fontsize=AXIS_FONT_SIZE)
-    plot_object.set_ylabel('Length (cm)', fontsize=AXIS_FONT_SIZE)
+    plot_object.set_title('Length vs. Age')
+    plot_object.set_xlabel('Age (months)')
+    plot_object.set_ylabel('Length (cm)')
     plot_object.set_xlim(
         data_height['Age'].iloc[-1], data_height['Age'].iloc[0])
     plot_object.set_ylim(53, 80)
     plot_object.xaxis.set_major_locator(ticker.MultipleLocator(1))
+    format_growth_chart_plot(plot_object)
 
 
 def plot_head_circumference_age(plot_object):
@@ -200,14 +197,14 @@ def plot_head_circumference_age(plot_object):
                      data_head['Head Circ.(cm)'], color='red', linewidth=2)
 
     # Labels
-    plot_object.set_title(
-        'Head Circumference vs. Age', fontsize=TITLE_FONT_SIZE)
-    plot_object.set_xlabel('Age (months)', fontsize=AXIS_FONT_SIZE)
-    plot_object.set_ylabel('Head Circumference (cm)', fontsize=AXIS_FONT_SIZE)
+    plot_object.set_title('Head Circumference vs. Age')
+    plot_object.set_xlabel('Age (months)')
+    plot_object.set_ylabel('Head Circumference (cm)')
 
     plot_object.set_xlim(data_head['Age'].iloc[-1], data_head['Age'].iloc[0])
     plot_object.set_ylim(35, 48)
     plot_object.xaxis.set_major_locator(ticker.MultipleLocator(1))
+    format_growth_chart_plot(plot_object)
 
 
 def plot_weight_length(plot_object):
@@ -239,13 +236,13 @@ def plot_weight_length(plot_object):
     plot_object.plot(data_weight_length['Height(cm)'],
                      data_weight_length['Weight'], color='red', linewidth=2)
     # Labels
-    plot_object.set_title('Weight vs. Length',
-                          fontsize=TITLE_FONT_SIZE)
-    plot_object.set_xlabel('Length (cm)', fontsize=AXIS_FONT_SIZE)
-    plot_object.set_ylabel('Weight (kg)', fontsize=AXIS_FONT_SIZE)
+    plot_object.set_title('Weight vs. Length')
+    plot_object.set_xlabel('Length (cm)')
+    plot_object.set_ylabel('Weight (kg)')
     plot_object.set_xlim(53, 80)
     plot_object.set_ylim(3.5, 10)
     plot_object.xaxis.set_major_locator(ticker.MultipleLocator(5))
+    format_growth_chart_plot(plot_object)
 
 
 def plot_growth_charts(config_file):

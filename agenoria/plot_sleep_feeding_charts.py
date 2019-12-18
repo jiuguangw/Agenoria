@@ -11,37 +11,19 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from matplotlib.dates import MonthLocator, DateFormatter
 from pandas.plotting import register_matplotlib_converters
 from .parse_config import parse_json_config
+from .plot_settings import format_monthly_plot, export_figure
 
 # Debug option
 DEBUG = False
 DEBUG_START_DATE = dt.datetime(2019, 8, 17, 0, 0, 0)
 DEBUG_END_DATE = dt.datetime(2019, 9, 27, 0, 0, 0)
 
-# Settings
-TITLE_FONT_SIZE = 10
-AXIS_FONT_SIZE = 8
 ALPHA_VALUE = 0.3
 
+# Parameters from JSON
 config = []
-
-
-def format_plot(date_data, plot_object):
-    plot_object.set_xlim(date_data.iloc[0],
-                         date_data.iloc[-1])
-
-    if(DEBUG):
-        plot_object.tick_params(labelsize=AXIS_FONT_SIZE)
-        plot_object.set_xticks(plot_object.get_xticks()[::1])
-        plot_object.xaxis.set_major_formatter(DateFormatter("%m/%d"))
-    else:
-        plot_object.tick_params(labelsize=AXIS_FONT_SIZE)
-        plot_object.set_xticks(plot_object.get_xticks()[::1])
-        plot_object.xaxis.set_major_locator(
-            MonthLocator(range(1, 13), bymonthday=1, interval=1))
-        plot_object.xaxis.set_major_formatter(DateFormatter("%b"))
 
 
 def parse_glow_sleep_data(file_name):
@@ -218,6 +200,9 @@ def plot_sleep_feeding_charts(config_file):
     glow_combined_feeding_data = combine_bottle_solid(
         glow_bottle_data, glow_solid_data)
 
+    xlim_left = glow_bottle_data['date'].iloc[0],
+    xlim_right = glow_bottle_data['date'].iloc[-1]
+
     # Chart 1 - Eat: Daily, Average Consumed Per Day(mL)
     axarr[0, 0].plot(glow_bottle_data['date'],
                      glow_bottle_data['mean'])
@@ -227,105 +212,73 @@ def plot_sleep_feeding_charts(config_file):
     axarr[0, 0].fill_between(
         glow_bottle_data['date'], glow_bottle_data['mean'],
         glow_bottle_data['min'], alpha=ALPHA_VALUE)
-    axarr[0, 0].set_title('Eat: Daily Volume Per Session (mL)',
-                          fontsize=TITLE_FONT_SIZE)
-    axarr[0, 0].set_xlabel('Date', fontsize=AXIS_FONT_SIZE)
-    axarr[0, 0].set_ylabel(
-        'Average Volume Per Session (mL)', fontsize=AXIS_FONT_SIZE)
+    axarr[0, 0].set_title('Eat: Daily Volume Per Session (mL)')
+    axarr[0, 0].set_ylabel('Average Volume Per Session (mL)')
     axarr[0, 0].yaxis.set_ticks(np.arange(0, 280, 30))
-    format_plot(glow_bottle_data['date'], axarr[0, 0])
+    format_monthly_plot(axarr[0, 0], xlim_left, xlim_right)
 
     # Chart 2 - Eat: Daily Number of Feeding Sessions Per Day
     axarr[0, 1].plot(glow_bottle_data['date'],
                      glow_bottle_data['sessions'])
-    axarr[0, 1].set_title('Eat: Daily Number of Feeding Sessions',
-                          fontsize=TITLE_FONT_SIZE)
-    axarr[0, 1].set_xlabel('Time', fontsize=AXIS_FONT_SIZE)
-    axarr[0, 1].set_ylabel('Number of Feeding Sessions',
-                           fontsize=AXIS_FONT_SIZE)
+    axarr[0, 1].set_title('Eat: Daily Number of Feeding Sessions')
+    axarr[0, 1].set_xlabel('Time')
+    axarr[0, 1].set_ylabel('Number of Feeding Sessions')
     axarr[0, 1].yaxis.set_ticks(np.arange(4, 15, 2))
-    format_plot(glow_bottle_data['date'], axarr[0, 1])
+    format_monthly_plot(axarr[0, 1], xlim_left, xlim_right)
 
     # Chart 3 - Eat: Daily, Daily Total Volume (mL)
     axarr[0, 2].plot(glow_bottle_data['date'],
                      glow_bottle_data['sum'])
-    axarr[0, 2].set_title('Eat: Daily Total Volume (mL)',
-                          fontsize=TITLE_FONT_SIZE)
-    axarr[0, 2].set_xlabel('Date', fontsize=AXIS_FONT_SIZE)
-    axarr[0, 2].set_ylabel('Daily Total (mL)', fontsize=AXIS_FONT_SIZE)
+    axarr[0, 2].set_title('Eat: Daily Total Volume (mL)')
+    axarr[0, 2].set_ylabel('Daily Total (mL)')
     axarr[0, 2].yaxis.set_ticks(np.arange(0, 1200, 200))
-    format_plot(glow_bottle_data['date'], axarr[0, 2])
+    format_monthly_plot(axarr[0, 2], xlim_left, xlim_right)
 
     # Chart 4 - Eat: Daily Total Solid Feeding (oz)
     axarr[1, 0].plot(glow_solid_data['date'],
                      glow_solid_data['sum'])
-    axarr[1, 0].set_title('Eat: Daily Total Solid Feeding (oz)',
-                          fontsize=TITLE_FONT_SIZE)
-    axarr[1, 0].set_xlabel('Date', fontsize=AXIS_FONT_SIZE)
-    axarr[1, 0].set_ylabel(
-        'Daily Total Solid Feeding (oz)', fontsize=AXIS_FONT_SIZE)
-    format_plot(glow_bottle_data['date'], axarr[1, 0])
+    axarr[1, 0].set_title('Eat: Daily Total Solid Feeding (oz)')
+    axarr[1, 0].set_ylabel('Daily Total Solid Feeding (oz)')
+    format_monthly_plot(axarr[1, 0], xlim_left, xlim_right)
 
     # Chart 5 - Eat: Daily Total Bottle + Solid
     axarr[1, 1].plot(glow_bottle_data['date'],
                      glow_combined_feeding_data)
-    axarr[1, 1].set_title('Eat: Daily Total Bottle + Solid (oz)',
-                          fontsize=TITLE_FONT_SIZE)
-    axarr[1, 1].set_xlabel('Date', fontsize=AXIS_FONT_SIZE)
-    axarr[1, 1].set_ylabel(
-        'Daily Total Bottle + Solid (oz)', fontsize=AXIS_FONT_SIZE)
-    format_plot(glow_bottle_data['date'], axarr[1, 1])
+    axarr[1, 1].set_title('Eat: Daily Total Bottle + Solid (oz)')
+    axarr[1, 1].set_ylabel('Daily Total Bottle + Solid (oz)')
+    format_monthly_plot(axarr[1, 1], xlim_left, xlim_right)
 
     # Chart 6 - Sleep: Daily Total Naps (7:00-19:00)
     axarr[1, 2].plot(daily_sleep_data['date'],
                      daily_sleep_data['total_naps'])
-    axarr[1, 2].set_title('Sleep: Daily Total Naps (7:00-19:00)',
-                          fontsize=TITLE_FONT_SIZE)
-    axarr[1, 2].set_xlabel('Date', fontsize=AXIS_FONT_SIZE)
-    axarr[1, 2].set_ylabel(
-        'Total Naps', fontsize=AXIS_FONT_SIZE)
+    axarr[1, 2].set_title('Sleep: Daily Total Naps (7:00-19:00)')
+    axarr[1, 2].set_ylabel('Total Naps')
     axarr[1, 2].yaxis.set_ticks(np.arange(0, 16, 2))
-    format_plot(daily_sleep_data['date'], axarr[1, 2])
+    format_monthly_plot(axarr[1, 2], xlim_left, xlim_right)
 
     # Chart 7 - Sleep: Daily Longest Duration of Uninterrupted Sleep (Hours)
     axarr[2, 0].plot(daily_sleep_data['date'],
                      daily_sleep_data['longest_session'])
-    axarr[2, 0].set_title('Sleep: Daily Longest Sleep Duration (Hr)',
-                          fontsize=TITLE_FONT_SIZE)
-    axarr[2, 0].set_xlabel('Date', fontsize=AXIS_FONT_SIZE)
-    axarr[2, 0].set_ylabel(
-        'Longest Sleep Duration (Hr)', fontsize=AXIS_FONT_SIZE)
+    axarr[2, 0].set_title('Sleep: Daily Longest Sleep Duration (Hr)')
+    axarr[2, 0].set_ylabel('Longest Sleep Duration (Hr)')
     axarr[2, 0].yaxis.set_ticks(np.arange(0, 13, 2))
-    format_plot(daily_sleep_data['date'], axarr[2, 0])
+    format_monthly_plot(axarr[2, 0], xlim_left, xlim_right)
 
     # Chart 8 - Sleep: Daily Total Sleep (Hours)
     axarr[2, 1].plot(daily_sleep_data['date'],
                      daily_sleep_data['total_sleep_duration'])
-    axarr[2, 1].set_title('Sleep: Daily Total Sleep (Hr)',
-                          fontsize=TITLE_FONT_SIZE)
-    axarr[2, 1].set_xlabel('Date', fontsize=AXIS_FONT_SIZE)
-    axarr[2, 1].set_ylabel(
-        'Total Sleep (Hr)', fontsize=AXIS_FONT_SIZE)
+    axarr[2, 1].set_title('Sleep: Daily Total Sleep (Hr)')
+    axarr[2, 1].set_ylabel('Total Sleep (Hr)')
     axarr[2, 1].yaxis.set_ticks(np.arange(11, 21, 2))
-    format_plot(daily_sleep_data['date'], axarr[2, 1])
+    format_monthly_plot(axarr[2, 1], xlim_left, xlim_right)
 
     # Chart 9 - Daily Maximum Awake Duration (Hr)
     axarr[2, 2].plot(daily_sleep_data['date'],
                      daily_sleep_data['max_awake_duration'])
-    axarr[2, 2].set_title('Daily Maximum Awake Duration (Hr)',
-                          fontsize=TITLE_FONT_SIZE)
-    axarr[2, 2].set_xlabel('Date', fontsize=AXIS_FONT_SIZE)
-    axarr[2, 2].set_ylabel(
-        'Maximum Awake Duration (Hr)', fontsize=AXIS_FONT_SIZE)
-    format_plot(daily_sleep_data['date'], axarr[2, 2])
+    axarr[2, 2].set_title('Daily Maximum Awake Duration (Hr)')
+    axarr[2, 2].set_ylabel('Maximum Awake Duration (Hr)')
+    format_monthly_plot(axarr[2, 2], xlim_left, xlim_right)
 
     # Export
-
-    f.subplots_adjust(wspace=0.2, hspace=0.5)
-    if (DEBUG):
-        f.set_size_inches(11, 8.5)  # US Letter
-    else:
-        f.set_size_inches(config['output_dim_x'], config['output_dim_y'])
-        f.savefig(config['output_daily_sleep_feeding_charts'],
-                  bbox_inches='tight')
-        f.clf()
+    export_figure(f, config['output_dim_x'], config['output_dim_y'],
+                  config['output_daily_sleep_feeding_charts'])

@@ -7,52 +7,12 @@
 # this package.
 
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 import seaborn as sns
 from .parse_config import parse_json_config
+from .plot_settings import format_24h_week_plot
 
 config = []
-
-
-def enumerate_labels(date_num):
-    hour_labels = []
-    for num in range(0, 24):
-        label = str(num) + ':00'
-        hour_labels.append(label)
-
-    week_labels = []
-    for num in range(0, int(round(date_num / 7))):
-        label = str(num)
-        week_labels.append(label)
-
-    return hour_labels, week_labels
-
-
-def format_axis(ax, date_num, title):
-    # Figure settings
-    TITLE_FONT_SIZE = 25
-    AXIS_FONT_SIZE = 15
-    TITLE_HEIGHT_ADJUST = 1.05
-
-    # Create the tick labels
-    hour_labels, week_labels = enumerate_labels(date_num)
-
-    # Set title and axis labels
-    ax.set_title(title, fontsize=TITLE_FONT_SIZE, y=TITLE_HEIGHT_ADJUST)
-    ax.set_xlabel('Age (weeks)', fontsize=AXIS_FONT_SIZE)
-    ax.set_ylabel('Time of Day', fontsize=AXIS_FONT_SIZE)
-
-    # Format y axis - clock time
-    ax.set_ylim(0, 24)
-    ax.yaxis.set_ticks(np.arange(0, 24, 1))
-    ax.set_yticklabels(hour_labels)
-    ax.invert_yaxis()
-
-    # Format x axis - bottom, week number
-    ax.set_xlim(1, date_num)
-    ax.xaxis.set_ticks(np.arange(1, date_num, 7))
-    ax.set_xticklabels(week_labels)
 
 
 def parse_raw_data(filename, key):
@@ -64,7 +24,6 @@ def parse_raw_data(filename, key):
 
     # Get start and end dates
     start_date = data['Date'].iloc[-1]
-    end_date = data['Date'].iloc[0]
 
     # Convert timesteamp to decimal hour
     data['timestamp_hour'] = data[key[0]].dt.hour + \
@@ -107,7 +66,7 @@ def plot_sleep_24h_viz(config_file):
 
     # Find sessions with offsets and plot the offset with day_number+1
     data.loc[index].apply(lambda row: ax.broken_barh(
-        [(row['day_number']+1, BAR_SIZE)], [0, row['offset']]), axis=1)
+        [(row['day_number'] + 1, BAR_SIZE)], [0, row['offset']]), axis=1)
 
     # Loop through each row and plot the duration
     data.apply(lambda row: ax.broken_barh(
@@ -115,7 +74,7 @@ def plot_sleep_24h_viz(config_file):
         [row['timestamp_hour'], row['duration']]), axis=1)
 
     # Format plot
-    format_axis(ax, data['day_number'].iloc[0], 'Sleep')
+    format_24h_week_plot(ax, data['day_number'].iloc[0], 'Sleep')
 
     # Export figure
     figure.set_size_inches(config['output_dim_x'], config['output_dim_y'])
@@ -141,7 +100,7 @@ def plot_feeding_24h_viz(config_file):
                                    marker='o', color='r'), axis=1)
 
     # Format plot
-    format_axis(ax, data['day_number'].iloc[0], 'Feeding')
+    format_24h_week_plot(ax, data['day_number'].iloc[0], 'Feeding')
 
     # Export figure
     figure.set_size_inches(config['output_dim_x'], config['output_dim_y'])
@@ -189,7 +148,7 @@ def plot_diapers_24h_viz(config_file):
                                    marker='o', color=row['Color key']), axis=1)
 
     # Format plot
-    format_axis(ax, data['day_number'].iloc[0], 'Diapers')
+    format_24h_week_plot(ax, data['day_number'].iloc[0], 'Diapers')
 
     # Export figure
     figure.set_size_inches(config['output_dim_x'], config['output_dim_y'])

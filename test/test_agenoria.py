@@ -58,7 +58,9 @@ def test_24h_viz():
     config = agenoria.parse_json_config(config_file)
 
     # Plot
-    agenoria.plot_24h_viz(config_file)
+    agenoria.plot_sleep_24h_viz(config_file)
+    agenoria.plot_feeding_24h_viz(config_file)
+    agenoria.plot_diapers_24h_viz(config_file)
 
     # Get the file size of the output PDF
     file_size_sleep = os.path.getsize(config['output_sleep_viz'])

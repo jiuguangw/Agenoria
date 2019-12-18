@@ -11,37 +11,17 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from matplotlib.dates import MonthLocator, DateFormatter
 from pandas.plotting import register_matplotlib_converters
 from .parse_config import parse_json_config
+from .plot_settings import format_monthly_plot, export_figure
 
 # Debug option
 DEBUG = False
 DEBUG_START_DATE = dt.datetime(2019, 8, 17, 0, 0, 0)
 DEBUG_END_DATE = dt.datetime(2019, 9, 27, 0, 0, 0)
 
-# Settings
-TITLE_FONT_SIZE = 10
-AXIS_FONT_SIZE = 8
-ALPHA_VALUE = 0.3
-
+# Parameters from JSON
 config = []
-
-
-def format_plot(date_data, plot_object):
-    plot_object.set_xlim(date_data.iloc[0],
-                         date_data.iloc[-1])
-
-    if(DEBUG):
-        plot_object.tick_params(labelsize=AXIS_FONT_SIZE)
-        plot_object.set_xticks(plot_object.get_xticks()[::1])
-        plot_object.xaxis.set_major_formatter(DateFormatter("%m/%d"))
-    else:
-        plot_object.tick_params(labelsize=AXIS_FONT_SIZE)
-        plot_object.set_xticks(plot_object.get_xticks()[::1])
-        plot_object.xaxis.set_major_locator(
-            MonthLocator(range(1, 13), bymonthday=1, interval=1))
-        plot_object.xaxis.set_major_formatter(DateFormatter("%b"))
 
 
 def parse_glow_diaper_data(file_name):
@@ -162,108 +142,79 @@ def plot_diaper_charts(config_file):
     constipation_monthly_data, diarrhea_monthly_data = get_abnormal_days(
         daily_diaper_data)
 
+    xlim_left = daily_diaper_data['date'].iloc[0],
+    xlim_right = daily_diaper_data['date'].iloc[-1]
+
     # Chart 1 - Diaper: Total Diapers (Cumulative)
     axarr[0, 0].plot(daily_diaper_data['date'],
                      daily_diaper_data['cumulative_diaper_count'])
-    axarr[0, 0].set_title('Diaper: Total Diapers (Cumulative)',
-                          fontsize=TITLE_FONT_SIZE)
-    axarr[0, 0].set_xlabel('Date', fontsize=AXIS_FONT_SIZE)
-    axarr[0, 0].set_ylabel(
-        'Total Diapers', fontsize=AXIS_FONT_SIZE)
-    format_plot(daily_diaper_data['date'], axarr[0, 0])
+    axarr[0, 0].set_title('Diaper: Total Diapers (Cumulative)')
+    axarr[0, 0].set_ylabel('Total Diapers')
+    format_monthly_plot(axarr[0, 0], xlim_left, xlim_right)
 
     # Chart 2 - Diaper: Number of Diapers by Month
     axarr[0, 1].plot(diaper_monthly_data.index,
                      diaper_monthly_data)
-    axarr[0, 1].set_title('Diaper: Number of Diapers by Month',
-                          fontsize=TITLE_FONT_SIZE)
-    axarr[0, 1].set_xlabel('Date', fontsize=AXIS_FONT_SIZE)
-    axarr[0, 1].set_ylabel(
-        'Number of Diapers by Month', fontsize=AXIS_FONT_SIZE)
+    axarr[0, 1].set_title('Diaper: Number of Diapers by Month')
+    axarr[0, 1].set_ylabel('Number of Diapers by Month')
     axarr[0, 1].yaxis.set_ticks(np.arange(0, 400, 50))
-    format_plot(daily_diaper_data['date'], axarr[0, 1])
+    format_monthly_plot(axarr[0, 1], xlim_left, xlim_right)
 
     # Chart 3 - Diaper: Daily Total Diaper Count
     axarr[0, 2].plot(daily_diaper_data['date'],
                      daily_diaper_data['daily_total_diaper_count'])
-    axarr[0, 2].set_title('Diaper: Number of Diapers by Day',
-                          fontsize=TITLE_FONT_SIZE)
-    axarr[0, 2].set_xlabel('Date', fontsize=AXIS_FONT_SIZE)
-    axarr[0, 2].set_ylabel(
-        'Number of Diapers by Day', fontsize=AXIS_FONT_SIZE)
+    axarr[0, 2].set_title('Diaper: Number of Diapers by Day')
+    axarr[0, 2].set_ylabel('Number of Diapers by Day')
     axarr[0, 2].yaxis.set_ticks(np.arange(0, 20, 2))
-    format_plot(daily_diaper_data['date'], axarr[0, 2])
+    format_monthly_plot(axarr[0, 2], xlim_left, xlim_right)
 
     # Chart 4 - Diaper: Daily Total Pees
     axarr[1, 0].plot(daily_diaper_data['date'],
                      daily_diaper_data['pee_count'])
-    axarr[1, 0].set_title('Diaper: Daily Total Pees',
-                          fontsize=TITLE_FONT_SIZE)
-    axarr[1, 0].set_xlabel('Date', fontsize=AXIS_FONT_SIZE)
-    axarr[1, 0].set_ylabel(
-        'Total Pees', fontsize=AXIS_FONT_SIZE)
+    axarr[1, 0].set_title('Diaper: Daily Total Pees')
+    axarr[1, 0].set_ylabel('Total Pees')
     axarr[1, 0].yaxis.set_ticks(np.arange(2, 20, 2))
-    format_plot(daily_diaper_data['date'], axarr[1, 0])
+    format_monthly_plot(axarr[1, 0], xlim_left, xlim_right)
 
     # Chart 5 - Diaper: Daily Total Poops
     axarr[1, 1].plot(daily_diaper_data['date'],
                      daily_diaper_data['poop_count'])
-    axarr[1, 1].set_title('Diaper: Daily Total Poops',
-                          fontsize=TITLE_FONT_SIZE)
-    axarr[1, 1].set_xlabel('Date', fontsize=AXIS_FONT_SIZE)
-    axarr[1, 1].set_ylabel(
-        'Total Poops', fontsize=AXIS_FONT_SIZE)
+    axarr[1, 1].set_title('Diaper: Daily Total Poops')
+    axarr[1, 1].set_ylabel('Total Poops')
     axarr[1, 1].yaxis.set_ticks(np.arange(0, 11, 2))
-    format_plot(daily_diaper_data['date'], axarr[1, 1])
+    format_monthly_plot(axarr[1, 1], xlim_left, xlim_right)
 
     # Chart 6 - Diaper: Average Time Between Diaper Changes
     axarr[1, 2].plot(daily_diaper_data['date'],
                      daily_diaper_data['diaper_change_time_avg'])
-    axarr[1, 2].set_title('Diaper: Average Time Between Diaper Changes (Hours)',
-                          fontsize=TITLE_FONT_SIZE)
-    axarr[1, 2].set_xlabel('Date', fontsize=AXIS_FONT_SIZE)
-    axarr[1, 2].set_ylabel(
-        'Average Time Between Diaper Changes (Hours)', fontsize=AXIS_FONT_SIZE)
+    axarr[1, 2].set_title('Diaper: Average Time Between Diaper Changes (Hours)')
+    axarr[1, 2].set_ylabel('Average Time Between Diaper Changes (Hours)')
     axarr[1, 2].yaxis.set_ticks(np.arange(1, 5, 0.5))
-    format_plot(daily_diaper_data['date'], axarr[1, 2])
+    format_monthly_plot(axarr[1, 2], xlim_left, xlim_right)
 
     # Chart 7 - Diaper: Poop Ratio
     axarr[2, 0].plot(daily_diaper_data['date'],
                      daily_diaper_data['poop_ratio'])
-    axarr[2, 0].set_title('Diaper: Poop as Percentage of Diaper Changes',
-                          fontsize=TITLE_FONT_SIZE)
-    axarr[2, 0].set_xlabel('Date', fontsize=AXIS_FONT_SIZE)
-    axarr[2, 0].set_ylabel(
-        'Poop as Percentage of Diaper Changes', fontsize=AXIS_FONT_SIZE)
+    axarr[2, 0].set_title('Diaper: Poop as Percentage of Diaper Changes')
+    axarr[2, 0].set_ylabel('Poop as Percentage of Diaper Changes')
     axarr[2, 0].yaxis.set_ticks(np.arange(0, 110, 10))
-    format_plot(daily_diaper_data['date'], axarr[2, 0])
+    format_monthly_plot(axarr[2, 0], xlim_left, xlim_right)
 
     # Chart 8 - Diaper: Constipation
     axarr[2, 1].plot(constipation_monthly_data.index,
                      constipation_monthly_data)
-    axarr[2, 1].set_title('Diaper: Number of Constipated Days by Month',
-                          fontsize=TITLE_FONT_SIZE)
-    axarr[2, 1].set_xlabel('Date', fontsize=AXIS_FONT_SIZE)
-    axarr[2, 1].set_ylabel(
-        'Number of Constipated Days', fontsize=AXIS_FONT_SIZE)
-    format_plot(daily_diaper_data['date'], axarr[2, 1])
+    axarr[2, 1].set_title('Diaper: Number of Constipated Days by Month')
+    axarr[2, 1].set_ylabel('Number of Constipated Days')
+    format_monthly_plot(axarr[2, 1], xlim_left, xlim_right)
 
     # Chart 9 - Diaper: Diarrhea
     axarr[2, 2].plot(diarrhea_monthly_data.index,
                      diarrhea_monthly_data)
-    axarr[2, 2].set_title('Diaper: Number of Diarrhea Days by Month',
-                          fontsize=TITLE_FONT_SIZE)
-    axarr[2, 2].set_xlabel('Date', fontsize=AXIS_FONT_SIZE)
-    axarr[2, 2].set_ylabel(
-        'Number of Diarrhea Days', fontsize=AXIS_FONT_SIZE)
+    axarr[2, 2].set_title('Diaper: Number of Diarrhea Days by Month')
+    axarr[2, 2].set_ylabel('Number of Diarrhea Days')
     axarr[2, 2].yaxis.set_ticks(np.arange(0, 3, 1))
-    format_plot(daily_diaper_data['date'], axarr[2, 2])
+    format_monthly_plot(axarr[2, 2], xlim_left, xlim_right)
 
     # Export
-    f.subplots_adjust(wspace=0.2, hspace=0.5)
-    if (DEBUG):
-        f.set_size_inches(11, 8.5)  # US Letter
-    else:
-        f.set_size_inches(config['output_dim_x'], config['output_dim_y'])
-        f.savefig(config['output_daily_diaper_charts'], bbox_inches='tight')
-        f.clf()
+    export_figure(f, config['output_dim_x'], config['output_dim_y'],
+                  config['output_daily_diaper_charts'])
