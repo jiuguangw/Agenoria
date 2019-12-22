@@ -123,10 +123,6 @@ def plot_weight_roc(plot_object):
 
 
 def plot_weight_age(plot_object):
-    # Plot growth curves
-    plot_growth_curves(config['growth_curve_weight'],
-                       config['gender'], 'Agemos', plot_object)
-
     # Import data
     hatch_data = parse_hatch_data(config['data_weight'], config['birthday'])
 
@@ -161,10 +157,6 @@ def plot_weight_percentile(plot_object):
 
 
 def plot_length_age(plot_object):
-    # Plot growth curves
-    plot_growth_curves(config['growth_curve_length'],
-                       config['gender'], 'Agemos', plot_object)
-
     # Import data
     data_height, _ = parse_glow_data(config['data_growth'], config['birthday'])
 
@@ -184,10 +176,6 @@ def plot_length_age(plot_object):
 
 
 def plot_head_circumference_age(plot_object):
-    # Plot growth curves
-    plot_growth_curves(config['growth_curve_head'],
-                       config['gender'], 'Agemos', plot_object)
-
     # Import data
     _, data_head = parse_glow_data(
         config['data_growth'], config['birthday'])
@@ -208,10 +196,6 @@ def plot_head_circumference_age(plot_object):
 
 
 def plot_weight_length(plot_object):
-    # Plot growth curves
-    plot_growth_curves(config['growth_curve_weight_length'],
-                       config['gender'], 'Length', plot_object)
-
     # Import data
     data_height, data_head = parse_glow_data(
         config['data_growth'], config['birthday'])
@@ -255,6 +239,9 @@ def plot_growth_charts(config_file):
     f, axarr = plt.subplots(2, 3)
 
     # Chart 1 - Weight / Age
+    plot_growth_curves(config['growth_curve_weight'],
+                       config['gender'], 'Agemos', axarr[0, 0])
+
     plot_weight_age(axarr[0, 0])
 
     # Chart 2 - Weight Percentile / Age
@@ -264,12 +251,18 @@ def plot_growth_charts(config_file):
     plot_weight_roc(axarr[0, 2])
 
     # Chart 4 - Length / Age
+    plot_growth_curves(config['growth_curve_length'],
+                       config['gender'], 'Agemos', axarr[1, 0])
     plot_length_age(axarr[1, 0])
 
     # Chart 5 - Head Circumference / Age
+    plot_growth_curves(config['growth_curve_head'],
+                       config['gender'], 'Agemos', axarr[1, 1])
     plot_head_circumference_age(axarr[1, 1])
 
     # Chart 6 - Weight / Length
+    plot_growth_curves(config['growth_curve_weight_length'],
+                       config['gender'], 'Length', axarr[1, 2])
     plot_weight_length(axarr[1, 2])
 
     # Export

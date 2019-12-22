@@ -18,8 +18,11 @@
     <a href="https://codeclimate.com/github/jiuguangw/Agenoria">
     <img src="https://img.shields.io/codeclimate/maintainability/jiuguangw/Agenoria">
     </a>
-    <a href="https://codeclimate.com/github/jiuguangw/Agenoria">
+    <a href="https://codeclimate.com/github/jiuguangw/Agenoria/issues">
     <img src="https://img.shields.io/codeclimate/issues/jiuguangw/Agenoria">
+    </a>
+    <a href="https://codeclimate.com/github/jiuguangw/Agenoria/coverage">
+    <img src="https://img.shields.io/codeclimate/coverage/jiuguangw/Agenoria">
     </a>
   </p>
 </p>

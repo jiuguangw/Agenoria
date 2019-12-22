@@ -24,6 +24,24 @@ DEBUG_END_DATE = dt.datetime(2019, 9, 27, 0, 0, 0)
 config = []
 
 
+def count_pee_poop(row):
+    # Return variables
+    pee = 0
+    poop = 0
+
+    # Parse
+    key = row['In the diaper']
+    if (key == 'pee'):  # Pee only
+        pee += 1
+    elif (key == 'poo'):
+        poop += 1
+    elif (key == 'pee and poo'):
+        pee += 1
+        poop += 1
+
+    return pee, poop
+
+
 def parse_glow_diaper_data(file_name):
     # Import file
     data_diaper = pd.read_csv(file_name, parse_dates=['Diaper time'])
@@ -59,14 +77,9 @@ def parse_glow_diaper_data(file_name):
         total_pee_count = 0
         total_poop_count = 0
         for index, diaper_event in rows_on_date.iterrows():
-            key = diaper_event['In the diaper']
-            if (key == 'pee'):  # Pee only
-                total_pee_count += 1
-            elif (key == 'poo'):
-                total_poop_count += 1
-            else:
-                total_pee_count += 1
-                total_poop_count += 1
+            pee, poop = count_pee_poop(diaper_event)
+            total_pee_count += pee
+            total_poop_count += poop
 
         # Compute poop to total diaper change ratio
         poop_ratio = (total_poop_count / daily_total_diaper_count) * 100
@@ -187,7 +200,8 @@ def plot_diaper_charts(config_file):
     # Chart 6 - Diaper: Average Time Between Diaper Changes
     axarr[1, 2].plot(daily_diaper_data['date'],
                      daily_diaper_data['diaper_change_time_avg'])
-    axarr[1, 2].set_title('Diaper: Average Time Between Diaper Changes (Hours)')
+    axarr[1, 2].set_title(
+        'Diaper: Average Time Between Diaper Changes (Hours)')
     axarr[1, 2].set_ylabel('Average Time Between Diaper Changes (Hours)')
     axarr[1, 2].yaxis.set_ticks(np.arange(1, 5, 0.5))
     format_monthly_plot(axarr[1, 2], xlim_left, xlim_right)

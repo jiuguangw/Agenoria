@@ -44,68 +44,55 @@ def parse_glow_sleep_data(file_name):
     sleep_data_list = []
     offset = 0
 
+    # For some reason raw sleep data is not sorted by time
+    data_sleep = data_sleep.sort_values(['Begin time'], ascending=False)
+
+    # Label each daytime nap session
+    nap_index = (data_sleep['Begin time'].dt.hour > 7) & (
+        data_sleep['Begin time'].dt.hour < 19)
+    data_sleep.loc[nap_index, 'daytime_nap'] = 1
+
+    # Get duration for each row, then convert to hours
+    data_sleep['duration'] = data_sleep['End time'] - data_sleep['Begin time']
+    data_sleep['duration'] = data_sleep['duration'] / np.timedelta64(1, 'h')
+
+    # Find the index of session that extend into the next day
+    index = data_sleep['End time'].dt.normalize(
+    ) > data_sleep['Begin time'].dt.normalize()
+
+    # Compute the offset duration to be plotted the next day
+    sleep_offset = data_sleep.loc[index, 'End time']
+    data_sleep.loc[index, 'offset'] = sleep_offset.dt.hour + \
+        sleep_offset.dt.minute / 60
+
     for current_date in pd.date_range(start_date, end_date):
         # Get all entires on this date
         rows_on_date = data_sleep[data_sleep['Date'].isin([current_date])]
 
-        # For some reason raw sleep data is not sorted by time
-        rows_on_date = rows_on_date.sort_values(
-            ['Begin time'], ascending=False)
-
         # Compute number of nap sessions
-        nap_sessions_on_date = 0
+        nap_sessions_on_date = rows_on_date['daytime_nap'].count()
 
-        for index, sleep_session in rows_on_date.iterrows():
-            timestamp = sleep_session['Begin time']
-            time7am = timestamp.replace(
-                hour=7, minute=0, second=0, microsecond=0)
-            time7pm = timestamp.replace(
-                hour=19, minute=0, second=0, microsecond=0)
-            if (timestamp > time7am) and (timestamp < time7pm):
-                nap_sessions_on_date += 1
-
-        # Total sleep
-
-        # Get duration for each row, then sum
-        elapsed_time = rows_on_date['End time'] - \
-            rows_on_date['Begin time']
-        total_sleep_duration = elapsed_time.sum().total_seconds()
+        # Get total sleep duration
+        total_sleep_duration = rows_on_date['duration'].sum()
 
         # Add offset from previous day
         total_sleep_duration += offset
 
-        # Get the first row in the block
-        start_last = rows_on_date['Begin time'].iloc[0]
-        end_last = rows_on_date['End time'].iloc[0]
-
-        # Catch session that extend past midnight
-        if(end_last.date() > start_last.date()):  # if extends to next day
-            midnight = end_last.replace(
-                hour=0, minute=0, second=0, microsecond=0)
-
-            # Subtract duration from today's total
-            offset = (end_last - midnight).total_seconds()
-            total_sleep_duration -= offset
-            # Keep the offset to add to tomorrow's total
-        else:
-            offset = 0
-
-        # Convert to hours
-        total_sleep_duration = total_sleep_duration // 3600
+        # Catch session that extend past midnight, subtract from duration
+        offset = rows_on_date['offset'].sum()
+        total_sleep_duration -= offset
 
         # Longest session
-        longest_session = elapsed_time.max().total_seconds() // 3600
-
-        # Longest awake duration
+        longest_session = rows_on_date['duration'].max()
 
         # Remove all sleep sessions less than two minutes
-        SLEEP_THRESHOLD = dt.timedelta(minutes=2)
-        sleep_filtered = rows_on_date[elapsed_time > SLEEP_THRESHOLD]
+        SLEEP_THRESHOLD = 0.0333333  # two minutes -> hours
+        filtered = rows_on_date[rows_on_date['duration'] > SLEEP_THRESHOLD]
 
-        # Compute awake time - begin (current time) -  end (next row)
-        end_time_shifted = sleep_filtered['End time'].shift(-1)
-        awake_duration = sleep_filtered['Begin time'] - end_time_shifted
-        max_awake_duration = awake_duration.max().total_seconds() // 3600
+        # Compute longest awake time - begin (current time) -  end (next row)
+        end_time_shifted = filtered['End time'].shift(-1)
+        awake_duration = filtered['Begin time'] - end_time_shifted
+        max_awake_duration = awake_duration.max() / np.timedelta64(1, 'h')
 
         # Put stats in a list
         sleep_data_list.append(

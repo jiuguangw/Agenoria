@@ -9,8 +9,14 @@ cache: pip
 
 install:
   - pip install -r requirements.txt
+  - pip install pytest-cov
+  - pip install codeclimate-test-reporter
   - pip install .
 
 script:
   - flake8
   - pytest
+  - coverage run -m pytest
+
+after_success:
+  - codeclimate-test-reporter
