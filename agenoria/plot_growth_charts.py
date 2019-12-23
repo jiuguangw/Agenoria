@@ -103,10 +103,7 @@ def plot_growth_curves(curve_file, gender, index, plot_object):
     plot_object.plot(data[index], data['P97'], alpha=LINE_ALPHA)
 
 
-def plot_weight_roc(plot_object):
-    # Parse weight data
-    hatch_data = parse_hatch_data(config['data_weight'], config['birthday'])
-
+def plot_weight_roc(plot_object, hatch_data):
     # Plot
     plot_object.plot(hatch_data['Age'],
                      hatch_data['Weight Average RoC'], color='red', linewidth=2)
@@ -122,10 +119,7 @@ def plot_weight_roc(plot_object):
     format_growth_chart_plot(plot_object)
 
 
-def plot_weight_age(plot_object):
-    # Import data
-    hatch_data = parse_hatch_data(config['data_weight'], config['birthday'])
-
+def plot_weight_age(plot_object, hatch_data):
     # Plot data
     plot_object.plot(hatch_data['Age'],
                      hatch_data['Amount'], color='red', linewidth=2)
@@ -141,9 +135,8 @@ def plot_weight_age(plot_object):
     format_growth_chart_plot(plot_object)
 
 
-def plot_weight_percentile(plot_object):
-    hatch_data = parse_hatch_data(config['data_weight'], config['birthday'])
-
+def plot_weight_percentile(plot_object, hatch_data):
+    # Plot data
     plot_object.plot(hatch_data['Age'],
                      hatch_data['Percentile'] * 100, color='red')
     plot_object.set_title('Weight Percentile vs. Age')
@@ -156,10 +149,7 @@ def plot_weight_percentile(plot_object):
     format_growth_chart_plot(plot_object)
 
 
-def plot_length_age(plot_object):
-    # Import data
-    data_height, _ = parse_glow_data(config['data_growth'], config['birthday'])
-
+def plot_length_age(plot_object, data_height):
     # Plot data
     plot_object.plot(data_height['Age'],
                      data_height['Height(cm)'], color='red', linewidth=2)
@@ -175,11 +165,7 @@ def plot_length_age(plot_object):
     format_growth_chart_plot(plot_object)
 
 
-def plot_head_circumference_age(plot_object):
-    # Import data
-    _, data_head = parse_glow_data(
-        config['data_growth'], config['birthday'])
-
+def plot_head_circumference_age(plot_object, data_head):
     # Plot data
     plot_object.plot(data_head['Age'],
                      data_head['Head Circ.(cm)'], color='red', linewidth=2)
@@ -195,12 +181,7 @@ def plot_head_circumference_age(plot_object):
     format_growth_chart_plot(plot_object)
 
 
-def plot_weight_length(plot_object):
-    # Import data
-    data_height, data_head = parse_glow_data(
-        config['data_growth'], config['birthday'])
-    hatch_data = parse_hatch_data(config['data_weight'], config['birthday'])
-
+def plot_weight_length(plot_object, data_height, data_head, hatch_data):
     weight_length = []
 
     # Search for weight on given date
@@ -238,32 +219,37 @@ def plot_growth_charts(config_file):
     sns.set(style="darkgrid")
     f, axarr = plt.subplots(2, 3)
 
+    # Import data
+    data_height, data_head = parse_glow_data(
+        config['data_growth'], config['birthday'])
+    hatch_data = parse_hatch_data(config['data_weight'], config['birthday'])
+
     # Chart 1 - Weight / Age
     plot_growth_curves(config['growth_curve_weight'],
                        config['gender'], 'Agemos', axarr[0, 0])
 
-    plot_weight_age(axarr[0, 0])
+    plot_weight_age(axarr[0, 0], hatch_data)
 
     # Chart 2 - Weight Percentile / Age
-    plot_weight_percentile(axarr[0, 1])
+    plot_weight_percentile(axarr[0, 1], hatch_data)
 
     # Chart 2 - Weight Rate of Change / Age
-    plot_weight_roc(axarr[0, 2])
+    plot_weight_roc(axarr[0, 2], hatch_data)
 
     # Chart 4 - Length / Age
     plot_growth_curves(config['growth_curve_length'],
                        config['gender'], 'Agemos', axarr[1, 0])
-    plot_length_age(axarr[1, 0])
+    plot_length_age(axarr[1, 0], data_height)
 
     # Chart 5 - Head Circumference / Age
     plot_growth_curves(config['growth_curve_head'],
                        config['gender'], 'Agemos', axarr[1, 1])
-    plot_head_circumference_age(axarr[1, 1])
+    plot_head_circumference_age(axarr[1, 1], data_head)
 
     # Chart 6 - Weight / Length
     plot_growth_curves(config['growth_curve_weight_length'],
                        config['gender'], 'Length', axarr[1, 2])
-    plot_weight_length(axarr[1, 2])
+    plot_weight_length(axarr[1, 2], data_height, data_head, hatch_data)
 
     # Export
     f.subplots_adjust(wspace=0.25, hspace=0.35)
