@@ -83,12 +83,12 @@ def parse_hatch_data(hatch_file, birthday):
     return data
 
 
-def plot_growth_curves(curve_file, gender, index, plot_object):
+def plot_growth_curves(curve_file, index, plot_object):
     # Import growth curves data file
     data_raw = pd.read_csv(curve_file)
 
     # Extract by sex
-    sex = 1 if (gender == "boy") else 2
+    sex = 1 if (config['gender'] == "boy") else 2
     data = data_raw.loc[data_raw['Sex'] == sex]
 
     # Plot percentile lines
@@ -146,15 +146,17 @@ def plot_growth_charts(config_file):
         config['data_growth'], config['birthday'])
     hatch_data = parse_hatch_data(config['data_weight'], config['birthday'])
 
+    start_date = hatch_data['Age'].iloc[0]
+    end_date = hatch_data['Age'].iloc[-1]
+
     # Chart 1 - Weight / Age
-    plot_growth_curves(config['growth_curve_weight'],
-                       config['gender'], 'Agemos', axarr[0, 0])
+    plot_growth_curves(config['growth_curve_weight'], 'Agemos', axarr[0, 0])
     axarr[0, 0].plot(hatch_data['Age'],
                      hatch_data['Amount'], color='red', linewidth=2)
     axarr[0, 0].set_title('Weight vs. Age')
     axarr[0, 0].set_xlabel('Age (months)')
     axarr[0, 0].set_ylabel('Weight (kg)')
-    axarr[0, 0].set_xlim(hatch_data['Age'].iloc[0], hatch_data['Age'].iloc[-1])
+    axarr[0, 0].set_xlim(start_date, end_date)
     axarr[0, 0].set_ylim(3, 10)
     axarr[0, 0].xaxis.set_major_locator(ticker.MultipleLocator(1))
     axarr[0, 0].yaxis.set_major_locator(ticker.MultipleLocator(1))
@@ -167,7 +169,7 @@ def plot_growth_charts(config_file):
     axarr[0, 1].set_ylabel('Weight Percentile (%)')
     axarr[0, 1].set_xlabel('Age (months)')
 
-    axarr[0, 1].set_xlim(hatch_data['Age'].iloc[0], hatch_data['Age'].iloc[-1])
+    axarr[0, 1].set_xlim(start_date, end_date)
     axarr[0, 1].xaxis.set_major_locator(ticker.MultipleLocator(1))
     axarr[0, 1].set_ylim(20, 80)
     format_growth_chart_plot(axarr[0, 1])
@@ -178,43 +180,40 @@ def plot_growth_charts(config_file):
     axarr[0, 2].set_title('Average Daily Weight Gain vs. Age')
     axarr[0, 2].set_xlabel('Age (months)')
     axarr[0, 2].set_ylabel('Average Daily Weight Gain (oz)')
-    axarr[0, 2].set_xlim(hatch_data['Age'].iloc[0], hatch_data['Age'].iloc[-1])
+    axarr[0, 2].set_xlim(start_date, end_date)
     axarr[0, 2].set_ylim(-0.5, 1)
     axarr[0, 2].xaxis.set_major_locator(ticker.MultipleLocator(1))
     axarr[0, 2].yaxis.set_major_locator(ticker.MultipleLocator(0.2))
     format_growth_chart_plot(axarr[0, 2])
 
     # Chart 4 - Length / Age
-    plot_growth_curves(config['growth_curve_length'],
-                       config['gender'], 'Agemos', axarr[1, 0])
+    plot_growth_curves(config['growth_curve_length'], 'Agemos', axarr[1, 0])
     axarr[1, 0].plot(data_height['Age'],
                      data_height['Height(cm)'], color='red', linewidth=2)
     axarr[1, 0].set_title('Length vs. Age')
     axarr[1, 0].set_xlabel('Age (months)')
     axarr[1, 0].set_ylabel('Length (cm)')
-    axarr[1, 0].set_xlim(
-        data_height['Age'].iloc[-1], data_height['Age'].iloc[0])
+    axarr[1, 0].set_xlim(start_date, end_date)
     axarr[1, 0].set_ylim(53, 80)
     axarr[1, 0].xaxis.set_major_locator(ticker.MultipleLocator(1))
     format_growth_chart_plot(axarr[1, 0])
 
     # Chart 5 - Head Circumference / Age
-    plot_growth_curves(config['growth_curve_head'],
-                       config['gender'], 'Agemos', axarr[1, 1])
+    plot_growth_curves(config['growth_curve_head'], 'Agemos', axarr[1, 1])
     axarr[1, 1].plot(data_head['Age'],
                      data_head['Head Circ.(cm)'], color='red', linewidth=2)
     axarr[1, 1].set_title('Head Circumference vs. Age')
     axarr[1, 1].set_xlabel('Age (months)')
     axarr[1, 1].set_ylabel('Head Circumference (cm)')
 
-    axarr[1, 1].set_xlim(data_head['Age'].iloc[-1], data_head['Age'].iloc[0])
+    axarr[1, 1].set_xlim(start_date, end_date)
     axarr[1, 1].set_ylim(35, 48)
     axarr[1, 1].xaxis.set_major_locator(ticker.MultipleLocator(1))
     format_growth_chart_plot(axarr[1, 1])
 
     # Chart 6 - Weight / Length
-    plot_growth_curves(config['growth_curve_weight_length'],
-                       config['gender'], 'Length', axarr[1, 2])
+    plot_growth_curves(
+        config['growth_curve_weight_length'], 'Length', axarr[1, 2])
     plot_weight_length(axarr[1, 2], data_height, data_head, hatch_data)
 
     # Export

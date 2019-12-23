@@ -10,7 +10,6 @@ cache: pip
 install:
   - pip install -r requirements.txt
   - pip install coverage==4.3
-  - pip install pytest-cov
   - pip install codeclimate-test-reporter
   - pip install .
 
