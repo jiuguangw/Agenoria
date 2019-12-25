@@ -8,6 +8,7 @@
 
 from matplotlib.dates import MonthLocator, DateFormatter
 import numpy as np
+import math
 
 
 def enumerate_labels(date_num):
@@ -17,7 +18,7 @@ def enumerate_labels(date_num):
         hour_labels.append(label)
 
     week_labels = []
-    for num in range(0, int(round(date_num / 7))):
+    for num in range(0, math.ceil(date_num / 7)):
         label = str(num)
         week_labels.append(label)
 
@@ -28,7 +29,7 @@ def format_24h_week_plot(ax, date_num, title):
     # Figure settings
     TITLE_FONT_SIZE = 25
     AXIS_FONT_SIZE = 15
-    TITLE_HEIGHT_ADJUST = 1.05
+    TITLE_HEIGHT_ADJUST = 1.02
 
     # Create the tick labels
     hour_labels, week_labels = enumerate_labels(date_num)
@@ -46,7 +47,7 @@ def format_24h_week_plot(ax, date_num, title):
 
     # Format x axis - bottom, week number
     ax.set_xlim(1, date_num)
-    ax.xaxis.set_ticks(np.arange(1, date_num, 7))
+    ax.xaxis.set_ticks(np.arange(1, date_num + 1, 7))
     ax.set_xticklabels(week_labels)
 
 
@@ -88,7 +89,6 @@ def format_monthly_plot(plot_object, xlim_left, xlim_right):
 
 def export_figure(figure, dim_x, dim_y, output_filename):
     # Export
-    figure.subplots_adjust(wspace=0.2, hspace=0.5)
     figure.set_size_inches(dim_x, dim_y)
     figure.savefig(output_filename, bbox_inches='tight')
     figure.clf()

@@ -57,8 +57,7 @@ def parse_glow_sleep_data(file_name):
     data_sleep['duration'] = data_sleep['duration'] / np.timedelta64(1, 'h')
 
     # Find the index of session that extend into the next day
-    index = data_sleep['End time'].dt.normalize(
-    ) > data_sleep['Begin time'].dt.normalize()
+    index = data_sleep['End time'].dt.normalize() > data_sleep['Date']
 
     # Compute the offset duration to be plotted the next day
     sleep_offset = data_sleep.loc[index, 'End time']
@@ -257,5 +256,6 @@ def plot_sleep_feeding_charts(config_file):
     format_monthly_plot(axarr[2, 2], xlim_left, xlim_right)
 
     # Export
+    f.subplots_adjust(wspace=0.2, hspace=0.35)
     export_figure(f, config['output_dim_x'], config['output_dim_y'],
                   config['output_daily_sleep_feeding_charts'])

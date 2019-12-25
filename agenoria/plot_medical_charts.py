@@ -75,5 +75,6 @@ def plot_medical_charts(config_file):
     plot_days_between_vomit(axarr[0, 1])
 
     # Export
+    f.subplots_adjust(wspace=0.25, hspace=0.35)
     export_figure(f, config['output_dim_x'], config['output_dim_y'],
                   config['output_medical_charts'])

@@ -69,8 +69,8 @@ def test_24h_viz():
 
     # Check the size is greater than 40 KB
     assert file_size_sleep > 100 * 1024, "Test failed - sleep viz"
-    assert file_size_feeding > 300 * 1024, "Test failed - feeding viz"
-    assert file_size_diaper > 300 * 1024, "Test failed - diaper viz"
+    assert file_size_feeding > 25 * 1024, "Test failed - feeding viz"
+    assert file_size_diaper > 25 * 1024, "Test failed - diaper viz"
 
 
 def test_growth_charts():

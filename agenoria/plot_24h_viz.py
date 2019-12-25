@@ -9,11 +9,10 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as plot_patches
 import pandas as pd
-import datetime as dt
 import numpy as np
 import seaborn as sns
 from .parse_config import parse_json_config
-from .plot_settings import format_24h_week_plot
+from .plot_settings import format_24h_week_plot, export_figure
 
 config = []
 
@@ -53,7 +52,7 @@ def plot_sleep_24h_viz(config_file):
     data['duration'] = data['end_timestamp_hour'] - data['timestamp_hour']
 
     # Find the index of session that extend into the next day
-    index = data['End time'].dt.normalize() > data['Begin time'].dt.normalize()
+    index = data['End time'].dt.normalize() > data['Date']
 
     # Compute the offset duration to be plotted the next day
     data.loc[index, 'offset'] = data['end_timestamp_hour']
@@ -80,9 +79,8 @@ def plot_sleep_24h_viz(config_file):
     format_24h_week_plot(ax, data['day_number'].iloc[0], 'Sleep')
 
     # Export figure
-    figure.set_size_inches(config['output_dim_x'], config['output_dim_y'])
-    figure.savefig(config['output_sleep_viz'], bbox_inches='tight')
-    figure.clf()
+    export_figure(figure, config['output_dim_x'], config['output_dim_y'],
+                  config['output_sleep_viz'])
 
 
 def plot_feeding_24h_viz(config_file):
@@ -101,18 +99,14 @@ def plot_feeding_24h_viz(config_file):
     ax = figure.add_subplot(111)
 
     # Compute offset from birthday
-    birthday_date = dt.datetime.strptime(config['birthday'], '%m-%d-%Y')
-    offset = data_solid['Date'].iloc[-1] - birthday_date
+    offset = data_solid['Date'].iloc[-1] - config['birthday']
     offset = int(offset / np.timedelta64(1, 'D'))   # Convert to day in int
 
-    # Loop through each row and plot bottle
-    data_bottle.apply(lambda row: ax.plot(row['day_number'],
-                                          row['timestamp_hour'],
-                                          marker='o', color='r'), axis=1)
-    # Loop through each row and plot solids, with date offset
-    data_solid.apply(lambda row: ax.plot(row['day_number'] + offset,
-                                         row['timestamp_hour'],
-                                         marker='o', color='b'), axis=1)
+    # Plot
+    ax.scatter(data_bottle['day_number'], data_bottle['timestamp_hour'],
+               s=25, c='r')
+    ax.scatter(data_solid['day_number'] + offset, data_solid['timestamp_hour'],
+               s=25, c='b')
 
     # Legend
     red_patch = plot_patches.Patch(color='r', label='Bottle Feeding')
@@ -123,9 +117,8 @@ def plot_feeding_24h_viz(config_file):
     format_24h_week_plot(ax, data_bottle['day_number'].iloc[0], 'Feeding')
 
     # Export figure
-    figure.set_size_inches(config['output_dim_x'], config['output_dim_y'])
-    figure.savefig(config['output_feeding_viz'], bbox_inches='tight')
-    figure.clf()
+    export_figure(figure, config['output_dim_x'], config['output_dim_y'],
+                  config['output_feeding_viz'])
 
 
 def map_poop_color(color):
@@ -163,9 +156,9 @@ def plot_diapers_24h_viz(config_file):
     figure = plt.figure()
     ax = figure.add_subplot(111)
 
-    # Loop through each row under current day, plot each diaper
-    data.apply(lambda row: ax.plot(row['day_number'], row['timestamp_hour'],
-                                   marker='o', color=row['Color key']), axis=1)
+    # Plot
+    ax.scatter(data['day_number'], data['timestamp_hour'],
+               s=25, c=data['Color key'])
 
     # Legend
     blue_patch = plot_patches.Patch(color='b', label='Poop, Yellow')
@@ -180,6 +173,5 @@ def plot_diapers_24h_viz(config_file):
     format_24h_week_plot(ax, data['day_number'].iloc[0], 'Diapers')
 
     # Export figure
-    figure.set_size_inches(config['output_dim_x'], config['output_dim_y'])
-    figure.savefig(config['output_diaper_viz'], bbox_inches='tight')
-    figure.clf()
+    export_figure(figure, config['output_dim_x'], config['output_dim_y'],
+                  config['output_diaper_viz'])

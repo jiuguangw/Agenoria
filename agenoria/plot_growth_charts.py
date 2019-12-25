@@ -6,14 +6,13 @@
 # Please see the LICENSE file that should have been included as part of
 # this package.
 
-import datetime as dt
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.ticker as ticker
 from .parse_config import parse_json_config
-from .plot_settings import format_growth_chart_plot
+from .plot_settings import format_growth_chart_plot, export_figure
 
 # Parameters from JSON
 config = []
@@ -31,8 +30,7 @@ def parse_glow_data(glow_file, birthday):
     data = pd.read_csv(glow_file, parse_dates=['Date'])
 
     # Compute age
-    birthday_date = dt.datetime.strptime(config['birthday'], '%m-%d-%Y')
-    data['Age'] = compute_age(data['Date'], birthday_date)
+    data['Age'] = compute_age(data['Date'], config['birthday'])
 
     # Get date and height columns
     data_height = data[data['Height(cm)'].notnull()][[
@@ -63,8 +61,7 @@ def parse_hatch_data(hatch_file, birthday):
         idx).rename_axis('Start Time').reset_index()
 
     # Compute Age
-    birthday_date = dt.datetime.strptime(config['birthday'], '%m-%d-%Y')
-    data['Age'] = compute_age(data['Start Time'], birthday_date)
+    data['Age'] = compute_age(data['Start Time'], config['birthday'])
 
     # Compute diff
     data['ROC'] = data['Amount'].diff()
@@ -213,6 +210,5 @@ def plot_growth_charts(config_file):
 
     # Export
     f.subplots_adjust(wspace=0.25, hspace=0.35)
-    f.set_size_inches(config['output_dim_x'], config['output_dim_y'])
-    f.savefig(config['output_growth'], bbox_inches='tight')
-    f.clf()
+    export_figure(f, config['output_dim_x'], config['output_dim_y'],
+                  config['output_growth'])

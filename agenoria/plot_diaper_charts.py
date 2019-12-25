@@ -230,5 +230,6 @@ def plot_diaper_charts(config_file):
     format_monthly_plot(axarr[2, 2], xlim_left, xlim_right)
 
     # Export
+    f.subplots_adjust(wspace=0.2, hspace=0.35)
     export_figure(f, config['output_dim_x'], config['output_dim_y'],
                   config['output_daily_diaper_charts'])

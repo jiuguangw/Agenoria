@@ -8,9 +8,12 @@
 
 
 import json
+import datetime as dt
 
 
 def parse_json_config(file_name):
     with open(file_name) as json_file:
         config = json.load(json_file)
+        config['birthday'] = dt.datetime.strptime(
+            config['birthday'], '%m-%d-%Y')
     return config
