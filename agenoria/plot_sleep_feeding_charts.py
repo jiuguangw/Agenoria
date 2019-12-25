@@ -100,11 +100,11 @@ def parse_glow_sleep_data(file_name):
              longest_session, max_awake_duration])
 
     # Convert list to dataframe
-    daily_sleep_data = pd.DataFrame(
+    data_sleep_daily = pd.DataFrame(
         sleep_data_list, columns=['date', 'total_naps', 'total_sleep_duration',
                                   'longest_session', 'max_awake_duration'])
 
-    return daily_sleep_data
+    return data_sleep_daily
 
 
 def parse_glow_feeding_data(file_name, key_amount):
@@ -148,19 +148,19 @@ def parse_glow_feeding_data(file_name, key_amount):
     return daily_data_new
 
 
-def combine_bottle_solid(glow_bottle_data, glow_solid_data):
+def combine_bottle_solid(data_bottle, data_solid):
     # Compute the difference in size between bottle and solids
-    size_missing = glow_bottle_data['date'].size - glow_solid_data['date'].size
+    size_missing = data_bottle['date'].size - data_solid['date'].size
 
     # Create rows of zero
     zero_data = pd.DataFrame(0, index=np.arange(size_missing), columns=['sum'])
 
     # Append it to the front of the solid data
     solid_new = pd.concat(
-        [zero_data['sum'], glow_solid_data['sum']], axis=0, ignore_index=True)
+        [zero_data['sum'], data_solid['sum']], axis=0, ignore_index=True)
 
     # Convert bottle feeding from mL to oz and add the solids
-    combined = glow_bottle_data['sum'] / 29.5735 + solid_new
+    combined = data_bottle['sum'] / 29.5735 + solid_new
 
     # Return combined data
     return combined
@@ -179,34 +179,28 @@ def plot_sleep_feeding_charts(config_file):
     config = parse_json_config(config_file)
 
     # Parse data
-    glow_bottle_data = parse_glow_feeding_data(
+    data_bottle = parse_glow_feeding_data(
         config['data_feed_bottle'], 'Amount(ml)')
-    glow_solid_data = parse_glow_feeding_data(
-        config['data_feed_solid'], 'Amount')
-    daily_sleep_data = parse_glow_sleep_data(config['data_sleep'])
-    glow_combined_feeding_data = combine_bottle_solid(
-        glow_bottle_data, glow_solid_data)
+    data_solid = parse_glow_feeding_data(config['data_feed_solid'], 'Amount')
+    data_sleep_daily = parse_glow_sleep_data(config['data_sleep'])
+    data_feeding_combined = combine_bottle_solid(data_bottle, data_solid)
 
-    xlim_left = glow_bottle_data['date'].iloc[0],
-    xlim_right = glow_bottle_data['date'].iloc[-1]
+    xlim_left = data_bottle['date'].iloc[0],
+    xlim_right = data_bottle['date'].iloc[-1]
 
     # Chart 1 - Eat: Daily, Average Consumed Per Day(mL)
-    axarr[0, 0].plot(glow_bottle_data['date'],
-                     glow_bottle_data['mean'])
-    axarr[0, 0].fill_between(
-        glow_bottle_data['date'], glow_bottle_data['mean'],
-        glow_bottle_data['max'], alpha=ALPHA_VALUE)
-    axarr[0, 0].fill_between(
-        glow_bottle_data['date'], glow_bottle_data['mean'],
-        glow_bottle_data['min'], alpha=ALPHA_VALUE)
+    axarr[0, 0].plot(data_bottle['date'], data_bottle['mean'])
+    axarr[0, 0].fill_between(data_bottle['date'], data_bottle['max'],
+                             data_bottle['mean'], alpha=ALPHA_VALUE)
+    axarr[0, 0].fill_between(data_bottle['date'], data_bottle['min'],
+                             data_bottle['mean'], alpha=ALPHA_VALUE)
     axarr[0, 0].set_title('Eat: Daily Volume Per Session (mL)')
     axarr[0, 0].set_ylabel('Average Volume Per Session (mL)')
     axarr[0, 0].yaxis.set_ticks(np.arange(0, 280, 30))
     format_monthly_plot(axarr[0, 0], xlim_left, xlim_right)
 
     # Chart 2 - Eat: Daily Number of Feeding Sessions Per Day
-    axarr[0, 1].plot(glow_bottle_data['date'],
-                     glow_bottle_data['sessions'])
+    axarr[0, 1].plot(data_bottle['date'], data_bottle['sessions'])
     axarr[0, 1].set_title('Eat: Daily Number of Feeding Sessions')
     axarr[0, 1].set_xlabel('Time')
     axarr[0, 1].set_ylabel('Number of Feeding Sessions')
@@ -214,54 +208,50 @@ def plot_sleep_feeding_charts(config_file):
     format_monthly_plot(axarr[0, 1], xlim_left, xlim_right)
 
     # Chart 3 - Eat: Daily, Daily Total Volume (mL)
-    axarr[0, 2].plot(glow_bottle_data['date'],
-                     glow_bottle_data['sum'])
+    axarr[0, 2].plot(data_bottle['date'], data_bottle['sum'])
     axarr[0, 2].set_title('Eat: Daily Total Volume (mL)')
     axarr[0, 2].set_ylabel('Daily Total (mL)')
     axarr[0, 2].yaxis.set_ticks(np.arange(0, 1200, 200))
     format_monthly_plot(axarr[0, 2], xlim_left, xlim_right)
 
     # Chart 4 - Eat: Daily Total Solid Feeding (oz)
-    axarr[1, 0].plot(glow_solid_data['date'],
-                     glow_solid_data['sum'])
+    axarr[1, 0].plot(data_solid['date'], data_solid['sum'])
     axarr[1, 0].set_title('Eat: Daily Total Solid Feeding (oz)')
     axarr[1, 0].set_ylabel('Daily Total Solid Feeding (oz)')
     format_monthly_plot(axarr[1, 0], xlim_left, xlim_right)
 
     # Chart 5 - Eat: Daily Total Bottle + Solid
-    axarr[1, 1].plot(glow_bottle_data['date'],
-                     glow_combined_feeding_data)
+    axarr[1, 1].plot(data_bottle['date'], data_feeding_combined)
     axarr[1, 1].set_title('Eat: Daily Total Bottle + Solid (oz)')
     axarr[1, 1].set_ylabel('Daily Total Bottle + Solid (oz)')
     format_monthly_plot(axarr[1, 1], xlim_left, xlim_right)
 
     # Chart 6 - Sleep: Daily Total Naps (7:00-19:00)
-    axarr[1, 2].plot(daily_sleep_data['date'],
-                     daily_sleep_data['total_naps'])
+    axarr[1, 2].plot(data_sleep_daily['date'], data_sleep_daily['total_naps'])
     axarr[1, 2].set_title('Sleep: Daily Total Naps (7:00-19:00)')
     axarr[1, 2].set_ylabel('Total Naps')
     axarr[1, 2].yaxis.set_ticks(np.arange(0, 16, 2))
     format_monthly_plot(axarr[1, 2], xlim_left, xlim_right)
 
     # Chart 7 - Sleep: Daily Longest Duration of Uninterrupted Sleep (Hours)
-    axarr[2, 0].plot(daily_sleep_data['date'],
-                     daily_sleep_data['longest_session'])
+    axarr[2, 0].plot(data_sleep_daily['date'],
+                     data_sleep_daily['longest_session'])
     axarr[2, 0].set_title('Sleep: Daily Longest Sleep Duration (Hr)')
     axarr[2, 0].set_ylabel('Longest Sleep Duration (Hr)')
     axarr[2, 0].yaxis.set_ticks(np.arange(0, 13, 2))
     format_monthly_plot(axarr[2, 0], xlim_left, xlim_right)
 
     # Chart 8 - Sleep: Daily Total Sleep (Hours)
-    axarr[2, 1].plot(daily_sleep_data['date'],
-                     daily_sleep_data['total_sleep_duration'])
+    axarr[2, 1].plot(data_sleep_daily['date'],
+                     data_sleep_daily['total_sleep_duration'])
     axarr[2, 1].set_title('Sleep: Daily Total Sleep (Hr)')
     axarr[2, 1].set_ylabel('Total Sleep (Hr)')
     axarr[2, 1].yaxis.set_ticks(np.arange(11, 21, 2))
     format_monthly_plot(axarr[2, 1], xlim_left, xlim_right)
 
     # Chart 9 - Daily Maximum Awake Duration (Hr)
-    axarr[2, 2].plot(daily_sleep_data['date'],
-                     daily_sleep_data['max_awake_duration'])
+    axarr[2, 2].plot(data_sleep_daily['date'],
+                     data_sleep_daily['max_awake_duration'])
     axarr[2, 2].set_title('Daily Maximum Awake Duration (Hr)')
     axarr[2, 2].set_ylabel('Maximum Awake Duration (Hr)')
     format_monthly_plot(axarr[2, 2], xlim_left, xlim_right)

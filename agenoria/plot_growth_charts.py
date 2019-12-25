@@ -120,8 +120,8 @@ def plot_weight_length(plot_object, data_height, data_head, hatch_data):
         weight_length, columns=['Date', 'Age', 'Height(cm)', 'Weight'])
 
     # Plot data
-    plot_object.plot(data_weight_length['Height(cm)'],
-                     data_weight_length['Weight'], color='red', linewidth=2)
+    plot_object.plot(
+        data_weight_length['Height(cm)'], data_weight_length['Weight'])
     # Labels
     plot_object.set_title('Weight vs. Length')
     plot_object.set_xlabel('Length (cm)')
@@ -139,6 +139,7 @@ def plot_growth_charts(config_file):
 
     # Settings
     sns.set(style="darkgrid")
+    plt.rcParams["lines.linewidth"] = 2
     f, axarr = plt.subplots(2, 3)
 
     # Import data
@@ -151,8 +152,7 @@ def plot_growth_charts(config_file):
 
     # Chart 1 - Weight / Age
     plot_growth_curves(config['growth_curve_weight'], 'Agemos', axarr[0, 0])
-    axarr[0, 0].plot(hatch_data['Age'],
-                     hatch_data['Amount'], color='red', linewidth=2)
+    axarr[0, 0].plot(hatch_data['Age'], hatch_data['Amount'])
     axarr[0, 0].set_title('Weight vs. Age')
     axarr[0, 0].set_xlabel('Age (months)')
     axarr[0, 0].set_ylabel('Weight (kg)')
@@ -163,8 +163,7 @@ def plot_growth_charts(config_file):
     format_growth_chart_plot(axarr[0, 0])
 
     # Chart 2 - Weight Percentile / Age
-    axarr[0, 1].plot(hatch_data['Age'],
-                     hatch_data['Percentile'] * 100, color='red')
+    axarr[0, 1].plot(hatch_data['Age'], hatch_data['Percentile'] * 100)
     axarr[0, 1].set_title('Weight Percentile vs. Age')
     axarr[0, 1].set_ylabel('Weight Percentile (%)')
     axarr[0, 1].set_xlabel('Age (months)')
@@ -175,8 +174,7 @@ def plot_growth_charts(config_file):
     format_growth_chart_plot(axarr[0, 1])
 
     # Chart 2 - Weight Rate of Change / Age
-    axarr[0, 2].plot(hatch_data['Age'],
-                     hatch_data['Weight Average RoC'], color='red', linewidth=2)
+    axarr[0, 2].plot(hatch_data['Age'], hatch_data['Weight Average RoC'])
     axarr[0, 2].set_title('Average Daily Weight Gain vs. Age')
     axarr[0, 2].set_xlabel('Age (months)')
     axarr[0, 2].set_ylabel('Average Daily Weight Gain (oz)')
@@ -188,8 +186,7 @@ def plot_growth_charts(config_file):
 
     # Chart 4 - Length / Age
     plot_growth_curves(config['growth_curve_length'], 'Agemos', axarr[1, 0])
-    axarr[1, 0].plot(data_height['Age'],
-                     data_height['Height(cm)'], color='red', linewidth=2)
+    axarr[1, 0].plot(data_height['Age'], data_height['Height(cm)'])
     axarr[1, 0].set_title('Length vs. Age')
     axarr[1, 0].set_xlabel('Age (months)')
     axarr[1, 0].set_ylabel('Length (cm)')
@@ -200,12 +197,10 @@ def plot_growth_charts(config_file):
 
     # Chart 5 - Head Circumference / Age
     plot_growth_curves(config['growth_curve_head'], 'Agemos', axarr[1, 1])
-    axarr[1, 1].plot(data_head['Age'],
-                     data_head['Head Circ.(cm)'], color='red', linewidth=2)
+    axarr[1, 1].plot(data_head['Age'], data_head['Head Circ.(cm)'])
     axarr[1, 1].set_title('Head Circumference vs. Age')
     axarr[1, 1].set_xlabel('Age (months)')
     axarr[1, 1].set_ylabel('Head Circumference (cm)')
-
     axarr[1, 1].set_xlim(start_date, end_date)
     axarr[1, 1].set_ylim(35, 48)
     axarr[1, 1].xaxis.set_major_locator(ticker.MultipleLocator(1))

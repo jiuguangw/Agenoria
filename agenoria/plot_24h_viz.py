@@ -7,7 +7,10 @@
 # this package.
 
 import matplotlib.pyplot as plt
+import matplotlib.patches as plot_patches
 import pandas as pd
+import datetime as dt
+import numpy as np
 import seaborn as sns
 from .parse_config import parse_json_config
 from .plot_settings import format_24h_week_plot
@@ -87,20 +90,37 @@ def plot_feeding_24h_viz(config_file):
     config = parse_json_config(config_file)
 
     # Import and extract feeding data
-    data = parse_raw_data(
+    data_bottle = parse_raw_data(
         config['data_feed_bottle'], ['Time of feeding'])
+    data_solid = parse_raw_data(
+        config['data_feed_solid'], ['Time of feeding'])
 
     # Plot setup
     sns.set(style="darkgrid")
     figure = plt.figure()
     ax = figure.add_subplot(111)
 
-    # Loop through each row and plot
-    data.apply(lambda row: ax.plot(row['day_number'], row['timestamp_hour'],
-                                   marker='o', color='r'), axis=1)
+    # Compute offset from birthday
+    birthday_date = dt.datetime.strptime(config['birthday'], '%m-%d-%Y')
+    offset = data_solid['Date'].iloc[-1] - birthday_date
+    offset = int(offset / np.timedelta64(1, 'D'))   # Convert to day in int
+
+    # Loop through each row and plot bottle
+    data_bottle.apply(lambda row: ax.plot(row['day_number'],
+                                          row['timestamp_hour'],
+                                          marker='o', color='r'), axis=1)
+    # Loop through each row and plot solids, with date offset
+    data_solid.apply(lambda row: ax.plot(row['day_number'] + offset,
+                                         row['timestamp_hour'],
+                                         marker='o', color='b'), axis=1)
+
+    # Legend
+    red_patch = plot_patches.Patch(color='r', label='Bottle Feeding')
+    blue_patch = plot_patches.Patch(color='b', label='Solid Feeding')
+    plt.legend(handles=[red_patch, blue_patch])
 
     # Format plot
-    format_24h_week_plot(ax, data['day_number'].iloc[0], 'Feeding')
+    format_24h_week_plot(ax, data_bottle['day_number'].iloc[0], 'Feeding')
 
     # Export figure
     figure.set_size_inches(config['output_dim_x'], config['output_dim_y'])
@@ -146,6 +166,15 @@ def plot_diapers_24h_viz(config_file):
     # Loop through each row under current day, plot each diaper
     data.apply(lambda row: ax.plot(row['day_number'], row['timestamp_hour'],
                                    marker='o', color=row['Color key']), axis=1)
+
+    # Legend
+    blue_patch = plot_patches.Patch(color='b', label='Poop, Yellow')
+    green_patch = plot_patches.Patch(color='g', label='Poop, Green')
+    brown_patch = plot_patches.Patch(color='m', label='Poop, Brown')
+    red_patch = plot_patches.Patch(color='r', label='Poop, Others')
+    yellow_patch = plot_patches.Patch(color='y', label='Pee')
+    plt.legend(handles=[blue_patch, green_patch, brown_patch,
+                        red_patch, yellow_patch])
 
     # Format plot
     format_24h_week_plot(ax, data['day_number'].iloc[0], 'Diapers')

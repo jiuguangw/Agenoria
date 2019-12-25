@@ -21,7 +21,7 @@
     <a href="https://codeclimate.com/github/jiuguangw/Agenoria/issues">
     <img src="https://img.shields.io/codeclimate/issues/jiuguangw/Agenoria">
     </a>
-    <a href="https://codeclimate.com/github/jiuguangw/Agenoria/coverage">
+    <a href="https://codeclimate.com/github/jiuguangw/Agenoria/code">
     <img src="https://img.shields.io/codeclimate/coverage/jiuguangw/Agenoria">
     </a>
   </p>
