@@ -112,7 +112,7 @@ I recorded by hand all the days he attended daycare. I intend to use this to fla
 
 ## Getting Started
 
-### Installing Anaconda Python
+### Installing Anaconda Python (Recommended)
 
 All perquisites are installed as a part of [Anaconda Python](https://www.anaconda.com/distribution/#download-section).
 
@@ -147,6 +147,13 @@ The prompt will return back to `$ ` or `(base)$`.
 Note: Older versions of conda may use `source activate agenoria` and `source
 deactivate` (`activate agenoria` and `deactivate` on Windows).
 
+### Installing dependencies
+
+All of the required packages should have been installed via Anaconda. If you are using another distribution of Python, then you might need to run
+```bash
+(agenoria)$ pip install -r requirements.txt
+```
+To install the required packages.
 
 ### Cloning the repo
 
@@ -183,10 +190,17 @@ The columns of both the Glow and Hatch CSVs are sufficiently self explanatory. I
 
 ### Plotting
 ```bash
-python agenoria.py
+(agenoria)$ python agenoria.py
 ```
 
 By default, the charts (in PDF) are produced in a directory called "build". The PDFs are ready for printing on paper sized 17 by 11 inches (Tabloid paper).
+
+### Development
+The unit tests can be run by first installing the package, then running pytest:
+```bash
+(agenoria)$ python install .
+(agenoria)$ pytest
+```
 
 ## License
 
@@ -195,11 +209,11 @@ By default, the charts (in PDF) are produced in a directory called "build". The 
 There are two components of Agenoria, covered by two different licenses:
 
 - The scripts in the [agenoria](agenoria) and [test](test) subdirectories are released under the MIT License.
-- The raw data in CSV (under the [data](data) subdirectory) are released under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0).
+- The raw data in CSV (under the [data/zw](data/zw) subdirectory) and the associated charts/images are released under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License (CC BY-NC-SA 4.0).
 
 The full license details can be found in [LICENSE](LICENSE).
 
-To recap, you are free to use or reference the scripts/code for any purpose. The data, however, is under a stricter license because it has taken me a lot of time and energy to collect.
+To recap, you are free to use or reference the scripts/code for any purpose. The data and any visualizations/graphs/images based on the data, however, is under a stricter license because it has taken me a lot of time and energy to collect.
 
 In short, I intend to grant you every freedom in using the data if it is for personal, educational, academic research, conference/journal publication, or otherwise clearly not for profit / non-commercial purposes. All I ask for is an attribution, as required by the CC licensing terms (see the [Attribution](#Attribution) section below).
 

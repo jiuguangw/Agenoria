@@ -18,14 +18,20 @@ from .plot_settings import format_monthly_plot, export_figure
 config = []
 
 
-def plot_days_between_vomit(plot_object):
-    # Import file
-    data = pd.read_csv(config['data_misc'], parse_dates=['Date'])
+def plot_daycare_days(plot_object, data):
+    # Group and compute sum by month. BMS gives 1st of month
+    daycare_monthly = data['Daycare'].resample('BMS').sum()
 
-    # Find first and last entry in column
-    start_date = data['Date'].iloc[0].date()
-    end_date = data['Date'].iloc[-1].date()
+    # Plot
+    plot_object.plot(daycare_monthly.index, daycare_monthly)
+    plot_object.set_title('Number of Days in Daycare by Months')
+    plot_object.set_ylabel('Number of Days')
+    plot_object.yaxis.set_ticks(np.arange(0, 21, 2))
+    format_monthly_plot(plot_object, daycare_monthly.index[0],
+                        daycare_monthly.index[-1])
 
+
+def plot_days_between_vomit(plot_object, data):
     # Look up vomit days and compute gaps
     vomit_days = data.loc[data['Vomit'] == 1]
     days_since_last_vomit = vomit_days['Date'].diff() / np.timedelta64(1, 'D')
@@ -35,18 +41,25 @@ def plot_days_between_vomit(plot_object):
     plot_object.set_title('Days Since Last Vomit')
     plot_object.set_xlabel('Date')
     plot_object.set_ylabel('Days Since Last Vomit')
-    format_monthly_plot(plot_object, start_date, end_date)
+    format_monthly_plot(
+        plot_object, vomit_days.index[0], vomit_days.index[-1])
 
 
-def plot_monthly_vomit(plot_object):
-    # Import file
-    data = pd.read_csv(config['data_misc'], parse_dates=['Date'])
-
-    # Fill empty cells with 0s
-    data.fillna(0, inplace=True)
-
+def plot_doctor_visit_monthly(plot_object, data):
     # Group and compute sum by month. BMS gives 1st of month
-    data = data.set_index(data['Date'])
+    doctor_monthly = data['Doctor'].resample('BMS').sum()
+
+    # Plot
+    plot_object.plot(doctor_monthly.index, doctor_monthly)
+    plot_object.set_title('Total Number of Doctor Visits by Months')
+    plot_object.set_ylabel('Total Number of Doctor Visits')
+    plot_object.yaxis.set_ticks(np.arange(0, 5, 1))
+    format_monthly_plot(plot_object, doctor_monthly.index[0],
+                        doctor_monthly.index[-1])
+
+
+def plot_monthly_vomit(plot_object, data):
+    # Group and compute sum by month. BMS gives 1st of month
     vomit_monthly = data['Vomit'].resample('BMS').sum()
 
     # Plot
@@ -64,15 +77,26 @@ def plot_medical_charts(config_file):
     sns.set(style="darkgrid")
     f, axarr = plt.subplots(2, 3)
 
-    # Import data
+    # Import configs
     global config
     config = parse_json_config(config_file)
 
+    # Import data
+    data = pd.read_csv(config['data_misc'], parse_dates=['Date'])
+    data.fillna(0, inplace=True)
+    data = data.set_index(data['Date'])
+
     # Chart 1 - Total Vomit Per Month
-    plot_monthly_vomit(axarr[0, 0])
+    plot_monthly_vomit(axarr[0, 0], data)
 
     # Chart 2 - Days Between Vomit
-    plot_days_between_vomit(axarr[0, 1])
+    plot_days_between_vomit(axarr[0, 1], data)
+
+    # Chart 3 - Days in Daycare
+    plot_daycare_days(axarr[0, 2], data)
+
+    # Chart 4 - Doctor Visits
+    plot_doctor_visit_monthly(axarr[1, 0], data)
 
     # Export
     f.subplots_adjust(wspace=0.25, hspace=0.35)
