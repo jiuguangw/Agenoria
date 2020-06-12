@@ -1,4 +1,535 @@
 Time of feeding,Ingredients,Amount,Unit type,Baby's reaction
+01/24/2020 12:23:07 PM,Oatmeal,4.0,oz,Love it!
+01/24/2020 6:45:33 PM,Oatmeal,4.15,oz,Love it!
+01/24/2020 9:40:28 AM,Oatmeal,3.25,oz,Love it!
+01/24/2020 4:08:17 PM,Fruit smoothies,1.4,oz,Hate it!
+01/24/2020 7:47:25 PM,Oatmeal,1.0,oz,Like it!
+01/23/2020 12:15:01 PM,Fruit smoothies,3.75,oz,Like it!
+01/23/2020 9:40:49 AM,Avocados,0.5,oz,Like it!
+01/23/2020 12:30:17 PM,Avocados,0.5,oz,Like it!
+01/23/2020 9:50:28 AM,Oatmeal,2.5,oz,Like it!
+01/23/2020 12:50:42 PM,Nuts,0.2,oz,Like it!
+01/23/2020 10:00:58 AM,Fruit smoothies,3.75,oz,Like it!
+01/23/2020 5:00:51 PM,Rice,0.5,oz,Love it!
+01/23/2020 3:10:59 PM,Oatmeal,2.5,oz,Like it!
+01/23/2020 3:35:29 PM,Yogurt,2.0,oz,Like it!
+01/23/2020 12:05:47 PM,Oatmeal,2.5,oz,Like it!
+01/22/2020 6:19:03 PM,Rice,0.5,oz,Like it!
+01/22/2020 4:20:03 PM,Oatmeal,2.6,oz,Like it!
+01/22/2020 9:37:44 AM,Oatmeal,1.8,oz,Like it!
+01/22/2020 4:05:17 PM,Fruit smoothies,0.85,oz,Like it!
+01/22/2020 12:31:47 PM,Oatmeal,2.6,oz,Like it!
+01/22/2020 12:37:01 PM,Fruit smoothies,0.5,oz,Like it!
+01/22/2020 6:05:32 PM,Fruit smoothies,3.75,oz,Like it!
+01/22/2020 9:30:36 AM,Fruit smoothies,2.15,oz,Like it!
+01/21/2020 4:24:02 PM,Oatmeal,2.8,oz,Like it!
+01/21/2020 6:20:58 PM,Fruit smoothies,2.8,oz,Like it!
+01/21/2020 4:00:51 PM,Fruit smoothies,0.2,oz,Hate it!
+01/21/2020 9:20:50 AM,Oatmeal,2.7,oz,Like it!
+01/21/2020 9:30:50 AM,Fruit smoothies,2.85,oz,Like it!
+01/21/2020 12:05:50 PM,Oatmeal,2.9,oz,Like it!
+01/21/2020 12:11:58 PM,Fruit smoothies,1.0,oz,Like it!
+01/20/2020 12:30:43 PM,Rice,1.0,oz,Like it!
+01/20/2020 9:30:25 AM,Oatmeal,2.5,oz,Like it!
+01/20/2020 3:35:25 PM,Yogurt,3.9,oz,Like it!
+01/20/2020 9:40:42 AM,Fruit smoothies,3.75,oz,Like it!
+01/20/2020 3:50:41 PM,Oatmeal,2.6,oz,Like it!
+01/20/2020 12:05:09 PM,Oatmeal,2.5,oz,Like it!
+01/20/2020 12:15:24 PM,Fruit smoothies,3.75,oz,Like it!
+01/19/2020 3:50:03 PM,Fruit smoothies,2.0,oz,Like it!
+01/19/2020 9:32:06 AM,Oatmeal,4.25,oz,Like it!
+01/18/2020 6:45:09 PM,Rice,2.0,oz,Love it!
+01/18/2020 7:50:19 PM,Fruit smoothies,1.5,oz,Like it!
+01/18/2020 9:16:13 AM,Oatmeal,1.55,oz,Like it!
+01/18/2020 11:47:59 AM,Fruit smoothies,1.8,oz,Like it!
+01/18/2020 9:32:27 AM,Fruit smoothies,0.6,oz,Hate it!
+01/18/2020 6:10:06 PM,Fruit smoothies,0.4,oz,Hate it!
+01/18/2020 10:10:17 AM,Fruit smoothies,2.75,oz,Like it!
+01/18/2020 2:50:04 PM,Oatmeal,2.5,oz,Love it!
+01/17/2020 3:55:08 PM,Rice cereal,2.0,oz,Hate it!
+01/17/2020 6:46:36 PM,Rice,1.0,oz,Like it!
+01/17/2020 9:43:16 AM,Fruit smoothies,1.7,oz,Like it!
+01/17/2020 3:04:25 PM,Fruit smoothies,1.0,oz,Hate it!
+01/17/2020 9:34:49 AM,Oatmeal,2.55,oz,Love it!
+01/17/2020 12:25:44 PM,Rice,0.5,oz,Like it!
+01/17/2020 5:35:23 PM,Fruit smoothies,0.8,oz,Hate it!
+01/16/2020 3:05:13 PM,Oatmeal,1.5,oz,Like it!
+01/16/2020 6:40:41 PM,Rice,1.0,oz,Love it!
+01/16/2020 3:25:28 PM,Yogurt,5.5,oz,Like it!
+01/16/2020 9:30:23 AM,Oatmeal,2.5,oz,Like it!
+01/16/2020 3:40:41 PM,Rice,1.0,oz,Like it!
+01/16/2020 9:40:00 AM,Fruit smoothies,3.75,oz,Like it!
+01/16/2020 6:20:39 PM,Fruit smoothies,3.75,oz,Like it!
+01/16/2020 12:05:31 PM,Oatmeal,2.5,oz,Like it!
+01/16/2020 12:20:45 PM,Fruit smoothies,3.75,oz,Like it!
+01/15/2020 3:20:27 PM,Yogurt,0.5,oz,Hate it!
+01/15/2020 12:05:53 PM,Oatmeal,2.6,oz,Like it!
+01/15/2020 6:03:37 PM,Yogurt,2.3,oz,Like it!
+01/15/2020 12:15:13 PM,Fruit smoothies,3.75,oz,Like it!
+01/15/2020 9:30:47 AM,Applesauce,3.0,oz,Like it!
+01/15/2020 9:37:01 AM,Oatmeal,2.6,oz,Like it!
+01/15/2020 12:30:58 PM,Nuts,0.2,oz,Like it!
+01/15/2020 7:53:05 PM,Fruit smoothies,1.5,oz,Like it!
+01/15/2020 9:45:18 AM,Fruit smoothies,3.75,oz,Like it!
+01/15/2020 3:10:13 PM,Oatmeal,2.6,oz,Like it!
+01/14/2020 9:40:03 AM,Fruit smoothies,3.75,oz,Like it!
+01/14/2020 3:10:43 PM,Oatmeal,2.2,oz,Like it!
+01/14/2020 7:50:24 PM,Fruit smoothies,2.3,oz,Like it!
+01/14/2020 3:25:58 PM,Yogurt,5.3,oz,Like it!
+01/14/2020 12:10:36 PM,Oatmeal,2.2,oz,Like it!
+01/14/2020 12:30:48 PM,Fruit smoothies,3.75,oz,Like it!
+01/14/2020 5:42:06 PM,Fruit smoothies,2.5,oz,Like it!
+01/14/2020 9:30:34 AM,Oatmeal,2.2,oz,Like it!
+01/14/2020 12:50:24 PM,Nuts,0.3,oz,Like it!
+01/13/2020 12:40:06 PM,Nuts,0.6,oz,Like it!
+01/13/2020 3:05:54 PM,Oatmeal,2.6,oz,Like it!
+01/13/2020 5:44:46 PM,Fruit smoothies,1.7,oz,Like it!
+01/13/2020 12:05:13 PM,Oatmeal,2.6,oz,Like it!
+01/13/2020 3:25:08 PM,Yogurt,2.5,oz,Like it!
+01/13/2020 7:47:53 PM,Fruit smoothies,1.4,oz,Like it!
+01/13/2020 12:15:27 PM,Fruit smoothies,3.75,oz,Like it!
+01/13/2020 9:30:29 AM,Oatmeal,2.6,oz,Like it!
+01/13/2020 9:40:44 AM,Fruit smoothies,3.75,oz,Like it!
+01/12/2020 9:50:15 AM,Oatmeal,1.0,oz,Like it!
+01/12/2020 10:12:26 AM,Fruit smoothies,0.35,oz,Hate it!
+01/12/2020 6:50:39 PM,Fruit smoothies,1.85,oz,Like it!
+01/12/2020 12:50:41 PM,Nuts,0.2,oz,Like it!
+01/12/2020 10:38:33 AM,Fruit smoothies,3.75,oz,Like it!
+01/12/2020 4:13:16 PM,Yogurt,3.5,oz,Like it!
+01/11/2020 5:20:46 PM,Fruit smoothies,3.75,oz,Love it!
+01/11/2020 9:25:37 AM,Oatmeal,2.6,oz,Like it!
+01/11/2020 6:37:34 PM,Yogurt,0.5,oz,Hate it!
+01/11/2020 11:46:40 AM,Fruit smoothies,2.85,oz,Like it!
+01/11/2020 9:40:18 AM,Fruit smoothies,1.1,oz,Like it!
+01/11/2020 7:47:20 PM,Fruit smoothies,1.9,oz,Like it!
+01/10/2020 10:47:15 AM,Fruit smoothies,0.6,oz,Hate it!
+01/10/2020 9:50:21 AM,Fruit smoothies,0.7,oz,Like it!
+01/10/2020 3:25:40 PM,Fruit smoothies,3.0,oz,Like it!
+01/10/2020 7:50:50 PM,Fruit smoothies,1.6,oz,Like it!
+01/10/2020 9:40:10 AM,Oatmeal,1.7,oz,Like it!
+01/10/2020 4:49:47 PM,Oatmeal,3.0,oz,Like it!
+01/10/2020 11:55:42 AM,Fruit smoothies,3.7,oz,Like it!
+01/10/2020 3:40:03 PM,Yogurt,1.2,oz,Like it!
+01/09/2020 9:40:55 AM,Fruit smoothies,3.75,oz,Like it!
+01/09/2020 3:15:49 PM,Oatmeal,2.6,oz,Like it!
+01/09/2020 7:55:46 PM,Fruit smoothies,3.45,oz,Like it!
+01/09/2020 3:25:01 PM,Yogurt,5.3,oz,Like it!
+01/09/2020 12:05:26 PM,Oatmeal,2.6,oz,Like it!
+01/09/2020 12:15:44 PM,Fruit smoothies,3.75,oz,Like it!
+01/09/2020 12:40:11 PM,Nuts,0.2,oz,Like it!
+01/09/2020 6:50:31 PM,Fruit smoothies,0.9,oz,Like it!
+01/09/2020 9:30:39 AM,Oatmeal,2.6,oz,Like it!
+01/08/2020 3:20:27 PM,Yogurt,0.5,oz,Hate it!
+01/08/2020 9:40:44 AM,Fruit smoothies,3.75,oz,Like it!
+01/08/2020 7:17:45 PM,Fruit smoothies,2.0,oz,Like it!
+01/08/2020 12:05:13 PM,Oatmeal,2.6,oz,Like it!
+01/08/2020 12:15:30 PM,Fruit smoothies,3.75,oz,Like it!
+01/08/2020 7:55:12 PM,Oatmeal,1.5,oz,Like it!
+01/08/2020 12:25:46 PM,Nuts,0.4,oz,Like it!
+01/08/2020 3:05:12 PM,Oatmeal,2.0,oz,Like it!
+01/08/2020 5:45:42 PM,Oatmeal,0.4,oz,Hate it!
+01/08/2020 9:30:28 AM,Oatmeal,2.6,oz,Like it!
+01/07/2020 3:05:40 PM,Oatmeal,2.6,oz,Like it!
+01/07/2020 6:05:47 PM,Fruit smoothies,3.8,oz,Like it!
+01/07/2020 3:25:55 PM,Yogurt,4.15,oz,Like it!
+01/07/2020 7:20:01 PM,Fruit smoothies,1.4,oz,Like it!
+01/07/2020 12:05:31 PM,Oatmeal,2.6,oz,Like it!
+01/07/2020 9:30:26 AM,Oatmeal,2.6,oz,Like it!
+01/07/2020 12:40:19 PM,Fruit smoothies,2.6,oz,Like it!
+01/07/2020 9:40:41 AM,Fruit smoothies,3.75,oz,Like it!
+01/06/2020 8:00:40 PM,Fruit smoothies,0.65,oz,Hate it!
+01/06/2020 3:10:04 PM,Oatmeal,2.6,oz,Like it!
+01/06/2020 7:01:24 PM,Yogurt,0.8,oz,Hate it!
+01/06/2020 9:50:34 AM,Oatmeal,2.6,oz,Like it!
+01/06/2020 3:30:18 PM,Yogurt,0.5,oz,Like it!
+01/06/2020 12:05:56 PM,Oatmeal,2.6,oz,Like it!
+01/06/2020 12:15:11 PM,Nuts,0.2,oz,Like it!
+01/06/2020 8:30:32 AM,Nuts,0.2,oz,Like it!
+01/06/2020 9:30:51 AM,Fruit smoothies,3.75,oz,Like it!
+01/06/2020 12:30:29 PM,Fruit smoothies,3.75,oz,Like it!
+01/05/2020 6:45:21 PM,Fruit smoothies,3.8,oz,Like it!
+01/05/2020 3:50:34 PM,Yogurt,1.9,oz,Like it!
+01/05/2020 10:00:26 AM,Fruit smoothies,2.8,oz,Like it!
+01/05/2020 12:00:55 PM,Fruit smoothies,1.95,oz,Like it!
+01/05/2020 12:25:00 PM,Oatmeal,1.8,oz,Like it!
+01/04/2020 7:26:16 AM,Fruit smoothies,0.6,oz,Like it!
+01/04/2020 12:28:36 PM,Oatmeal,0.6,oz,Like it!
+01/04/2020 12:40:49 PM,Fruit smoothies,0.8,oz,Like it!
+01/04/2020 7:53:49 PM,Fruit smoothies,1.3,oz,Like it!
+01/04/2020 3:59:33 PM,Yogurt,1.45,oz,Like it!
+01/04/2020 8:02:36 PM,Nuts,0.2,oz,Like it!
+01/04/2020 4:38:25 PM,Fruit smoothies,1.1,oz,Like it!
+01/04/2020 4:11:28 PM,Oatmeal,1.0,oz,Like it!
+01/04/2020 10:20:54 AM,Fruit smoothies,1.9,oz,Like it!
+01/04/2020 10:11:32 AM,Fruit smoothies,3.15,oz,Like it!
+01/03/2020 8:40:44 AM,Oatmeal,2.55,oz,Like it!
+01/03/2020 10:02:17 AM,Fruit smoothies,1.4,oz,Like it!
+01/03/2020 3:17:27 PM,Oatmeal,1.2,oz,Like it!
+01/03/2020 5:58:48 PM,Fruit smoothies,0.2,oz,Like it!
+01/03/2020 12:05:16 PM,Fruit smoothies,3.35,oz,Like it!
+01/03/2020 7:56:24 PM,Fruit smoothies,1.05,oz,Like it!
+01/03/2020 4:40:56 PM,Fruit smoothies,3.3,oz,Like it!
+01/03/2020 9:20:29 AM,Fruit smoothies,0.95,oz,Like it!
+01/03/2020 7:15:30 PM,Oatmeal,2.9,oz,Like it!
+01/02/2020 3:30:16 PM,Yogurt,2.0,oz,Like it!
+01/02/2020 9:50:46 AM,Fruit smoothies,2.3,oz,Like it!
+01/02/2020 3:40:49 PM,Oatmeal,2.5,oz,Like it!
+01/02/2020 8:45:22 AM,Oatmeal,2.5,oz,Like it!
+01/02/2020 12:25:17 PM,Oatmeal,1.2,oz,Like it!
+01/02/2020 12:40:33 PM,Fruit smoothies,3.7,oz,Like it!
+01/02/2020 5:35:44 PM,Fruit smoothies,3.0,oz,Like it!
+01/02/2020 3:05:04 PM,Nuts,0.2,oz,Like it!
+01/02/2020 9:40:33 AM,Oatmeal,2.5,oz,Like it!
+01/01/2020 8:54:56 AM,Fruit smoothies,3.8,oz,Like it!
+01/01/2020 6:12:44 PM,Fruit smoothies,3.7,oz,Like it!
+01/01/2020 7:52:26 PM,Fruit smoothies,3.4,oz,Like it!
+01/01/2020 10:58:11 AM,Yogurt,3.0,oz,Like it!
+01/01/2020 8:45:55 AM,Oatmeal,3.1,oz,Like it!
+01/01/2020 3:16:33 PM,Oatmeal,3.0,oz,Like it!
+01/01/2020 12:37:59 PM,Fruit smoothies,3.7,oz,Like it!
+12/31/2019 7:38:09 AM,Fruit smoothies,1.1,oz,Like it!
+12/31/2019 6:40:11 PM,Fruit smoothies,3.7,oz,Like it!
+12/31/2019 7:53:52 PM,Fruit smoothies,3.5,oz,Like it!
+12/31/2019 12:25:53 PM,Oatmeal,2.6,oz,Like it!
+12/31/2019 9:15:09 AM,Oatmeal,2.6,oz,Love it!
+12/31/2019 4:15:36 PM,Yogurt,2.2,oz,Like it!
+12/31/2019 9:20:38 AM,Fruit smoothies,1.6,oz,Like it!
+12/31/2019 12:34:46 PM,Fruit smoothies,2.05,oz,Like it!
+12/31/2019 4:11:15 PM,Fruit smoothies,3.0,oz,Hate it!
+12/30/2019 4:05:56 PM,Yogurt,2.8,oz,Like it!
+12/30/2019 11:58:58 AM,Fruit smoothies,1.6,oz,Like it!
+12/30/2019 7:56:50 PM,Fruit smoothies,1.3,oz,Like it!
+12/30/2019 9:25:01 AM,Oatmeal,2.9,oz,Like it!
+12/30/2019 4:22:33 PM,Fruit smoothies,1.6,oz,Like it!
+12/30/2019 12:40:41 PM,Oatmeal,2.5,oz,Like it!
+12/30/2019 9:36:12 AM,Fruit smoothies,2.0,oz,Like it!
+12/30/2019 7:50:58 AM,Fruit smoothies,1.1,oz,Like it!
+12/30/2019 6:00:20 PM,Fruit smoothies,3.5,oz,Like it!
+12/29/2019 3:30:55 PM,Oatmeal,2.5,oz,Like it!
+12/29/2019 12:20:07 PM,Yogurt,2.3,oz,Like it!
+12/29/2019 8:50:08 AM,Oatmeal,0.8,oz,Like it!
+12/29/2019 9:05:22 AM,Fruit smoothies,1.4,oz,Like it!
+12/29/2019 9:30:34 AM,Fruit smoothies,1.75,oz,Like it!
+12/29/2019 7:48:35 PM,Fruit smoothies,1.7,oz,Like it!
+12/29/2019 3:43:55 PM,Fruit smoothies,2.15,oz,Like it!
+12/29/2019 10:50:04 AM,Fruit smoothies,0.6,oz,Like it!
+12/29/2019 12:32:48 PM,Fruit smoothies,0.8,oz,Like it!
+12/29/2019 10:45:18 AM,Oatmeal,1.9,oz,Like it!
+12/29/2019 5:30:36 PM,Fruit smoothies,3.75,oz,Like it!
+12/28/2019 7:54:00 PM,Fruit smoothies,3.1,oz,Like it!
+12/28/2019 9:15:20 AM,Fruit smoothies,3.1,oz,Like it!
+12/28/2019 11:46:56 AM,Yogurt,3.0,oz,Like it!
+12/28/2019 6:01:28 PM,Fruit smoothies,1.55,oz,Like it!
+12/28/2019 8:55:44 AM,Oatmeal,2.7,oz,Like it!
+12/28/2019 5:56:43 PM,Oatmeal,2.8,oz,Like it!
+12/28/2019 1:00:14 PM,Fruit smoothies,3.8,oz,Like it!
+12/27/2019 6:48:16 PM,Fruit smoothies,4.15,oz,Like it!
+12/27/2019 12:15:50 PM,Oatmeal,1.35,oz,Like it!
+12/27/2019 8:52:20 AM,Oatmeal,2.7,oz,Like it!
+12/27/2019 4:10:10 PM,Fruit smoothies,2.8,oz,Like it!
+12/27/2019 12:05:10 PM,Fruit smoothies,2.0,oz,Like it!
+12/27/2019 3:40:47 PM,Yogurt,1.7,oz,Like it!
+12/27/2019 9:38:58 AM,Fruit smoothies,2.55,oz,Like it!
+12/26/2019 7:47:50 PM,Fruit smoothies,2.6,oz,Like it!
+12/26/2019 5:45:30 PM,Yogurt,0.6,oz,Like it!
+12/26/2019 12:15:16 PM,Oatmeal,2.8,oz,Like it!
+12/26/2019 7:41:22 PM,Oatmeal,1.4,oz,Like it!
+12/26/2019 3:18:47 PM,Yogurt,2.5,oz,Like it!
+12/26/2019 10:05:06 AM,Fruit smoothies,4.45,oz,Like it!
+12/26/2019 3:28:16 PM,Fruit smoothies,2.3,oz,Like it!
+12/26/2019 5:23:04 PM,Fruit smoothies,1.9,oz,Like it!
+12/26/2019 9:15:33 AM,Oatmeal,2.75,oz,Like it!
+12/25/2019 4:38:08 PM,Fruit smoothies,1.35,oz,Like it!
+12/25/2019 9:03:01 AM,Oatmeal,2.2,oz,Like it!
+12/25/2019 8:55:10 AM,Nuts,0.2,oz,Like it!
+12/25/2019 9:09:51 AM,Fruit smoothies,3.4,oz,Like it!
+12/25/2019 12:35:19 PM,Oatmeal,2.25,oz,Like it!
+12/25/2019 7:52:34 PM,Fruit smoothies,2.25,oz,Like it!
+12/25/2019 5:34:35 PM,Fruit smoothies,1.6,oz,Like it!
+12/25/2019 12:43:32 PM,Fruit smoothies,2.75,oz,Like it!
+12/25/2019 5:25:35 PM,Yogurt,1.2,oz,Like it!
+12/24/2019 7:27:59 PM,Fruit smoothies,2.8,oz,Like it!
+12/24/2019 10:35:33 AM,Fruit smoothies,2.0,oz,Like it!
+12/24/2019 12:14:08 PM,Oatmeal,2.8,oz,Like it!
+12/24/2019 4:10:53 PM,Fruit smoothies,3.25,oz,Like it!
+12/24/2019 12:19:18 PM,Fruit smoothies,2.3,oz,Like it!
+12/24/2019 8:48:27 AM,Oatmeal,2.7,oz,Like it!
+12/24/2019 5:22:38 PM,Yogurt,2.5,oz,Like it!
+12/23/2019 4:50:17 PM,Fruit smoothies,2.45,oz,Like it!
+12/23/2019 8:18:19 AM,Oatmeal,1.9,oz,Like it!
+12/23/2019 12:36:14 PM,Oatmeal,2.5,oz,Like it!
+12/23/2019 10:30:29 AM,Fruit smoothies,1.0,oz,Like it!
+12/23/2019 9:23:35 AM,Fruit smoothies,2.6,oz,Like it!
+12/23/2019 6:14:21 PM,Nuts,0.2,oz,Like it!
+12/23/2019 4:05:57 PM,Fruit smoothies,1.4,oz,Like it!
+12/23/2019 10:37:12 AM,Oatmeal,1.6,oz,Like it!
+12/23/2019 6:20:34 PM,Yogurt,1.7,oz,Like it!
+12/22/2019 11:15:12 AM,Fruit smoothies,3.0,oz,Like it!
+12/22/2019 4:04:21 PM,Yogurt,0.4,oz,Hate it!
+12/22/2019 9:40:07 AM,Fruit smoothies,1.6,oz,Like it!
+12/22/2019 5:57:58 PM,Fruit smoothies,0.65,oz,Like it!
+12/22/2019 5:24:51 PM,Fruit smoothies,1.85,oz,Love it!
+12/22/2019 4:10:45 PM,Nuts,0.4,oz,Like it!
+12/22/2019 12:49:38 PM,Fruit smoothies,1.25,oz,Like it!
+12/22/2019 7:10:33 PM,Fruit smoothies,2.95,oz,Like it!
+12/22/2019 3:52:36 PM,Oatmeal,2.25,oz,Like it!
+12/22/2019 12:39:07 PM,Oatmeal,1.3,oz,Like it!
+12/22/2019 8:30:14 AM,Oatmeal,0.8,oz,Like it!
+12/22/2019 9:35:45 AM,Oatmeal,1.7,oz,Like it!
+12/22/2019 8:45:37 AM,Fruit smoothies,1.4,oz,Like it!
+12/21/2019 12:01:17 PM,Fruit smoothies,1.65,oz,Like it!
+12/21/2019 9:05:42 AM,Oatmeal,0.5,oz,Like it!
+12/21/2019 7:55:43 PM,"Apricots,Sweet potatoes,Bananas",2.35,oz,Like it!
+12/21/2019 5:20:09 PM,Fruit smoothies,2.0,oz,Like it!
+12/21/2019 6:25:36 PM,Applesauce,3.0,oz,Love it!
+12/21/2019 5:25:33 PM,Yogurt,0.4,oz,Like it!
+12/21/2019 4:15:51 PM,Yogurt,0.2,oz,Hate it!
+12/21/2019 9:28:11 AM,Oatmeal,2.4,oz,Like it!
+12/21/2019 12:29:43 PM,Oatmeal,2.5,oz,Like it!
+12/21/2019 5:33:32 PM,Oatmeal,1.3,oz,Like it!
+12/21/2019 9:45:53 AM,Fruit smoothies,2.35,oz,Like it!
+12/20/2019 9:17:06 AM,Fruit smoothies,2.3,oz,Like it!
+12/20/2019 3:40:19 PM,Rice cereal,0.8,oz,Like it!
+12/20/2019 3:53:32 PM,Fruit smoothies,0.9,oz,Like it!
+12/20/2019 12:50:06 PM,Rice cereal,1.8,oz,Like it!
+12/20/2019 6:15:17 PM,Fruit smoothies,1.95,oz,Like it!
+12/20/2019 12:55:19 PM,Fruit smoothies,1.4,oz,Like it!
+12/20/2019 10:30:16 AM,Rice cereal,2.7,oz,Love it!
+12/20/2019 6:20:48 PM,Fruit smoothies,0.6,oz,Hate it!
+12/20/2019 10:40:45 AM,Fruit smoothies,1.4,oz,Like it!
+12/20/2019 7:45:54 PM,Fruit smoothies,0.8,oz,Like it!
+12/20/2019 5:04:41 PM,Yogurt,1.2,oz,Like it!
+12/19/2019 9:45:18 AM,Nuts,0.1,oz,Like it!
+12/19/2019 5:27:27 PM,Fruit smoothies,1.7,oz,Like it!
+12/19/2019 9:50:34 AM,Fruit smoothies,3.5,oz,Like it!
+12/19/2019 5:34:13 PM,Yogurt,0.4,oz,Hate it!
+12/19/2019 12:00:11 PM,Oatmeal,2.8,oz,Like it!
+12/19/2019 3:08:58 PM,Oatmeal,1.5,oz,Like it!
+12/19/2019 12:10:27 PM,Fruit smoothies,2.0,oz,Like it!
+12/19/2019 9:35:14 AM,Oatmeal,2.8,oz,Like it!
+12/19/2019 3:20:20 PM,Yogurt,2.0,oz,Like it!
+12/19/2019 7:00:46 PM,Yogurt,0.6,oz,Like it!
+12/19/2019 7:06:57 PM,Fruit smoothies,1.6,oz,Like it!
+12/18/2019 12:40:23 PM,Fruit smoothies,3.75,oz,Like it!
+12/18/2019 3:30:51 PM,Yogurt,5.0,oz,Like it!
+12/18/2019 6:45:00 PM,"Pears,Peas,Broccoli",2.0,oz,Like it!
+12/18/2019 9:30:08 AM,Oatmeal,2.5,oz,Like it!
+12/18/2019 8:02:08 PM,"Pears,Peas,Broccoli",1.6,oz,Like it!
+12/18/2019 9:50:37 AM,Fruit smoothies,3.75,oz,Like it!
+12/18/2019 12:05:53 PM,Oatmeal,2.5,oz,Like it!
+12/17/2019 9:50:36 AM,Fruit smoothies,3.75,oz,Like it!
+12/17/2019 3:05:24 PM,Yogurt,4.0,oz,Like it!
+12/17/2019 12:00:51 PM,Oatmeal,2.3,oz,Like it!
+12/17/2019 12:15:23 PM,Fruit smoothies,3.75,oz,Like it!
+12/17/2019 6:02:58 PM,Fruit smoothies,3.6,oz,Love it!
+12/17/2019 12:25:49 PM,Nuts,0.2,oz,Like it!
+12/17/2019 9:30:07 AM,Oatmeal,2.3,oz,Like it!
+12/16/2019 3:35:48 PM,Yogurt,1.3,oz,Like it!
+12/16/2019 3:15:35 PM,Oatmeal,0.1,oz,Hate it!
+12/16/2019 9:30:31 AM,Oatmeal,2.6,oz,Like it!
+12/16/2019 8:20:47 AM,Yogurt,0.9,oz,Like it!
+12/16/2019 9:40:44 AM,Fruit smoothies,3.75,oz,Like it!
+12/16/2019 12:10:19 PM,Nuts,0.2,oz,Like it!
+12/16/2019 12:20:48 PM,Oatmeal,1.3,oz,Like it!
+12/16/2019 4:48:14 PM,Fruit smoothies,2.9,oz,Like it!
+12/16/2019 8:01:34 AM,Oatmeal,1.2,oz,Like it!
+12/16/2019 12:35:06 PM,"Chicken,Other",0.2,oz,Hate it!
+12/15/2019 9:19:58 AM,Oatmeal,2.2,oz,Love it!
+12/15/2019 6:50:11 PM,Yogurt,1.35,oz,Like it!
+12/15/2019 9:24:58 AM,Fruit smoothies,2.3,oz,Like it!
+12/15/2019 12:15:25 PM,Fruit smoothies,0.5,oz,Like it!
+12/15/2019 12:28:42 PM,Yogurt,1.85,oz,Like it!
+12/15/2019 12:21:35 PM,Rice cereal,0.3,oz,Hate it!
+12/15/2019 4:36:37 PM,Yogurt,1.35,oz,Like it!
+12/15/2019 4:50:24 PM,Fruit smoothies,3.2,oz,Like it!
+12/14/2019 4:30:48 PM,Fruit smoothies,1.5,oz,Like it!
+12/14/2019 10:02:43 AM,Oatmeal,1.7,oz,Like it!
+12/14/2019 9:15:27 AM,Wheat cereal,0.1,oz,Hate it!
+12/14/2019 10:13:55 AM,Fruit smoothies,0.8,oz,Like it!
+12/14/2019 7:51:40 PM,Fruit smoothies,1.7,oz,Love it!
+12/14/2019 8:04:26 AM,Nuts,0.2,oz,Love it!
+12/14/2019 12:12:27 PM,Yogurt,1.6,oz,Like it!
+12/14/2019 8:17:20 AM,Yogurt,0.3,oz,Like it!
+12/14/2019 9:21:44 AM,Fruit smoothies,0.65,oz,Like it!
+12/14/2019 7:58:09 PM,Oatmeal,1.8,oz,Like it!
+12/14/2019 6:28:50 PM,Fruit smoothies,2.0,oz,Love it!
+12/13/2019 9:00:00 AM,Oatmeal,1.5,oz,Like it!
+12/13/2019 11:33:41 AM,Fruit smoothies,2.0,oz,Love it!
+12/13/2019 12:42:11 PM,Oatmeal,0.7,oz,Hate it!
+12/13/2019 9:05:11 AM,Fruit smoothies,0.8,oz,Like it!
+12/13/2019 9:50:34 AM,Fruit smoothies,2.6,oz,Love it!
+12/13/2019 8:12:02 AM,Oatmeal,0.7,oz,Like it!
+12/13/2019 5:00:25 PM,Fruit smoothies,1.8,oz,Like it!
+12/13/2019 12:24:20 PM,Nuts,0.2,oz,Like it!
+12/13/2019 6:35:19 PM,Yogurt,2.3,oz,Like it!
+12/12/2019 3:15:31 PM,Nuts,0.6,oz,Like it!
+12/12/2019 6:40:48 PM,Fruit smoothies,1.6,oz,Love it!
+12/12/2019 12:05:22 PM,Oatmeal,2.5,oz,Like it!
+12/12/2019 6:12:18 PM,Oatmeal,2.0,oz,Like it!
+12/12/2019 3:25:03 PM,Yogurt,2.5,oz,Like it!
+12/12/2019 12:40:09 PM,Fruit smoothies,3.75,oz,Like it!
+12/12/2019 9:30:40 AM,Oatmeal,2.5,oz,Like it!
+12/12/2019 9:40:57 AM,Fruit smoothies,3.75,oz,Like it!
+12/12/2019 8:10:45 AM,Oatmeal,1.35,oz,Like it!
+12/12/2019 3:05:16 PM,Oatmeal,2.5,oz,Like it!
+12/12/2019 7:57:15 PM,Fruit smoothies,1.4,oz,Like it!
+12/12/2019 5:10:32 PM,Yogurt,2.1,oz,Like it!
+12/11/2019 5:54:49 PM,Fruit smoothies,1.1,oz,Like it!
+12/11/2019 3:05:46 PM,Oatmeal,2.5,oz,Like it!
+12/11/2019 3:15:58 PM,Yogurt,0.1,oz,Hate it!
+12/11/2019 12:05:33 PM,Oatmeal,2.5,oz,Like it!
+12/11/2019 12:25:08 PM,Fruit smoothies,3.75,oz,Like it!
+12/11/2019 4:20:04 PM,Nuts,0.4,oz,Love it!
+12/11/2019 9:30:19 AM,Oatmeal,2.5,oz,Like it!
+12/11/2019 12:40:22 PM,Nuts,0.2,oz,Like it!
+12/11/2019 7:54:13 PM,Fruit smoothies,2.1,oz,Love it!
+12/11/2019 9:40:06 AM,Fruit smoothies,3.75,oz,Like it!
+12/10/2019 7:53:18 PM,"Pears,Mango,Spinach",1.7,oz,Love it!
+12/10/2019 5:57:45 PM,"Pears,Mango,Spinach",1.9,oz,Love it!
+12/10/2019 9:45:50 AM,Fruit smoothies,3.75,oz,Like it!
+12/10/2019 3:05:35 PM,Yogurt,2.6,oz,Like it!
+12/10/2019 12:00:12 PM,Oatmeal,2.5,oz,Like it!
+12/10/2019 3:15:03 PM,Nuts,0.1,oz,Like it!
+12/10/2019 3:30:20 PM,Oatmeal,2.5,oz,Like it!
+12/10/2019 12:20:40 PM,Nuts,0.2,oz,Like it!
+12/10/2019 5:45:30 PM,Fruit smoothies,0.8,oz,Love it!
+12/10/2019 12:30:04 PM,"Beef,Other",2.0,oz,Like it!
+12/10/2019 9:30:15 AM,Oatmeal,2.5,oz,Like it!
+12/09/2019 7:50:12 PM,Fruit smoothies,1.0,oz,Love it!
+12/09/2019 3:05:29 PM,Oatmeal,2.3,oz,Like it!
+12/09/2019 10:01:59 AM,Fruit smoothies,3.7,oz,Love it!
+12/09/2019 12:40:39 PM,Yogurt,2.6,oz,Like it!
+12/09/2019 12:05:11 PM,Oatmeal,2.3,oz,Like it!
+12/09/2019 3:30:58 PM,Yogurt,2.6,oz,Like it!
+12/09/2019 12:15:26 PM,Fruit smoothies,3.7,oz,Like it!
+12/09/2019 8:24:51 AM,Oatmeal,2.3,oz,Like it!
+12/09/2019 5:36:17 PM,Fruit smoothies,1.6,oz,Love it!
+12/09/2019 12:45:15 PM,Nuts,0.2,oz,Love it!
+12/09/2019 3:50:35 PM,Nuts,0.2,oz,Love it!
+12/08/2019 9:12:48 AM,Nuts,0.3,oz,Love it!
+12/08/2019 9:28:25 AM,Fruit smoothies,2.5,oz,Love it!
+12/08/2019 4:08:01 PM,Yogurt,0.8,oz,Like it!
+12/08/2019 7:48:59 PM,"Pears,Mango,Spinach",3.1,oz,Love it!
+12/08/2019 9:18:45 AM,Oatmeal,2.8,oz,Love it!
+12/08/2019 3:59:42 PM,Oatmeal,2.8,oz,Like it!
+12/08/2019 5:38:59 PM,Yogurt,1.9,oz,Like it!
+12/08/2019 12:20:49 PM,Fruit smoothies,3.6,oz,Love it!
+12/08/2019 6:15:30 PM,Nuts,0.2,oz,Love it!
+12/07/2019 6:00:10 PM,Nuts,0.3,oz,Love it!
+12/07/2019 4:40:25 PM,Yogurt,2.9,oz,Like it!
+12/07/2019 7:55:45 PM,"Applesauce,Blueberries,Spinach",2.2,oz,Like it!
+12/07/2019 9:03:57 AM,Oatmeal,2.5,oz,Like it!
+12/07/2019 12:12:20 PM,Fruit smoothies,5.05,oz,Like it!
+12/07/2019 4:52:44 PM,"Oatmeal,Nuts",0.5,oz,Hate it!
+12/07/2019 9:45:50 AM,Fruit smoothies,2.0,oz,Like it!
+12/07/2019 7:35:27 PM,Yogurt,1.7,oz,Love it!
+12/06/2019 9:45:39 AM,Rice cereal,3.1,oz,Love it!
+12/06/2019 3:05:45 PM,Oatmeal,2.9,oz,Love it!
+12/06/2019 5:55:27 PM,Fruit smoothies,1.0,oz,Like it!
+12/06/2019 8:01:33 PM,"Applesauce,Blueberries,Spinach",1.0,oz,Like it!
+12/06/2019 12:20:57 PM,Oatmeal,0.1,oz,Hate it!
+12/06/2019 8:45:06 AM,Fruit smoothies,0.2,oz,Like it!
+12/06/2019 10:12:45 AM,Fruit smoothies,2.6,oz,Love it!
+12/06/2019 6:09:05 PM,Yogurt,1.4,oz,Like it!
+12/06/2019 3:15:24 PM,Yogurt,2.0,oz,Love it!
+12/05/2019 12:15:31 PM,Rice cereal,1.3,oz,Like it!
+12/05/2019 2:50:55 PM,Rice cereal,0.5,oz,Hate it!
+12/05/2019 5:40:05 PM,Fruit smoothies,2.5,oz,Like it!
+12/05/2019 9:30:14 AM,"Other,Rice cereal",2.6,oz,Like it!
+12/05/2019 3:00:42 PM,Yogurt,0.3,oz,Hate it!
+12/05/2019 7:30:49 PM,Fruit smoothies,0.5,oz,Like it!
+12/05/2019 9:40:49 AM,Fruit smoothies,4.0,oz,Love it!
+12/05/2019 4:30:11 PM,Fruit smoothies,3.75,oz,Love it!
+12/05/2019 12:25:43 PM,Yogurt,0.1,oz,Hate it!
+12/04/2019 7:12:54 PM,Fruit smoothies,0.2,oz,Hate it!
+12/04/2019 9:30:48 AM,Oatmeal,2.3,oz,Like it!
+12/04/2019 12:10:45 PM,"Beef,Other",4.0,oz,Like it!
+12/04/2019 9:40:23 AM,"Applesauce,Blueberries,Spinach",3.5,oz,Like it!
+12/04/2019 4:45:48 PM,Yogurt,2.85,oz,Like it!
+12/04/2019 12:00:02 PM,Oatmeal,2.3,oz,Like it!
+12/03/2019 7:54:11 PM,"Oatmeal,Other",0.4,oz,Hate it!
+12/03/2019 12:05:09 PM,Oatmeal,0.2,oz,Hate it!
+12/03/2019 12:15:46 PM,"Beef,Other",1.7,oz,Like it!
+12/03/2019 10:25:44 AM,"Bananas,Blueberries",3.75,oz,Like it!
+12/03/2019 8:35:11 AM,Rice cereal,1.95,oz,Like it!
+12/03/2019 3:00:18 PM,Oatmeal,2.9,oz,Like it!
+12/03/2019 3:10:43 PM,Yogurt,2.5,oz,Like it!
+12/02/2019 9:30:06 AM,Oatmeal,2.9,oz,Like it!
+12/02/2019 12:30:05 PM,Yogurt,2.6,oz,Like it!
+12/02/2019 3:25:29 PM,Yogurt,2.6,oz,Like it!
+12/02/2019 5:35:42 PM,"Apricots,Sweet potatoes,Bananas",1.9,oz,Like it!
+12/02/2019 3:35:46 PM,Oatmeal,2.9,oz,Like it!
+12/02/2019 9:50:44 AM,"Applesauce,Pears,Spinach",4.0,oz,Like it!
+12/02/2019 12:15:40 PM,"Beef,Other",4.0,oz,Like it!
+12/01/2019 10:05:54 AM,"Apricots,Sweet potatoes,Bananas",0.1,oz,Hate it!
+12/01/2019 12:57:48 PM,Applesauce,1.9,oz,Like it!
+12/01/2019 4:17:16 PM,Oatmeal,1.7,oz,Like it!
+12/01/2019 9:16:00 AM,Yogurt,3.45,oz,Like it!
+12/01/2019 12:08:53 PM,"Beef,Other",3.6,oz,Like it!
+12/01/2019 4:56:05 PM,Oatmeal,2.4,oz,Like it!
+12/01/2019 9:53:23 AM,Rice cereal,0.6,oz,Hate it!
+11/30/2019 8:50:30 AM,Yogurt,3.0,oz,Like it!
+11/30/2019 6:29:11 PM,Rice cereal,2.3,oz,Like it!
+11/30/2019 3:50:13 PM,"Beef,Other",3.5,oz,Like it!
+11/30/2019 10:50:08 AM,Yogurt,2.25,oz,Like it!
+11/30/2019 12:51:44 PM,"Pears,Peaches,Strawberries",1.7,oz,Like it!
+11/30/2019 4:04:00 PM,"Pears,Peaches,Strawberries",1.5,oz,Like it!
+11/30/2019 7:56:34 PM,"Applesauce,Blueberries,Spinach",3.1,oz,Like it!
+11/29/2019 4:13:44 PM,Oatmeal,2.8,oz,Like it!
+11/29/2019 6:34:08 PM,"Apricots,Sweet potatoes,Bananas",3.3,oz,Love it!
+11/29/2019 8:54:19 AM,"Beef,Other",0.3,oz,Love it!
+11/29/2019 8:58:01 AM,Yogurt,3.05,oz,Love it!
+11/29/2019 11:19:19 AM,"Beef,Other",3.5,oz,Like it!
+11/29/2019 4:02:31 PM,Yogurt,1.15,oz,Like it!
+11/28/2019 7:50:20 PM,"Applesauce,Carrots,Mango",3.0,oz,Love it!
+11/28/2019 3:47:39 PM,Oatmeal,0.4,oz,Hate it!
+11/28/2019 10:54:30 AM,"Beef,Other",3.4,oz,Like it!
+11/28/2019 3:53:19 PM,Yogurt,2.2,oz,Like it!
+11/28/2019 8:17:03 AM,Yogurt,1.7,oz,Like it!
+11/28/2019 9:52:27 AM,"Pears,Mango,Spinach",0.9,oz,Like it!
+11/27/2019 9:40:52 AM,"Bananas,Oatmeal,Other",3.0,oz,Like it!
+11/27/2019 8:11:21 AM,Rice cereal,1.0,oz,Love it!
+11/27/2019 9:35:14 AM,Rice cereal,2.3,oz,Like it!
+11/27/2019 3:05:14 PM,Oatmeal,2.3,oz,Like it!
+11/27/2019 6:30:55 PM,"Bananas,Oatmeal",3.5,oz,Like it!
+11/27/2019 12:00:46 PM,Oatmeal,2.3,oz,Like it!
+11/27/2019 12:10:08 PM,"Beef,Other",4.0,oz,Like it!
+11/27/2019 3:30:11 PM,Yogurt,0.3,oz,Like it!
+11/26/2019 6:07:33 PM,Yogurt,2.5,oz,Like it!
+11/26/2019 9:45:54 AM,"Beef,Other",4.0,oz,Like it!
+11/26/2019 3:30:33 PM,Rice cereal,2.75,oz,Like it!
+11/26/2019 3:20:01 PM,Yogurt,2.2,oz,Like it!
+11/26/2019 12:05:21 PM,Rice cereal,2.75,oz,Like it!
+11/26/2019 9:30:24 AM,Rice cereal,2.75,oz,Like it!
+11/26/2019 3:35:33 PM,Applesauce,2.0,oz,Like it!
+11/26/2019 12:15:38 PM,"Applesauce,Carrots,Mango",3.5,oz,Like it!
+11/25/2019 5:55:55 PM,"Peas,Broccoli,Pears",1.1,oz,Like it!
+11/25/2019 12:10:49 PM,"Applesauce,Carrots,Mango",3.5,oz,Like it!
+11/25/2019 9:45:06 AM,"Beef,Other",4.0,oz,Like it!
+11/25/2019 9:35:29 AM,Oatmeal,2.1,oz,Like it!
+11/25/2019 3:25:37 PM,Oatmeal,2.1,oz,Like it!
+11/25/2019 12:00:34 PM,Oatmeal,2.1,oz,Like it!
+11/25/2019 3:15:24 PM,Yogurt,4.0,oz,Like it!
+11/24/2019 9:58:50 AM,Oatmeal,1.7,oz,Like it!
+11/24/2019 3:45:05 PM,Yogurt,3.15,oz,Like it!
+11/24/2019 5:30:47 PM,Rice cereal,1.5,oz,Hate it!
+11/24/2019 10:30:35 AM,"Pears,Peas,Broccoli",3.75,oz,Like it!
+11/24/2019 5:20:43 PM,Yogurt,1.0,oz,
+11/24/2019 7:24:34 PM,"Pears,Peaches,Strawberries",0.6,oz,Like it!
+11/24/2019 6:26:18 PM,"Pears,Peaches,Strawberries",2.4,oz,Like it!
+11/24/2019 11:24:12 AM,Applesauce,3.2,oz,Like it!
+11/23/2019 3:50:26 PM,Yogurt,1.75,oz,Love it!
+11/23/2019 9:05:34 AM,"Pears,Mango,Spinach",3.75,oz,Love it!
+11/23/2019 9:59:22 AM,Oatmeal,0.3,oz,Hate it!
+11/23/2019 11:40:19 AM,Oatmeal,0.5,oz,Hate it!
+11/23/2019 8:01:07 PM,"Bananas,Blueberries,Other",3.7,oz,Love it!
+11/23/2019 11:50:04 AM,Applesauce,3.05,oz,Love it!
+11/23/2019 5:57:33 PM,Yogurt,1.55,oz,Love it!
+11/22/2019 11:41:21 AM,Oatmeal,2.6,oz,Like it!
+11/22/2019 9:23:42 AM,Oatmeal,1.2,oz,Like it!
+11/22/2019 6:20:12 PM,"Pears,Broccoli,Spinach",3.75,oz,Like it!
+11/22/2019 4:10:58 PM,Yogurt,0.1,oz,Love it!
+11/22/2019 10:05:10 AM,"Bananas,Blueberries,Other",3.6,oz,Love it!
 11/21/2019 3:25:28 PM,Yogurt,2.5,oz,Like it!
 11/21/2019 12:10:10 PM,Oatmeal,2.1,oz,Like it!
 11/21/2019 12:15:27 PM,"Chicken,Other",4.0,oz,Like it!
