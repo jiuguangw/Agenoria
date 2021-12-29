@@ -15,6 +15,8 @@
     "output_daily_diaper_charts": "build/Agenoria_Daily_Diaper_Charts.pdf",
     "output_daily_sleep_feeding_charts": "build/Agenoria_Daily_Sleep_Feeding_Charts.pdf",
     "output_sleep_viz": "build/Agenoria_Sleep_Viz.pdf",
+    "output_sleep_viz_orientation": "horizontal",
+    "output_year_one_only": true,
     "output_feeding_viz": "build/Agenoria_Feeding_Viz.pdf",
     "output_diaper_viz": "build/Agenoria_Diaper_Viz.pdf",
     "output_growth": "build/Agenoria_Growth_Charts.pdf",

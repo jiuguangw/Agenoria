@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 # Copyright 2019 by Jiuguang Wang (www.robo.guru)
 # All rights reserved.
-# This file is part of Agenoria and is released under the  MIT License.
+# This file is part of Agenoria and is released under the MIT License.
 # Please see the LICENSE file that should have been included as part of
 # this package.
 
 import datetime as dt
+from dateutil.relativedelta import relativedelta
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -184,8 +185,13 @@ def plot_sleep_feeding_charts(config_file):
     data_sleep_daily = parse_glow_sleep_data(config['data_sleep'])
     data_feeding_combined = combine_bottle_solid(data_bottle, data_solid)
 
-    xlim_left = data_bottle['date'].iloc[0],
-    xlim_right = data_bottle['date'].iloc[-1]
+    # Start date
+    xlim_left = data_bottle['date'].iloc[0]
+    # End date - one year or full
+    if (config["output_year_one_only"]):
+        xlim_right = xlim_left + relativedelta(years=1)
+    else:
+        xlim_right = data_bottle['date'].iloc[-1]
 
     # Chart 1 - Eat: Daily, Average Consumed Per Day(mL)
     axarr[0, 0].plot(data_bottle['date'], data_bottle['mean'])
@@ -195,7 +201,6 @@ def plot_sleep_feeding_charts(config_file):
                              data_bottle['mean'], alpha=ALPHA_VALUE)
     axarr[0, 0].set_title('Eat: Daily Volume Per Session (mL)')
     axarr[0, 0].set_ylabel('Average Volume Per Session (mL)')
-    axarr[0, 0].yaxis.set_ticks(np.arange(0, 280, 30))
     format_monthly_plot(axarr[0, 0], xlim_left, xlim_right)
 
     # Chart 2 - Eat: Daily Number of Feeding Sessions Per Day
@@ -203,14 +208,12 @@ def plot_sleep_feeding_charts(config_file):
     axarr[0, 1].set_title('Eat: Daily Number of Feeding Sessions')
     axarr[0, 1].set_xlabel('Time')
     axarr[0, 1].set_ylabel('Number of Feeding Sessions')
-    axarr[0, 1].yaxis.set_ticks(np.arange(4, 15, 2))
     format_monthly_plot(axarr[0, 1], xlim_left, xlim_right)
 
     # Chart 3 - Eat: Daily, Daily Total Volume (mL)
     axarr[0, 2].plot(data_bottle['date'], data_bottle['sum'])
     axarr[0, 2].set_title('Eat: Daily Total Volume (mL)')
     axarr[0, 2].set_ylabel('Daily Total (mL)')
-    axarr[0, 2].yaxis.set_ticks(np.arange(0, 1200, 200))
     format_monthly_plot(axarr[0, 2], xlim_left, xlim_right)
 
     # Chart 4 - Eat: Daily Total Solid Feeding (oz)
@@ -229,7 +232,6 @@ def plot_sleep_feeding_charts(config_file):
     axarr[1, 2].plot(data_sleep_daily['date'], data_sleep_daily['total_naps'])
     axarr[1, 2].set_title('Sleep: Daily Total Naps (7:00-19:00)')
     axarr[1, 2].set_ylabel('Total Naps')
-    axarr[1, 2].yaxis.set_ticks(np.arange(0, 16, 2))
     format_monthly_plot(axarr[1, 2], xlim_left, xlim_right)
 
     # Chart 7 - Sleep: Daily Longest Duration of Uninterrupted Sleep (Hours)
@@ -237,7 +239,6 @@ def plot_sleep_feeding_charts(config_file):
                      data_sleep_daily['longest_session'])
     axarr[2, 0].set_title('Sleep: Daily Longest Sleep Duration (Hr)')
     axarr[2, 0].set_ylabel('Longest Sleep Duration (Hr)')
-    axarr[2, 0].yaxis.set_ticks(np.arange(0, 13, 2))
     format_monthly_plot(axarr[2, 0], xlim_left, xlim_right)
 
     # Chart 8 - Sleep: Daily Total Sleep (Hours)
@@ -245,7 +246,6 @@ def plot_sleep_feeding_charts(config_file):
                      data_sleep_daily['total_sleep_duration'])
     axarr[2, 1].set_title('Sleep: Daily Total Sleep (Hr)')
     axarr[2, 1].set_ylabel('Total Sleep (Hr)')
-    axarr[2, 1].yaxis.set_ticks(np.arange(11, 21, 2))
     format_monthly_plot(axarr[2, 1], xlim_left, xlim_right)
 
     # Chart 9 - Daily Maximum Awake Duration (Hr)

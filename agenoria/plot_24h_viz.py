@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Copyright 2019 by Jiuguang Wang (www.robo.guru)
 # All rights reserved.
-# This file is part of Agenoria and is released under the  MIT License.
+# This file is part of Agenoria and is released under the MIT License.
 # Please see the LICENSE file that should have been included as part of
 # this package.
 
@@ -12,7 +12,9 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 from .parse_config import parse_json_config
-from .plot_settings import format_24h_week_plot, export_figure
+from .plot_settings import format_24h_week_plot_vertical
+from .plot_settings import format_24h_week_plot_horizontal
+from .plot_settings import export_figure
 
 config = []
 
@@ -75,8 +77,17 @@ def plot_sleep_24h_viz(config_file):
         [(row['day_number'], BAR_SIZE)],
         [row['timestamp_hour'], row['duration']]), axis=1)
 
-    # Format plot
-    format_24h_week_plot(ax, data['day_number'].iloc[0], 'Sleep')
+    # End date - one year or full
+    if (config["output_year_one_only"]):
+        end_date = 365
+    else:
+        end_date = data['day_number'].iloc[0]
+
+    # Format plot - vertical or horizontal
+    if (config["output_sleep_viz_orientation"] == "vertical"):
+        format_24h_week_plot_vertical(ax, end_date, 'Sleep')
+    else:
+        format_24h_week_plot_horizontal(ax, end_date, 'Sleep')
 
     # Export figure
     export_figure(figure, config['output_dim_x'], config['output_dim_y'],
@@ -113,8 +124,14 @@ def plot_feeding_24h_viz(config_file):
     blue_patch = plot_patches.Patch(color='b', label='Solid Feeding')
     plt.legend(handles=[red_patch, blue_patch])
 
+    # End date - one year or full
+    if (config["output_year_one_only"]):
+        end_date = 365
+    else:
+        end_date = data_bottle['day_number'].iloc[0]
+
     # Format plot
-    format_24h_week_plot(ax, data_bottle['day_number'].iloc[0], 'Feeding')
+    format_24h_week_plot_horizontal(ax, end_date, 'Feeding')
 
     # Export figure
     export_figure(figure, config['output_dim_x'], config['output_dim_y'],
@@ -169,8 +186,14 @@ def plot_diapers_24h_viz(config_file):
     plt.legend(handles=[blue_patch, green_patch, brown_patch,
                         red_patch, yellow_patch])
 
+    # End date - one year or full
+    if (config["output_year_one_only"]):
+        end_date = 365
+    else:
+        end_date = data['day_number'].iloc[0]
+
     # Format plot
-    format_24h_week_plot(ax, data['day_number'].iloc[0], 'Diapers')
+    format_24h_week_plot_horizontal(ax, end_date, 'Diapers')
 
     # Export figure
     export_figure(figure, config['output_dim_x'], config['output_dim_y'],

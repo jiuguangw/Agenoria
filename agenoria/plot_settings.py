@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Copyright 2019 by Jiuguang Wang (www.robo.guru)
 # All rights reserved.
-# This file is part of Agenoria and is released under the  MIT License.
+# This file is part of Agenoria and is released under the MIT License.
 # Please see the LICENSE file that should have been included as part of
 # this package.
 
@@ -18,14 +18,14 @@ def enumerate_labels(date_num):
         hour_labels.append(label)
 
     week_labels = []
-    for num in range(0, math.ceil(date_num / 7)):
+    for num in range(0, math.ceil(date_num / 7), 2):
         label = str(num)
         week_labels.append(label)
 
     return hour_labels, week_labels
 
 
-def format_24h_week_plot(ax, date_num, title):
+def format_24h_week_plot_horizontal(ax, date_num, title):
     # Figure settings
     TITLE_FONT_SIZE = 25
     AXIS_FONT_SIZE = 15
@@ -47,8 +47,34 @@ def format_24h_week_plot(ax, date_num, title):
 
     # Format x axis - bottom, week number
     ax.set_xlim(1, date_num)
-    ax.xaxis.set_ticks(np.arange(1, date_num + 1, 7))
+    ax.xaxis.set_ticks(np.arange(1, date_num + 1, 14))
     ax.set_xticklabels(week_labels)
+
+
+def format_24h_week_plot_vertical(ax, date_num, title):
+    # Figure settings
+    TITLE_FONT_SIZE = 25
+    AXIS_FONT_SIZE = 15
+    TITLE_HEIGHT_ADJUST = 1.02
+
+    # Create the tick labels
+    hour_labels, week_labels = enumerate_labels(date_num)
+
+    # Set title and axis labels
+    # ax.set_title(title, fontsize=TITLE_FONT_SIZE, y=TITLE_HEIGHT_ADJUST)
+    ax.set_xlabel('Age (weeks)', fontsize=AXIS_FONT_SIZE, rotation=180)
+    ax.set_ylabel('Time of Day', fontsize=AXIS_FONT_SIZE)
+
+    # Format y axis - clock time
+    ax.set_ylim(24, 0)
+    ax.yaxis.set_ticks(np.arange(0, 24, 1))
+    ax.set_yticklabels(hour_labels, rotation=180)
+    ax.invert_yaxis()
+
+    # Format x axis - bottom, week number
+    ax.set_xlim(1, date_num)
+    ax.xaxis.set_ticks(np.arange(1, date_num + 1, 14))
+    ax.set_xticklabels(week_labels, rotation=90)
 
 
 def format_growth_chart_plot(plot_object):
@@ -73,6 +99,7 @@ def format_monthly_plot(plot_object, xlim_left, xlim_right):
 
     # Change x-axis left and right limits
     plot_object.set_xlim(xlim_left, xlim_right)
+    plot_object.autoscale(enable=True, axis='y', tight=True)
 
     # Change label sizes
     plot_object.title.set_size(TITLE_FONT_SIZE)

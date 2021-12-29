@@ -1,4 +1,11 @@
-# __init__.py
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# Copyright 2019 by Jiuguang Wang (www.robo.guru)
+# All rights reserved.
+# This file is part of Agenoria and is released under the MIT License.
+# Please see the LICENSE file that should have been included as part of
+# this package.
+
 from .plot_diaper_charts import plot_diaper_charts  # noqa
 from .plot_sleep_feeding_charts import plot_sleep_feeding_charts  # noqa
 from .plot_growth_charts import plot_growth_charts  # noqa

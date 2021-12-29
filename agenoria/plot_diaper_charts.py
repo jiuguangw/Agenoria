@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 # Copyright 2019 by Jiuguang Wang (www.robo.guru)
 # All rights reserved.
-# This file is part of Agenoria and is released under the  MIT License.
+# This file is part of Agenoria and is released under the MIT License.
 # Please see the LICENSE file that should have been included as part of
 # this package.
 
 import datetime as dt
+from dateutil.relativedelta import relativedelta
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -155,8 +156,13 @@ def plot_diaper_charts(config_file):
     constipation_monthly_data, diarrhea_monthly_data = get_abnormal_days(
         daily_diaper_data)
 
-    xlim_left = daily_diaper_data['date'].iloc[0],
-    xlim_right = daily_diaper_data['date'].iloc[-1]
+    # Start date
+    xlim_left = daily_diaper_data['date'].iloc[0]
+    # End date - one year or full
+    if (config["output_year_one_only"]):
+        xlim_right = xlim_left + relativedelta(years=1)
+    else:
+        xlim_right = daily_diaper_data['date'].iloc[-1]
 
     # Chart 1 - Diaper: Total Diapers (Cumulative)
     axarr[0, 0].plot(daily_diaper_data['date'],
@@ -170,7 +176,6 @@ def plot_diaper_charts(config_file):
                      diaper_monthly_data)
     axarr[0, 1].set_title('Diaper: Number of Diapers by Month')
     axarr[0, 1].set_ylabel('Number of Diapers by Month')
-    axarr[0, 1].yaxis.set_ticks(np.arange(0, 400, 50))
     format_monthly_plot(axarr[0, 1], xlim_left, xlim_right)
 
     # Chart 3 - Diaper: Daily Total Diaper Count
@@ -178,7 +183,6 @@ def plot_diaper_charts(config_file):
                      daily_diaper_data['daily_total_diaper_count'])
     axarr[0, 2].set_title('Diaper: Number of Diapers by Day')
     axarr[0, 2].set_ylabel('Number of Diapers by Day')
-    axarr[0, 2].yaxis.set_ticks(np.arange(0, 20, 2))
     format_monthly_plot(axarr[0, 2], xlim_left, xlim_right)
 
     # Chart 4 - Diaper: Daily Total Pees
@@ -186,7 +190,6 @@ def plot_diaper_charts(config_file):
                      daily_diaper_data['pee_count'])
     axarr[1, 0].set_title('Diaper: Daily Total Pees')
     axarr[1, 0].set_ylabel('Total Pees')
-    axarr[1, 0].yaxis.set_ticks(np.arange(2, 20, 2))
     format_monthly_plot(axarr[1, 0], xlim_left, xlim_right)
 
     # Chart 5 - Diaper: Daily Total Poops
@@ -194,7 +197,6 @@ def plot_diaper_charts(config_file):
                      daily_diaper_data['poop_count'])
     axarr[1, 1].set_title('Diaper: Daily Total Poops')
     axarr[1, 1].set_ylabel('Total Poops')
-    axarr[1, 1].yaxis.set_ticks(np.arange(0, 11, 2))
     format_monthly_plot(axarr[1, 1], xlim_left, xlim_right)
 
     # Chart 6 - Diaper: Average Time Between Diaper Changes
@@ -203,7 +205,6 @@ def plot_diaper_charts(config_file):
     axarr[1, 2].set_title(
         'Diaper: Average Time Between Diaper Changes (Hours)')
     axarr[1, 2].set_ylabel('Average Time Between Diaper Changes (Hours)')
-    axarr[1, 2].yaxis.set_ticks(np.arange(1, 5, 0.5))
     format_monthly_plot(axarr[1, 2], xlim_left, xlim_right)
 
     # Chart 7 - Diaper: Poop Ratio
@@ -211,7 +212,6 @@ def plot_diaper_charts(config_file):
                      daily_diaper_data['poop_ratio'])
     axarr[2, 0].set_title('Diaper: Poop as Percentage of Diaper Changes')
     axarr[2, 0].set_ylabel('Poop as Percentage of Diaper Changes')
-    axarr[2, 0].yaxis.set_ticks(np.arange(0, 110, 10))
     format_monthly_plot(axarr[2, 0], xlim_left, xlim_right)
 
     # Chart 8 - Diaper: Constipation
@@ -226,7 +226,6 @@ def plot_diaper_charts(config_file):
                      diarrhea_monthly_data)
     axarr[2, 2].set_title('Diaper: Number of Diarrhea Days by Month')
     axarr[2, 2].set_ylabel('Number of Diarrhea Days')
-    axarr[2, 2].yaxis.set_ticks(np.arange(0, 3, 1))
     format_monthly_plot(axarr[2, 2], xlim_left, xlim_right)
 
     # Export

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # Copyright 2019 by Jiuguang Wang (www.robo.guru)
 # All rights reserved.
-# This file is part of Agenoria and is released under the  MIT License.
+# This file is part of Agenoria and is released under the MIT License.
 # Please see the LICENSE file that should have been included as part of
 # this package.
 
@@ -123,8 +123,8 @@ def plot_weight_length(plot_object, data_height, data_head, hatch_data):
     plot_object.set_title('Weight vs. Length')
     plot_object.set_xlabel('Length (cm)')
     plot_object.set_ylabel('Weight (kg)')
-    plot_object.set_xlim(53, 80)
-    plot_object.set_ylim(3.5, 10)
+    plot_object.set_xlim(53, 90)
+    plot_object.set_ylim(3.5, 12)
     plot_object.xaxis.set_major_locator(ticker.MultipleLocator(5))
     format_growth_chart_plot(plot_object)
 
@@ -144,8 +144,12 @@ def plot_growth_charts(config_file):
         config['data_growth'], config['birthday'])
     hatch_data = parse_hatch_data(config['data_weight'], config['birthday'])
 
-    start_date = hatch_data['Age'].iloc[0]
-    end_date = hatch_data['Age'].iloc[-1]
+    # Start & end date - one year or full
+    start_date = 0
+    if (config["output_year_one_only"]):
+        end_date = 12
+    else:
+        end_date = hatch_data['Age'].iloc[-1]
 
     # Chart 1 - Weight / Age
     plot_growth_curves(config['growth_curve_weight'], 'Agemos', axarr[0, 0])
@@ -154,7 +158,7 @@ def plot_growth_charts(config_file):
     axarr[0, 0].set_xlabel('Age (months)')
     axarr[0, 0].set_ylabel('Weight (kg)')
     axarr[0, 0].set_xlim(start_date, end_date)
-    axarr[0, 0].set_ylim(3, 10)
+    axarr[0, 0].set_ylim(3, 12)
     axarr[0, 0].xaxis.set_major_locator(ticker.MultipleLocator(1))
     axarr[0, 0].yaxis.set_major_locator(ticker.MultipleLocator(1))
     format_growth_chart_plot(axarr[0, 0])
@@ -176,7 +180,7 @@ def plot_growth_charts(config_file):
     axarr[0, 2].set_xlabel('Age (months)')
     axarr[0, 2].set_ylabel('Average Daily Weight Gain (oz)')
     axarr[0, 2].set_xlim(start_date, end_date)
-    axarr[0, 2].set_ylim(-0.5, 1)
+    axarr[0, 2].set_ylim(-0.5, 1.3)
     axarr[0, 2].xaxis.set_major_locator(ticker.MultipleLocator(1))
     axarr[0, 2].yaxis.set_major_locator(ticker.MultipleLocator(0.2))
     format_growth_chart_plot(axarr[0, 2])
