@@ -12,17 +12,14 @@
     <a href="https://www.python.org/">
         <img src="https://img.shields.io/badge/built%20with-Python3-red.svg" />
     </a>
-    <a href="https://travis-ci.com/jiuguangw/Agenoria">
-    <img src="https://travis-ci.com/jiuguangw/Agenoria.svg?branch=master">
+    <a href="https://github.com/jiuguangw/Agenoria/actions">
+    <img src="https://github.com/jiuguangw/Agenoria/actions/workflows/test.yml/badge.svg">
     </a>
     <a href="https://codeclimate.com/github/jiuguangw/Agenoria">
     <img src="https://img.shields.io/codeclimate/maintainability/jiuguangw/Agenoria">
     </a>
     <a href="https://codeclimate.com/github/jiuguangw/Agenoria/issues">
     <img src="https://img.shields.io/codeclimate/issues/jiuguangw/Agenoria">
-    </a>
-    <a href="https://codeclimate.com/github/jiuguangw/Agenoria/code">
-    <img src="https://img.shields.io/codeclimate/coverage/jiuguangw/Agenoria">
     </a>
   </p>
 </p>
@@ -122,7 +119,6 @@ Supported Configurations:
 | ------- | -------------- |
 | MacOS   | 3.7  |
 | Ubuntu  | 3.7  |
-| Windows | 3.7  |
 
 
 ### (Optional) Create a virtual environment

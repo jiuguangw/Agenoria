@@ -53,15 +53,12 @@ def format_24h_week_plot_horizontal(ax, date_num, title):
 
 def format_24h_week_plot_vertical(ax, date_num, title):
     # Figure settings
-    TITLE_FONT_SIZE = 25
     AXIS_FONT_SIZE = 15
-    TITLE_HEIGHT_ADJUST = 1.02
 
     # Create the tick labels
     hour_labels, week_labels = enumerate_labels(date_num)
 
     # Set title and axis labels
-    # ax.set_title(title, fontsize=TITLE_FONT_SIZE, y=TITLE_HEIGHT_ADJUST)
     ax.set_xlabel('Age (weeks)', fontsize=AXIS_FONT_SIZE, rotation=180)
     ax.set_ylabel('Time of Day', fontsize=AXIS_FONT_SIZE)
 
