@@ -19,6 +19,17 @@ from .plot_settings import export_figure
 config = []
 
 
+def get_end_date(data, first_year_only):
+    end_date = 0
+
+    if (first_year_only):
+        end_date = 365
+    else:
+        end_date = data.iloc[0]
+
+    return end_date
+
+
 def parse_raw_data(filename, key):
     # Import data
     data = pd.read_csv(filename, parse_dates=key)
@@ -78,10 +89,7 @@ def plot_sleep_24h_viz(config_file):
         [row['timestamp_hour'], row['duration']]), axis=1)
 
     # End date - one year or full
-    if (config["output_year_one_only"]):
-        end_date = 365
-    else:
-        end_date = data['day_number'].iloc[0]
+    end_date = get_end_date(data['day_number'], config["output_year_one_only"])
 
     # Format plot - vertical or horizontal
     if (config["output_sleep_viz_orientation"] == "vertical"):
@@ -125,10 +133,8 @@ def plot_feeding_24h_viz(config_file):
     plt.legend(handles=[red_patch, blue_patch])
 
     # End date - one year or full
-    if (config["output_year_one_only"]):
-        end_date = 365
-    else:
-        end_date = data_bottle['day_number'].iloc[0]
+    end_date = get_end_date(
+        data_bottle['day_number'], config["output_year_one_only"])
 
     # Format plot
     format_24h_week_plot_horizontal(ax, end_date, 'Feeding')
@@ -187,10 +193,7 @@ def plot_diapers_24h_viz(config_file):
                         red_patch, yellow_patch])
 
     # End date - one year or full
-    if (config["output_year_one_only"]):
-        end_date = 365
-    else:
-        end_date = data['day_number'].iloc[0]
+    end_date = get_end_date(data['day_number'], config["output_year_one_only"])
 
     # Format plot
     format_24h_week_plot_horizontal(ax, end_date, 'Diapers')

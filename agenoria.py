@@ -19,7 +19,7 @@ if not os.path.exists('build'):
     os.makedirs('build')
 
 # Config file
-config_file = 'config.json'
+config_file = 'config_zyw.json'
 
 
 procs = []
@@ -28,7 +28,11 @@ proc = Process(target=agenoria.plot_diaper_charts, args=(config_file,))
 procs.append(proc)
 proc.start()
 
-proc = Process(target=agenoria.plot_sleep_feeding_charts, args=(config_file,))
+proc = Process(target=agenoria.plot_sleep_stats_charts, args=(config_file,))
+procs.append(proc)
+proc.start()
+
+proc = Process(target=agenoria.plot_feeding_stats_charts, args=(config_file,))
 procs.append(proc)
 proc.start()
 

@@ -44,7 +44,9 @@ Here are some of the visualizations that Agenoria produces.
 
 ### Daily statistics
 
-![Daily Sleep and Feeding Statistics](docs/daily_sleep_feeding.png?raw=true "Daily Sleep and Feeding Statistics")
+![Daily Sleep and Feeding Statistics](docs/daily_feeding_stats.png?raw=true "Daily Feeding Statistics")
+
+![Daily Sleep and Feeding Statistics](docs/daily_sleep_stats.png?raw=true "Daily Sleep Statistics")
 
 ![Daily Diaper Statistics](docs/daily_diaper.png?raw=true "Daily Diaper Statistics")
 
@@ -194,7 +196,7 @@ By default, the charts (in PDF) are produced in a directory called "build". The 
 ### Development
 The unit tests can be run by first installing the package, then running pytest:
 ```bash
-(agenoria)$ python install .
+(agenoria)$ pip install .
 (agenoria)$ pytest
 ```
 

@@ -7,7 +7,8 @@
 # this package.
 
 from .plot_diaper_charts import plot_diaper_charts  # noqa
-from .plot_sleep_feeding_charts import plot_sleep_feeding_charts  # noqa
+from .plot_sleep_stats_charts import plot_sleep_stats_charts  # noqa
+from .plot_feeding_stats_charts import plot_feeding_stats_charts  # noqa
 from .plot_growth_charts import plot_growth_charts  # noqa
 from .plot_24h_viz import plot_sleep_24h_viz  # noqa
 from .plot_24h_viz import plot_feeding_24h_viz  # noqa

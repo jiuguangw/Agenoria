@@ -16,3 +16,7 @@ def parse_json_config(file_name):
         config['birthday'] = dt.datetime.strptime(
             config['birthday'], '%m-%d-%Y')
     return config
+
+
+def get_daytime_index(data):
+    return (data.dt.hour > 7) & (data.dt.hour < 19)

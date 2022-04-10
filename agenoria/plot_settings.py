@@ -11,6 +11,12 @@ import numpy as np
 import math
 
 
+def mmm_plot(object, data_date, data_mean, data_min, data_max, ALPHA_VALUE):
+    object.plot(data_date, data_mean)
+    object.fill_between(data_date, data_max, data_mean, alpha=ALPHA_VALUE)
+    object.fill_between(data_date, data_min, data_mean, alpha=ALPHA_VALUE)
+
+
 def enumerate_labels(date_num):
     hour_labels = []
     for num in range(0, 24):
