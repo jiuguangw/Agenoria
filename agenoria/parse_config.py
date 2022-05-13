@@ -19,4 +19,8 @@ def parse_json_config(file_name):
 
 
 def get_daytime_index(data):
-    return (data.dt.hour > 7) & (data.dt.hour < 19)
+    return (data.dt.hour > 7) & (data.dt.hour < 20)
+
+
+def get_nighttime_index(data):
+    return (data.dt.hour < 7) | (data.dt.hour > 20)

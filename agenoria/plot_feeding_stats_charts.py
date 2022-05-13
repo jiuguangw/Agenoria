@@ -13,7 +13,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from pandas.plotting import register_matplotlib_converters
-from .parse_config import parse_json_config, get_daytime_index
+from .parse_config import parse_json_config, get_daytime_index, get_nighttime_index
 from .plot_settings import mmm_plot, format_monthly_plot, export_figure
 
 # Debug option
@@ -25,6 +25,14 @@ ALPHA_VALUE = 0.3
 
 # Parameters from JSON
 config = []
+
+
+def export_feeding_text(feeding_data, key_amount, label):
+    print(label + ': ', end='')
+    for index, row in feeding_data.iterrows():
+        print(row['Time of feeding'].strftime('%I:%M%p').lower(), end='')
+        print(': ' + str(int(row[key_amount])) + ' mL; ', end='')
+    print('\n', end='')
 
 
 def parse_glow_feeding_data(file_name, key_amount):
@@ -60,27 +68,44 @@ def parse_glow_feeding_data(file_name, key_amount):
         min_on_date = rows_on_date[key_amount].min()
         sessions_on_date = rows_on_date[key_amount].count()
 
-        # Time between feedings
+        # Daytime feedings
         daytime_index = get_daytime_index(rows_on_date['Time of feeding'])
         daytime_feeding = rows_on_date[daytime_index]
-        time_between_feeding = daytime_feeding['Time of feeding'].diff()
+        daytime_sum = daytime_feeding[key_amount].sum()
 
+        # Daytime time between feedings
+        time_between_feeding = daytime_feeding['Time of feeding'].diff()
         min2hour = np.timedelta64(1, 'h')
         time_between_feeding_max = time_between_feeding.max() / min2hour
         time_between_feeding_mean = time_between_feeding.mean() / min2hour
         time_between_feeding_min = time_between_feeding.min() / min2hour
+
+        # Nighttime feeding
+        nighttime_index = get_nighttime_index(rows_on_date['Time of feeding'])
+        nighttime_feeding = rows_on_date[nighttime_index]
+        nighttime_sum = nighttime_feeding[key_amount].sum()
+
+        # Print
+        if (DEBUG):
+            print(current_date.date())
+            export_feeding_text(daytime_feeding, key_amount, 'Daytime')
+            export_feeding_text(nighttime_feeding, key_amount, 'Nighttime')
+            print('Total volume:', int(sum_on_date), 'mL')
+            print('\n', end='')
 
         # Put stats in a list
         feeding_data_list.append([current_date, sum_on_date,
                                   mean_on_date, min_on_date, max_on_date,
                                   sessions_on_date, time_between_feeding_max,
                                   time_between_feeding_mean,
-                                  time_between_feeding_min])
+                                  time_between_feeding_min,
+                                  daytime_sum, nighttime_sum])
 
     # Convert list to dataframe
     daily_data_new = pd.DataFrame(feeding_data_list, columns=[
         'date', 'sum', 'mean', 'min', 'max', 'sessions',
-        'time gap max', 'time gap mean', 'time gap min'])
+        'time gap max', 'time gap mean', 'time gap min',
+        'daytime sum', 'nighttime sum'])
 
     return daily_data_new
 
@@ -109,7 +134,7 @@ def plot_feeding_stats_charts(config_file):
 
     # Style
     sns.set(style="darkgrid")
-    f, axarr = plt.subplots(2, 3)
+    f, axarr = plt.subplots(3, 3)
 
     # Import data
     global config
@@ -149,25 +174,37 @@ def plot_feeding_stats_charts(config_file):
     axarr[0, 2].set_ylabel('Daily Total (mL)')
     format_monthly_plot(axarr[0, 2], xlim_left, xlim_right)
 
-    # Chart 4 - Eat: Daily Total Solid Feeding (oz)
-    axarr[1, 0].plot(data_solid['date'], data_solid['sum'])
-    axarr[1, 0].set_title('Eat: Daily Total Solid Feeding (oz)')
-    axarr[1, 0].set_ylabel('Daily Total Solid Feeding (oz)')
+    # Chart 4 - Eat: Daytime Volume
+    axarr[1, 0].plot(data_bottle['date'], data_bottle['daytime sum'],)
+    axarr[1, 0].set_title('Eat: Daily Total Daytime Volume (mL)')
+    axarr[1, 0].set_ylabel('Eat: Daily Total Daytime Volume (mL)')
     format_monthly_plot(axarr[1, 0], xlim_left, xlim_right)
 
-    # Chart 5 - Eat: Daily Total Bottle + Solid
-    axarr[1, 1].plot(data_bottle['date'], data_feeding_combined)
-    axarr[1, 1].set_title('Eat: Daily Total Bottle + Solid (oz)')
-    axarr[1, 1].set_ylabel('Daily Total Bottle + Solid (oz)')
+    # Chart 5 - Eat: Nighttime Volume
+    axarr[1, 1].plot(data_bottle['date'], data_bottle['nighttime sum'],)
+    axarr[1, 1].set_title('Eat: Daily Total Nighttime Volume (mL)')
+    axarr[1, 1].set_ylabel('Eat: Daily Total Nighttime Volume (mL)')
     format_monthly_plot(axarr[1, 1], xlim_left, xlim_right)
 
-    # Chart 6 - Eat: Average Time Between Feedings
-    mmm_plot(axarr[1, 2], data_bottle['date'], data_bottle['time gap mean'],
+    # Chart 6 - Eat: Daily Total Solid Feeding (oz)
+    axarr[1, 2].plot(data_solid['date'], data_solid['sum'])
+    axarr[1, 2].set_title('Eat: Daily Total Solid Feeding (oz)')
+    axarr[1, 2].set_ylabel('Daily Total Solid Feeding (oz)')
+    format_monthly_plot(axarr[1, 2], xlim_left, xlim_right)
+
+    # Chart 7 - Eat: Daily Total Bottle + Solid
+    axarr[2, 0].plot(data_bottle['date'], data_feeding_combined)
+    axarr[2, 0].set_title('Eat: Daily Total Bottle + Solid (oz)')
+    axarr[2, 0].set_ylabel('Daily Total Bottle + Solid (oz)')
+    format_monthly_plot(axarr[2, 0], xlim_left, xlim_right)
+
+    # Chart 8 - Eat: Average Time Between Feedings
+    mmm_plot(axarr[2, 1], data_bottle['date'], data_bottle['time gap mean'],
              data_bottle['time gap min'],
              data_bottle['time gap max'], ALPHA_VALUE)
-    axarr[1, 2].set_title('Eat: Average Daytime Bottle Feeding Time Gap (Hr)')
-    axarr[1, 2].set_ylabel('Eat: Average Daytime Bottle Feeding Time Gap (Hr)')
-    format_monthly_plot(axarr[1, 2], xlim_left, xlim_right)
+    axarr[2, 1].set_title('Eat: Average Daytime Bottle Feeding Time Gap (Hr)')
+    axarr[2, 1].set_ylabel('Eat: Average Daytime Bottle Feeding Time Gap (Hr)')
+    format_monthly_plot(axarr[2, 1], xlim_left, xlim_right)
 
     # Export
     f.subplots_adjust(wspace=0.2, hspace=0.35)
