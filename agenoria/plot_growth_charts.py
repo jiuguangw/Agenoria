@@ -129,10 +129,10 @@ def plot_weight_length(plot_object, data_height, data_head, hatch_data):
     format_growth_chart_plot(plot_object)
 
 
-def plot_growth_charts(config_file):
+def plot_growth_charts(config_data):
     # Import data
     global config
-    config = parse_json_config(config_file)
+    config = config_data
 
     # Settings
     sns.set(style="darkgrid")

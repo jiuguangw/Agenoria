@@ -27,13 +27,7 @@ ALPHA_VALUE = 0.3
 config = []
 
 
-def parse_glow_sleep_data(file_name):
-    # Import file
-    data_sleep = pd.read_csv(file_name, parse_dates=['Begin time', 'End time'])
-
-    # Make a new column with date component only
-    data_sleep['Date'] = data_sleep['Begin time'].dt.normalize()
-
+def parse_glow_sleep_data(data_sleep):
     # Find first and last entry in column
     start_date = data_sleep['Date'].iloc[-1]
     end_date = data_sleep['Date'].iloc[0]
@@ -118,7 +112,7 @@ def parse_glow_sleep_data(file_name):
     return data_sleep_daily
 
 
-def plot_sleep_stats_charts(config_file):
+def plot_sleep_stats_charts(config_data, sleep_data):
     # Matplotlib converters
     register_matplotlib_converters()
 
@@ -128,10 +122,10 @@ def plot_sleep_stats_charts(config_file):
 
     # Import data
     global config
-    config = parse_json_config(config_file)
+    config = config_data
 
     # Parse data
-    data_sleep_daily = parse_glow_sleep_data(config['data_sleep'])
+    data_sleep_daily = parse_glow_sleep_data(sleep_data)
 
     # Start date
     xlim_left = data_sleep_daily['date'].iloc[0]

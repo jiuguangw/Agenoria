@@ -70,7 +70,7 @@ def plot_monthly_vomit(plot_object, data):
                         vomit_monthly.index[-1])
 
 
-def plot_medical_charts(config_file):
+def plot_medical_charts(config_data, data):
     register_matplotlib_converters()
 
     # Style
@@ -79,12 +79,7 @@ def plot_medical_charts(config_file):
 
     # Import configs
     global config
-    config = parse_json_config(config_file)
-
-    # Import data
-    data = pd.read_csv(config['data_misc'], parse_dates=['Date'])
-    data.fillna(0, inplace=True)
-    data = data.set_index(data['Date'])
+    config = config_data
 
     # Chart 1 - Total Vomit Per Month
     plot_monthly_vomit(axarr[0, 0], data)

@@ -42,16 +42,7 @@ def count_pee_poop(row):
     return pee, poop
 
 
-def parse_glow_diaper_data(file_name):
-    # Import file
-    data_diaper = pd.read_csv(file_name, parse_dates=['Diaper time'])
-
-    # Sort by date and time
-    data_diaper = data_diaper.sort_values(by=['Diaper time'], ascending=False)
-
-    # Make a new column with date component only
-    data_diaper['Date'] = data_diaper['Diaper time'].dt.normalize()
-
+def parse_glow_diaper_data(data_diaper):
     # Find first and last entry in column
     start_date = data_diaper['Date'].iloc[-1]
     end_date = data_diaper['Date'].iloc[0]
@@ -137,7 +128,7 @@ def get_diaper_monthly_data(diaper_data):
     return diaper_monthly_data
 
 
-def plot_diaper_charts(config_file):
+def plot_diaper_charts(config_data, diaper_data):
     # Matplotlib converters
     register_matplotlib_converters()
 
@@ -147,10 +138,10 @@ def plot_diaper_charts(config_file):
 
     # Import data
     global config
-    config = parse_json_config(config_file)
+    config = config_data
 
     # Parse data
-    daily_diaper_data = parse_glow_diaper_data(config['data_diaper'])
+    daily_diaper_data = parse_glow_diaper_data(diaper_data)
     diaper_monthly_data = get_diaper_monthly_data(daily_diaper_data)
     constipation_monthly_data, diarrhea_monthly_data = get_abnormal_days(
         daily_diaper_data)
