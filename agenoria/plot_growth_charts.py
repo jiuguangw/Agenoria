@@ -25,10 +25,7 @@ def compute_age(date, birthday):
     return age
 
 
-def parse_glow_data(glow_file, birthday):
-    # Import file
-    data = pd.read_csv(glow_file, parse_dates=['Date'])
-
+def parse_glow_data(data, birthday):
     # Compute age
     data['Age'] = compute_age(data['Date'], config['birthday'])
 
@@ -41,10 +38,7 @@ def parse_glow_data(glow_file, birthday):
     return data_height, data_head
 
 
-def parse_hatch_data(hatch_file, birthday):
-    # Import file
-    data = pd.read_csv(hatch_file)
-
+def parse_hatch_data(data, birthday):
     # Keep date only, remove time. Hatch invalid format: redundant AM/PM
     hatch_dates = data['Start Time'].astype(str).str[0: 10]
     # Convert to datetime
@@ -129,10 +123,10 @@ def plot_weight_length(plot_object, data_height, data_head, hatch_data):
     format_growth_chart_plot(plot_object)
 
 
-def plot_growth_charts(config_file):
+def plot_growth_charts(config_data, growth_data, hatch_data):
     # Import data
     global config
-    config = parse_json_config(config_file)
+    config = config_data
 
     # Settings
     sns.set(style="darkgrid")
@@ -140,9 +134,8 @@ def plot_growth_charts(config_file):
     f, axarr = plt.subplots(2, 3)
 
     # Import data
-    data_height, data_head = parse_glow_data(
-        config['data_growth'], config['birthday'])
-    hatch_data = parse_hatch_data(config['data_weight'], config['birthday'])
+    data_height, data_head = parse_glow_data(growth_data, config['birthday'])
+    hatch_data = parse_hatch_data(hatch_data, config['birthday'])
 
     # Start & end date - one year or full
     start_date = 0

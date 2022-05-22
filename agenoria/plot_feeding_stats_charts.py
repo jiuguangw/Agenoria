@@ -35,13 +35,7 @@ def export_feeding_text(feeding_data, key_amount, label):
     print('\n', end='')
 
 
-def parse_glow_feeding_data(file_name, key_amount):
-    # Import file
-    data = pd.read_csv(file_name, parse_dates=['Time of feeding'])
-
-    # Make a new column with date component only
-    data['Date'] = data['Time of feeding'].dt.normalize()
-
+def parse_glow_feeding_data(data, key_amount):
     # Find first and last entry in column
     start_date = data['Date'].iloc[-1]
     end_date = data['Date'].iloc[0]
@@ -128,7 +122,7 @@ def combine_bottle_solid(data_bottle, data_solid):
     return combined
 
 
-def plot_feeding_stats_charts(config_file):
+def plot_feeding_stats_charts(config_data, feeding_bottle_data, feeding_solid_data):
     # Matplotlib converters
     register_matplotlib_converters()
 
@@ -138,12 +132,11 @@ def plot_feeding_stats_charts(config_file):
 
     # Import data
     global config
-    config = parse_json_config(config_file)
+    config = config_data
 
     # Parse data
-    data_bottle = parse_glow_feeding_data(
-        config['data_feed_bottle'], 'Amount(ml)')
-    data_solid = parse_glow_feeding_data(config['data_feed_solid'], 'Amount')
+    data_bottle = parse_glow_feeding_data(feeding_bottle_data, 'Amount(ml)')
+    data_solid = parse_glow_feeding_data(feeding_solid_data, 'Amount')
     data_feeding_combined = combine_bottle_solid(data_bottle, data_solid)
 
     # Start date

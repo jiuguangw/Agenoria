@@ -10,17 +10,28 @@ import agenoria
 import os
 
 
-def test_diaper_charts():
+def get_data():
     # Create the output directory
     if not os.path.exists('build'):
         os.makedirs('build')
 
-    # Config file
+    # Parse JSON config file
     config_file = 'config_zyw.json'
     config = agenoria.parse_json_config(config_file)
 
+    # Import data
+    diaper_data, sleep_data, feeding_bottle_data, feeding_solid_data, misc_data, growth_data, hatch_data = agenoria.import_data(
+        config)
+
+    return config, diaper_data, sleep_data, feeding_bottle_data, feeding_solid_data, misc_data, growth_data, hatch_data
+
+
+def test_diaper_charts():
+    # Setup
+    config, diaper_data, _, _, _, _, _, _ = get_data()
+
     # Plot
-    agenoria.plot_diaper_charts(config_file)
+    agenoria.plot_diaper_charts(config, diaper_data)
 
     # Get the file size of the output PDF
     file_size = os.path.getsize(config['output_daily_diaper_charts'])
@@ -30,16 +41,11 @@ def test_diaper_charts():
 
 
 def test_sleep_stats_charts():
-    # Create the output directory
-    if not os.path.exists('build'):
-        os.makedirs('build')
-
-    # Config file
-    config_file = 'config_zyw.json'
-    config = agenoria.parse_json_config(config_file)
+    # Setup
+    config, _, sleep_data, _, _, _, _, _ = get_data()
 
     # Plot
-    agenoria.plot_sleep_stats_charts(config_file)
+    agenoria.plot_sleep_stats_charts(config, sleep_data)
 
     # Get the file size of the output PDF
     file_size = os.path.getsize(config['output_daily_sleep_stats_charts'])
@@ -49,16 +55,12 @@ def test_sleep_stats_charts():
 
 
 def test_feeding_stats_charts():
-    # Create the output directory
-    if not os.path.exists('build'):
-        os.makedirs('build')
-
-    # Config file
-    config_file = 'config_zyw.json'
-    config = agenoria.parse_json_config(config_file)
+    # Setup
+    config, _, _, feeding_bottle_data, feeding_solid_data, _, _, _ = get_data()
 
     # Plot
-    agenoria.plot_feeding_stats_charts(config_file)
+    agenoria.plot_feeding_stats_charts(
+        config, feeding_bottle_data, feeding_solid_data)
 
     # Get the file size of the output PDF
     file_size = os.path.getsize(config['output_daily_feeding_stats_charts'])
@@ -68,18 +70,14 @@ def test_feeding_stats_charts():
 
 
 def test_24h_viz():
-    # Create the output directory
-    if not os.path.exists('build'):
-        os.makedirs('build')
-
-    # Config file
-    config_file = 'config_zyw.json'
-    config = agenoria.parse_json_config(config_file)
+    # Setup
+    config, diaper_data, sleep_data, feeding_bottle_data, feeding_solid_data, _, _, _ = get_data()
 
     # Plot
-    agenoria.plot_sleep_24h_viz(config_file)
-    agenoria.plot_feeding_24h_viz(config_file)
-    agenoria.plot_diapers_24h_viz(config_file)
+    agenoria.plot_sleep_24h_viz(config, sleep_data)
+    agenoria.plot_feeding_24h_viz(
+        config, feeding_bottle_data, feeding_solid_data)
+    agenoria.plot_diapers_24h_viz(config, diaper_data)
 
     # Get the file size of the output PDF
     file_size_sleep = os.path.getsize(config['output_sleep_viz'])
@@ -93,16 +91,11 @@ def test_24h_viz():
 
 
 def test_growth_charts():
-    # Create the output directory
-    if not os.path.exists('build'):
-        os.makedirs('build')
-
-    # Config file
-    config_file = 'config_zyw.json'
-    config = agenoria.parse_json_config(config_file)
+    # Setup
+    config, _, _, _, _, _, growth_data, hatch_data = get_data()
 
     # Plot
-    agenoria.plot_growth_charts(config_file)
+    agenoria.plot_growth_charts(config, growth_data, hatch_data)
 
     # Get the file size of the output PDF
     file_size = os.path.getsize(config['output_growth'])
@@ -112,16 +105,11 @@ def test_growth_charts():
 
 
 def test_medical_charts():
-    # Create the output directory
-    if not os.path.exists('build'):
-        os.makedirs('build')
-
-    # Config file
-    config_file = 'config_zyw.json'
-    config = agenoria.parse_json_config(config_file)
+    # Setup
+    config, _, _, _, _, misc_data, _, _ = get_data()
 
     # Plot
-    agenoria.plot_medical_charts(config_file)
+    agenoria.plot_medical_charts(config, misc_data)
 
     # Get the file size of the output PDF
     file_size = os.path.getsize(config['output_medical_charts'])

@@ -15,3 +15,4 @@ from .plot_24h_viz import plot_feeding_24h_viz  # noqa
 from .plot_24h_viz import plot_diapers_24h_viz  # noqa
 from .plot_medical_charts import plot_medical_charts  # noqa
 from .parse_config import parse_json_config  # noqa
+from .import_data import import_data  # noqa

@@ -30,13 +30,7 @@ def get_end_date(data, first_year_only):
     return end_date
 
 
-def parse_raw_data(filename, key):
-    # Import data
-    data = pd.read_csv(filename, parse_dates=key)
-
-    # Make a new column data date component only
-    data['Date'] = data[key[0]].dt.normalize()
-
+def parse_raw_data(data, key):
     # Get start and end dates
     start_date = data['Date'].iloc[-1]
 
@@ -50,12 +44,9 @@ def parse_raw_data(filename, key):
     return data
 
 
-def plot_sleep_24h_viz(config_file):
-    # Parse config file
-    config = parse_json_config(config_file)
-
+def plot_sleep_24h_viz(config, sleep_data):
     # Import and extract sleep data
-    data = parse_raw_data(config['data_sleep'], ['Begin time', 'End time'])
+    data = parse_raw_data(sleep_data, ['Begin time', 'End time'])
 
     # Convert end time timestamp to decimal hours
     data['end_timestamp_hour'] = data['End time'].dt.hour + \
@@ -102,15 +93,10 @@ def plot_sleep_24h_viz(config_file):
                   config['output_sleep_viz'])
 
 
-def plot_feeding_24h_viz(config_file):
-    # Parse config file
-    config = parse_json_config(config_file)
-
+def plot_feeding_24h_viz(config, feeding_bottle_data, feeding_solid_data):
     # Import and extract feeding data
-    data_bottle = parse_raw_data(
-        config['data_feed_bottle'], ['Time of feeding'])
-    data_solid = parse_raw_data(
-        config['data_feed_solid'], ['Time of feeding'])
+    data_bottle = parse_raw_data(feeding_bottle_data, ['Time of feeding'])
+    data_solid = parse_raw_data(feeding_solid_data, ['Time of feeding'])
 
     # Plot setup
     sns.set(style="darkgrid")
@@ -163,13 +149,9 @@ def map_poop_color(color):
     return key
 
 
-def plot_diapers_24h_viz(config_file):
-    # Parse config file
-    config = parse_json_config(config_file)
-
+def plot_diapers_24h_viz(config, diaper_data):
     # Import and extract feeding data
-    data = parse_raw_data(
-        config['data_diaper'], ['Diaper time'])
+    data = parse_raw_data(diaper_data, ['Diaper time'])
 
     # Go through poop colors and map to matplotlib color keys
     data['Color key'] = data['Color'].apply(map_poop_color)
