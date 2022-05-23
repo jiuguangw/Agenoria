@@ -164,7 +164,7 @@ def plot_growth_charts(config_data, growth_data, hatch_data):
 
     axarr[0, 1].set_xlim(start_date, end_date)
     axarr[0, 1].xaxis.set_major_locator(ticker.MultipleLocator(1))
-    axarr[0, 1].set_ylim(20, 80)
+    axarr[0, 1].autoscale(enable=True, axis='y', tight=True)
     format_growth_chart_plot(axarr[0, 1])
 
     # Chart 2 - Weight Rate of Change / Age
@@ -173,7 +173,7 @@ def plot_growth_charts(config_data, growth_data, hatch_data):
     axarr[0, 2].set_xlabel('Age (months)')
     axarr[0, 2].set_ylabel('Average Daily Weight Gain (oz)')
     axarr[0, 2].set_xlim(start_date, end_date)
-    axarr[0, 2].set_ylim(-0.5, 1.3)
+    axarr[0, 2].autoscale(enable=True, axis='y', tight=True)
     axarr[0, 2].xaxis.set_major_locator(ticker.MultipleLocator(1))
     axarr[0, 2].yaxis.set_major_locator(ticker.MultipleLocator(0.2))
     format_growth_chart_plot(axarr[0, 2])

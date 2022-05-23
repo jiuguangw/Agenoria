@@ -8,15 +8,15 @@
 
 import agenoria
 import os
+import pytest
 
 
-def get_data():
+def get_data(config_file):
     # Create the output directory
     if not os.path.exists('build'):
         os.makedirs('build')
 
     # Parse JSON config file
-    config_file = 'config_zyw.json'
     config = agenoria.parse_json_config(config_file)
 
     # Import data
@@ -26,9 +26,10 @@ def get_data():
     return config, diaper_data, sleep_data, feeding_bottle_data, feeding_solid_data, misc_data, growth_data, hatch_data
 
 
-def test_diaper_charts():
+@pytest.mark.parametrize('config_file', ['config_zyw.json'])
+def test_diaper_charts(config_file):
     # Setup
-    config, diaper_data, _, _, _, _, _, _ = get_data()
+    config, diaper_data, _, _, _, _, _, _ = get_data(config_file)
 
     # Plot
     agenoria.plot_diaper_charts(config, diaper_data)
@@ -40,9 +41,10 @@ def test_diaper_charts():
     assert file_size > 20 * 1024, "Test failed - diaper charts"
 
 
-def test_sleep_stats_charts():
+@pytest.mark.parametrize('config_file', ['config_zyw.json'])
+def test_sleep_stats_charts(config_file):
     # Setup
-    config, _, sleep_data, _, _, _, _, _ = get_data()
+    config, _, sleep_data, _, _, _, _, _ = get_data(config_file)
 
     # Plot
     agenoria.plot_sleep_stats_charts(config, sleep_data)
@@ -54,9 +56,11 @@ def test_sleep_stats_charts():
     assert file_size > 30 * 1024, "Test failed - diaper charts"
 
 
-def test_feeding_stats_charts():
+@pytest.mark.parametrize('config_file', ['config_zyw.json'])
+def test_feeding_stats_charts(config_file):
     # Setup
-    config, _, _, feeding_bottle_data, feeding_solid_data, _, _, _ = get_data()
+    config, _, _, feeding_bottle_data, feeding_solid_data, _, _, _ = get_data(
+        config_file)
 
     # Plot
     agenoria.plot_feeding_stats_charts(
@@ -69,9 +73,11 @@ def test_feeding_stats_charts():
     assert file_size > 40 * 1024, "Test failed - diaper charts"
 
 
-def test_24h_viz():
+@pytest.mark.parametrize('config_file', ['config_zyw.json'])
+def test_24h_viz(config_file):
     # Setup
-    config, diaper_data, sleep_data, feeding_bottle_data, feeding_solid_data, _, _, _ = get_data()
+    config, diaper_data, sleep_data, feeding_bottle_data, feeding_solid_data, _, _, _ = get_data(
+        config_file)
 
     # Plot
     agenoria.plot_sleep_24h_viz(config, sleep_data)
@@ -90,9 +96,10 @@ def test_24h_viz():
     assert file_size_diaper > 25 * 1024, "Test failed - diaper viz"
 
 
-def test_growth_charts():
+@pytest.mark.parametrize('config_file', ['config_zyw.json'])
+def test_growth_charts(config_file):
     # Setup
-    config, _, _, _, _, _, growth_data, hatch_data = get_data()
+    config, _, _, _, _, _, growth_data, hatch_data = get_data(config_file)
 
     # Plot
     agenoria.plot_growth_charts(config, growth_data, hatch_data)
@@ -104,9 +111,10 @@ def test_growth_charts():
     assert file_size > 30 * 1024, "Test failed - growth charts"
 
 
-def test_medical_charts():
+@pytest.mark.parametrize('config_file', ['config_zyw.json'])
+def test_medical_charts(config_file):
     # Setup
-    config, _, _, _, _, misc_data, _, _ = get_data()
+    config, _, _, _, _, misc_data, _, _ = get_data(config_file)
 
     # Plot
     agenoria.plot_medical_charts(config, misc_data)
