@@ -78,6 +78,7 @@ def parse_glow_feeding_data(data, key_amount):
         nighttime_index = get_nighttime_index(rows_on_date['Time of feeding'])
         nighttime_feeding = rows_on_date[nighttime_index]
         nighttime_sum = nighttime_feeding[key_amount].sum()
+        nighttime_feeding_count = len(nighttime_feeding)
 
         # Print
         if (DEBUG):
@@ -93,13 +94,14 @@ def parse_glow_feeding_data(data, key_amount):
                                   sessions_on_date, time_between_feeding_max,
                                   time_between_feeding_mean,
                                   time_between_feeding_min,
-                                  daytime_sum, nighttime_sum])
+                                  daytime_sum, nighttime_sum,
+                                  nighttime_feeding_count])
 
     # Convert list to dataframe
     daily_data_new = pd.DataFrame(feeding_data_list, columns=[
         'date', 'sum', 'mean', 'min', 'max', 'sessions',
         'time gap max', 'time gap mean', 'time gap min',
-        'daytime sum', 'nighttime sum'])
+        'daytime sum', 'nighttime sum', 'nighttime count'])
 
     return daily_data_new
 
@@ -179,25 +181,31 @@ def plot_feeding_stats_charts(config_data, feeding_bottle_data, feeding_solid_da
     axarr[1, 1].set_ylabel('Eat: Daily Total Nighttime Volume (mL)')
     format_monthly_plot(axarr[1, 1], xlim_left, xlim_right)
 
-    # Chart 6 - Eat: Daily Total Solid Feeding (oz)
-    axarr[1, 2].plot(data_solid['date'], data_solid['sum'])
-    axarr[1, 2].set_title('Eat: Daily Total Solid Feeding (oz)')
-    axarr[1, 2].set_ylabel('Daily Total Solid Feeding (oz)')
+    # Chart 6 - Eat: Number of Nighttime Feedings
+    axarr[1, 2].plot(data_bottle['date'], data_bottle['nighttime count'],)
+    axarr[1, 2].set_title('Eat: Number of Nighttime Feedings')
+    axarr[1, 2].set_ylabel('Eat: Number of Nighttime Feedings')
     format_monthly_plot(axarr[1, 2], xlim_left, xlim_right)
 
-    # Chart 7 - Eat: Daily Total Bottle + Solid
-    axarr[2, 0].plot(data_bottle['date'], data_feeding_combined)
-    axarr[2, 0].set_title('Eat: Daily Total Bottle + Solid (oz)')
-    axarr[2, 0].set_ylabel('Daily Total Bottle + Solid (oz)')
+    # Chart 7 - Eat: Daily Total Solid Feeding (oz)
+    axarr[2, 0].plot(data_solid['date'], data_solid['sum'])
+    axarr[2, 0].set_title('Eat: Daily Total Solid Feeding (oz)')
+    axarr[2, 0].set_ylabel('Daily Total Solid Feeding (oz)')
     format_monthly_plot(axarr[2, 0], xlim_left, xlim_right)
 
-    # Chart 8 - Eat: Average Time Between Feedings
-    mmm_plot(axarr[2, 1], data_bottle['date'], data_bottle['time gap mean'],
+    # Chart 8 - Eat: Daily Total Bottle + Solid
+    axarr[2, 1].plot(data_bottle['date'], data_feeding_combined)
+    axarr[2, 1].set_title('Eat: Daily Total Bottle + Solid (oz)')
+    axarr[2, 1].set_ylabel('Daily Total Bottle + Solid (oz)')
+    format_monthly_plot(axarr[2, 1], xlim_left, xlim_right)
+
+    # Chart 9 - Eat: Average Time Between Feedings
+    mmm_plot(axarr[2, 2], data_bottle['date'], data_bottle['time gap mean'],
              data_bottle['time gap min'],
              data_bottle['time gap max'], ALPHA_VALUE)
-    axarr[2, 1].set_title('Eat: Average Daytime Bottle Feeding Time Gap (Hr)')
-    axarr[2, 1].set_ylabel('Eat: Average Daytime Bottle Feeding Time Gap (Hr)')
-    format_monthly_plot(axarr[2, 1], xlim_left, xlim_right)
+    axarr[2, 2].set_title('Eat: Average Daytime Bottle Feeding Time Gap (Hr)')
+    axarr[2, 2].set_ylabel('Eat: Average Daytime Bottle Feeding Time Gap (Hr)')
+    format_monthly_plot(axarr[2, 2], xlim_left, xlim_right)
 
     # Export
     f.subplots_adjust(wspace=0.2, hspace=0.35)

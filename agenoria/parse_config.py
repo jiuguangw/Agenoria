@@ -23,4 +23,4 @@ def get_daytime_index(data):
 
 
 def get_nighttime_index(data):
-    return (data.dt.hour < 7) | (data.dt.hour >= 20)
+    return (data.dt.hour < 7) | (data.dt.hour >= 21)
