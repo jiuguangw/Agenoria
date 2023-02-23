@@ -10,16 +10,28 @@
     </a>
     </a>
     <a href="https://www.python.org/">
-        <img src="https://img.shields.io/badge/built%20with-Python3-red.svg" />
+      <img src="https://img.shields.io/badge/built%20with-Python3-red.svg" />
     </a>
     <a href="https://github.com/jiuguangw/Agenoria/actions">
-    <img src="https://github.com/jiuguangw/Agenoria/actions/workflows/test.yml/badge.svg">
+      <img src="https://github.com/jiuguangw/Agenoria/actions/workflows/test.yml/badge.svg">
     </a>
+    <br />
     <a href="https://codeclimate.com/github/jiuguangw/Agenoria">
-    <img src="https://img.shields.io/codeclimate/maintainability/jiuguangw/Agenoria">
+      <img src="https://img.shields.io/codeclimate/maintainability/jiuguangw/Agenoria">
     </a>
     <a href="https://codeclimate.com/github/jiuguangw/Agenoria/issues">
-    <img src="https://img.shields.io/codeclimate/issues/jiuguangw/Agenoria">
+      <img src="https://img.shields.io/codeclimate/issues/jiuguangw/Agenoria">
+    </a>
+    <a href="https://codecov.io/gh/jiuguangw/Agenoria">
+      <img src="https://codecov.io/gh/jiuguangw/Agenoria/branch/main/graph/badge.svg?token=UU0KQ94PAQ" />
+    </a>
+    <a href="https://github.com/jiuguangw/Agenoria/actions">
+      <img src="https://img.shields.io/badge/linting-pylint-yellowgreen" />
+    </a>
+  </p>
+  <p align="center">
+    <a href="https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=222033385&machine=standardLinux32gb&devcontainer_path=.devcontainer%2Fdevcontainer.json&location=EastUs">
+      <img src="https://github.com/codespaces/badge.svg" />
     </a>
   </p>
 </p>
@@ -36,7 +48,7 @@ When my wife and I were expecting our first child in late 2018, I came across a 
 
 What started as a fun project became immensely useful in diagnosing some medical issues. Since Month 5, we've encountered significant feeding difficulties with our baby - he would often push away the bottle and refuse to eat, even when he seems hungry. We relied on accurate daily record-keeping to gauge whether or not he has had sufficient amount to eat - 1000 mL or 32 oz daily, plus pureed foods after Month 6. Despite of these efforts, while his absolute weight grew in the first nine months, his weight percentile continued to drop, from 82% at birth, to the lowest of 27% around Month 10. Several periods of slow weight gain (or even weight loss) were associated with low appetite that lasted close to a week each. But then from Month 9-10, his weight gain slowed to a crawl, even as he was eating more than ever. Mysterious low appetite, worsening feeding aversion, slow weight gain, plus frequent (few times a month) projectile vomiting, constipation, and eczema - prompted us to seek the attention of specialists, even though his pediatrician was not convinced that there were any issues at all. The result - he was diagnosed with a non-IgE mediated allergy to cow's milk, which prompted us to remove all dairy from his diet, leading to immediate weight gain from Month 11.
 
-Agenoria was critical in visualizing the data and identifying abnormal behaviors early. In case it is helpful to another data-obsessed parent - I'm making Agenoria freely available on the web, which includes several Python scripts for statistics and visualization, as well as a dataset containing nearly 10,000 observations (2391 diaper changes, 2574 bottle feeding, 603 solid feeding, and 4203 sleep sessions). For terms of use, see the [License](#License) section below.
+Agenoria was critical in visualizing the data and identifying abnormal behaviors early. In case it is helpful to another data-obsessed parent - I'm making Agenoria freely available on the web, which includes several Python scripts for statistics and visualization, as well as a dataset containing nearly 23,000+ observations (Baby 1 with 3371 diaper changes, 2929 bottle feeding, 1158 solid feeding, and 5140 sleep sessions; Baby 2 with 2431 diaper changes, 3614 bottle feeding, 113 solid feeding, and 4541 sleep sessions). For terms of use, see the [License](#License) section below.
 
 ## Gallery
 
@@ -44,31 +56,44 @@ Here are some of the visualizations that Agenoria produces.
 
 ### Daily statistics
 
-![Daily Sleep and Feeding Statistics](docs/daily_feeding_stats.png?raw=true "Daily Feeding Statistics")
+Baby 1 - Feeding          |  Baby 2 - Feeding
+:-------------------------:|:-------------------------:
+![Daily Feeding Statistics](docs/zyw_daily_feeding_stats.png?raw=true "Daily Feeding Statistics")  |  ![Daily Feeding Statistics](docs/zlw_daily_feeding_stats.png?raw=true "Daily Feeding Statistics")
 
-![Daily Sleep and Feeding Statistics](docs/daily_sleep_stats.png?raw=true "Daily Sleep Statistics")
+Baby 1 - Sleep          |  Baby 2 - Sleep
+:-------------------------:|:-------------------------:
+![Daily Sleep Statistics](docs/zyw_daily_sleep_stats.png?raw=true "Daily Sleep Statistics")  |  ![Daily Sleep Statistics](docs/zlw_daily_sleep_stats.png?raw=true "Daily Sleep Statistics")
 
-![Daily Diaper Statistics](docs/daily_diaper.png?raw=true "Daily Diaper Statistics")
+Baby 1 - Diapers          |  Baby 2 - Diapers
+:-------------------------:|:-------------------------:
+![Daily Diaper Statistics](docs/zyw_daily_diaper.png?raw=true "Daily Diaper Statistics")  |  ![Daily Diaper Statistics](docs/zlw_daily_diaper.png?raw=true "Daily Diaper Statistics")
 
-### 24-hour sleep visualization
 
-![Sleep Visualization](docs/sleep.png?raw=true "Sleep Visualization")
+### 24-hour visualizations
 
-### 24-hour feeding visualization
+Baby 1 - Sleep          |  Baby 2 - Sleep
+:-------------------------:|:-------------------------:
+![Sleep Visualization](docs/zyw_sleep.png?raw=true "Sleep Visualization")  |  ![Sleep Visualization](docs/zlw_sleep.png?raw=true "Sleep Visualization")
 
-![Feeding Visualization](docs/feeding.png?raw=true "Feeding Visualization")
+Baby 1 - Feeding           |  Baby 2 - Feeding
+:-------------------------:|:-------------------------:
+![Feeding Visualization](docs/zyw_feeding.png?raw=true "Feeding Visualization")  |  ![Feeding Visualization](docs/zlw_feeding.png?raw=true "Feeding Visualization")
 
-### 24-hour diaper visualization
-
-![Diaper Visualization](docs/diapers.png?raw=true "Diaper Visualization")
+Baby 1 - Diapers         |  Baby 2 - Diapers
+:-------------------------:|:-------------------------:
+![Diaper Visualization](docs/zyw_diapers.png?raw=true "Diaper Visualization")  |  ![Diaper Visualization](docs/zlw_diapers.png?raw=true "Diaper Visualization")
 
 ### Growth charts - weight, height, head circumference
 
-![Growth Visualization](docs/growth.png?raw=true "Growth Visualization")
+Baby 1           |  Baby 2
+:-------------------------:|:-------------------------:
+![Growth Visualization](docs/zyw_growth.png?raw=true "Growth Visualization")  |  ![Growth Visualization](docs/zlw_growth.png?raw=true "Growth Visualization")
 
-### Medical charts - vomit
+### Misc charts
 
-![Medical Issues Visualization](docs/medical.png?raw=true "Medical Issues Visualization")
+Baby 1           |  Baby 2
+:-------------------------:|:-------------------------:
+![Medical Issues Visualization](docs/zyw_medical.png?raw=true "Medical Issues Visualization")  |  ![Medical Issues Visualization](docs/zlw_medical.png?raw=true "Medical Issues Visualization")
 
 ## Data collection
 
@@ -119,18 +144,18 @@ Supported Configurations:
 
 | OS      | Python version |
 | ------- | -------------- |
-| MacOS   | 3.7  |
-| Ubuntu  | 3.7  |
+| MacOS   | 3.10  |
+| Ubuntu  | 3.10  |
 
 
 ### (Optional) Create a virtual environment
 
 I strongly recommend using a virtual environment to ensure dependencies are  installed safely. This is an optional setup, but if you have trouble running the scripts, try this first.
 
-The instructions below assume you are using Conda, though Virtualenv is essentially interchangeable. To create a new Python 3.7 environment, run:
+The instructions below assume you are using Conda, though Virtualenv is essentially interchangeable. To create a new Python environment, run:
 
 ```bash
-conda create --name agenoria python=3.7
+conda create --name agenoria python=3.10
 conda activate agenoria
 ```
 
@@ -173,7 +198,7 @@ The Glow Baby data can be generated by going to "Export Report" - "CSV", choose 
 * glow_sleep.csv - contains sleep data
 * glow_growth.csv - contains growth data such as head circumference, weight, and length
 
-The file "config.json" specifies the locations of the data files. It also requires the user to enter two values - gender and birthday.
+The `config/*.toml` configuration files (imported via `__init__.py`) specifies the locations of the data files. It also requires the user to enter two values - gender and birthday.
 
 Note:
 
@@ -188,16 +213,29 @@ The columns of both the Glow and Hatch CSVs are sufficiently self explanatory. I
 
 ### Plotting
 ```bash
-(agenoria)$ python agenoria.py
+# Pass in the configuration file in .toml
+(agenoria)$ python agenoria_main.py config/config_zyw.toml
 ```
 
 By default, the charts (in PDF) are produced in a directory called "build". The PDFs are ready for printing on paper sized 17 by 11 inches (Tabloid paper).
 
 ### Development
-The unit tests can be run by first installing the package, then running pytest:
+The following linting tools are used for the project:
+* yapf: autoformatter
+* isort: imports sorting
+* pylint: linting
+* mypy: type checking
+
 ```bash
-(agenoria)$ pip install .
-(agenoria)$ pytest
+yapf -i -r --style .github/style.yapf .
+isort .
+pylint --rcfile=.github/pylintrc ./agenoria
+mypy . --config-file .github/mypy.ini
+```
+
+The unit tests can be run by:
+```bash
+(agenoria)$ python -m pytest
 ```
 
 ## License

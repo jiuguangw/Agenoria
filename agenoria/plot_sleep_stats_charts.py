@@ -6,35 +6,31 @@
 # Please see the LICENSE file that should have been included as part of
 # this package.
 
-import datetime as dt
-from dateutil.relativedelta import relativedelta
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from dateutil.relativedelta import relativedelta
 from pandas.plotting import register_matplotlib_converters
-from .parse_config import parse_json_config, get_daytime_index
-from .plot_settings import format_monthly_plot, export_figure
 
-# Debug option
-DEBUG = False
-DEBUG_START_DATE = dt.datetime(2019, 8, 17, 0, 0, 0)
-DEBUG_END_DATE = dt.datetime(2019, 9, 27, 0, 0, 0)
+from config import param as config
+from config import sleep_data
+
+from .parse_config import get_daytime_index
+from .plot_settings import export_figure, format_monthly_plot
 
 ALPHA_VALUE = 0.3
-
-# Parameters from JSON
-config = []
+SLEEP_THRESHOLD = 0.0333333  # two minutes -> hours
 
 
-def parse_glow_sleep_data(data_sleep):
+def parse_glow_sleep_data(data_sleep: pd.DataFrame) -> pd.DataFrame:
     # Find first and last entry in column
     start_date = data_sleep['Date'].iloc[-1]
     end_date = data_sleep['Date'].iloc[0]
 
-    if (DEBUG):
-        start_date = DEBUG_START_DATE
-        end_date = DEBUG_END_DATE
+    if config['debug']["debug_mode"]:
+        start_date = config['debug']["debug_start_date"]
+        end_date = config['debug']["debug_end_date"]
 
     sleep_data_list = []
     offset = 0
@@ -59,7 +55,6 @@ def parse_glow_sleep_data(data_sleep):
         rows_on_date = data_sleep[data_sleep['Date'].isin([current_date])]
 
         # Remove all sleep sessions less than two minutes
-        SLEEP_THRESHOLD = 0.0333333  # two minutes -> hours
         filtered = rows_on_date[rows_on_date['duration'] > SLEEP_THRESHOLD]
 
         # Get total sleep duration
@@ -81,8 +76,8 @@ def parse_glow_sleep_data(data_sleep):
         max_awake_duration = awake_duration.max() / np.timedelta64(1, 'h')
 
         # Remove session that extends into other days
-        filtered2 = filtered[filtered['End time'].dt.normalize()
-                             == current_date]
+        filtered2 = filtered[filtered['End time'].dt.normalize() ==
+                             current_date]
 
         # Nap sessions must begin and end within the defined window
         nap_index1 = get_daytime_index(filtered2['Begin time'])
@@ -97,32 +92,32 @@ def parse_glow_sleep_data(data_sleep):
         nighttime_duration = total_sleep_duration - nap_duration_on_date
 
         # Put stats in a list
-        sleep_data_list.append(
-            [current_date, nap_sessions_on_date, total_sleep_duration,
-             nap_duration_on_date, nighttime_duration,
-             longest_session, max_awake_duration])
+        sleep_data_list.append([
+            current_date, nap_sessions_on_date, total_sleep_duration,
+            nap_duration_on_date, nighttime_duration, longest_session,
+            max_awake_duration
+        ])
 
     # Convert list to dataframe
-    data_sleep_daily = pd.DataFrame(
-        sleep_data_list, columns=['date', 'total_naps', 'total_sleep_duration',
-                                  'total_nap_duration',
-                                  'total_nighttime_duration',
-                                  'longest_session', 'max_awake_duration'])
+    data_sleep_daily = pd.DataFrame(sleep_data_list,
+                                    columns=[
+                                        'date', 'total_naps',
+                                        'total_sleep_duration',
+                                        'total_nap_duration',
+                                        'total_nighttime_duration',
+                                        'longest_session', 'max_awake_duration'
+                                    ])
 
     return data_sleep_daily
 
 
-def plot_sleep_stats_charts(config_data, sleep_data):
+def plot_sleep_stats_charts() -> None:
     # Matplotlib converters
     register_matplotlib_converters()
 
     # Style
     sns.set(style="darkgrid")
-    f, axarr = plt.subplots(2, 3)
-
-    # Import data
-    global config
-    config = config_data
+    fig, axarr = plt.subplots(2, 3)
 
     # Parse data
     data_sleep_daily = parse_glow_sleep_data(sleep_data)
@@ -130,7 +125,7 @@ def plot_sleep_stats_charts(config_data, sleep_data):
     # Start date
     xlim_left = data_sleep_daily['date'].iloc[0]
     # End date - one year or full
-    if (config["output_year_one_only"]):
+    if config['output_format']["output_year_one_only"]:
         xlim_right = xlim_left + relativedelta(years=1)
     else:
         xlim_right = data_sleep_daily['date'].iloc[-1]
@@ -177,6 +172,6 @@ def plot_sleep_stats_charts(config_data, sleep_data):
     format_monthly_plot(axarr[1, 2], xlim_left, xlim_right)
 
     # Export
-    f.subplots_adjust(wspace=0.2, hspace=0.35)
-    export_figure(f, config['output_dim_x'], config['output_dim_y'],
-                  config['output_daily_sleep_stats_charts'])
+    fig.subplots_adjust(wspace=0.2, hspace=0.35)
+    export_figure(fig,
+                  config['output_data']['output_daily_sleep_stats_charts'])

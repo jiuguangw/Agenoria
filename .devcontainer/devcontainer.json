@@ -1,0 +1,30 @@
+{
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".."
+    },
+
+    "remoteUser": "nonroot",
+
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python"
+            ],
+            "settings": {
+                "python.testing.pytestArgs": [
+                    "."
+                ],
+                "python.testing.unittestEnabled": false,
+                "python.testing.pytestEnabled": true,
+                "python.formatting.provider": "yapf",
+                "python.formatting.yapfArgs": [
+                    "--style",
+                    ".github/style.yapf"
+                ],
+                "python.linting.mypyEnabled": true,
+                "python.linting.enabled": true
+            }
+        }
+    }
+}

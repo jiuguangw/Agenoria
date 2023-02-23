@@ -6,97 +6,101 @@
 # Please see the LICENSE file that should have been included as part of
 # this package.
 
-from matplotlib.dates import MonthLocator, DateFormatter
-import numpy as np
 import math
 
+import matplotlib as plt
+import numpy as np
+import pandas as pd
+from chart_studio import plotly
+from matplotlib.dates import DateFormatter, MonthLocator
 
-def mmm_plot(object, data_date, data_mean, data_min, data_max, ALPHA_VALUE):
-    object.plot(data_date, data_mean)
-    object.fill_between(data_date, data_max, data_mean, alpha=ALPHA_VALUE)
-    object.fill_between(data_date, data_min, data_mean, alpha=ALPHA_VALUE)
+from config import param as config
+
+# Figure settings
+TITLE_HEIGHT_ADJUST = 1.02
+
+TITLE_FONT_SIZE_LG = 25
+AXIS_FONT_SIZE_LG = 15
+TITLE_FONT_SIZE_MED = 14
+AXIS_FONT_SIZE_MED = 10
+TITLE_FONT_SIZE_SM = 10
+AXIS_FONT_SIZE_SM = 8
+
+ALPHA_VALUE = 0.3
 
 
-def enumerate_labels(date_num):
-    hour_labels = []
-    for num in range(0, 24):
-        label = str(num) + ':00'
-        hour_labels.append(label)
+def mmm_plot(plot_object: plt.figure, data_date: pd.DataFrame,
+             data_mean: pd.DataFrame, data_min: pd.DataFrame,
+             data_max: pd.DataFrame) -> None:
+    plot_object.plot(data_date, data_mean)
+    plot_object.fill_between(data_date, data_max, data_mean, alpha=ALPHA_VALUE)
+    plot_object.fill_between(data_date, data_min, data_mean, alpha=ALPHA_VALUE)
 
-    week_labels = []
-    for num in range(0, math.ceil(date_num / 7), 2):
-        label = str(num)
-        week_labels.append(label)
+
+def enumerate_labels(date_num: int) -> tuple[pd.DataFrame, pd.DataFrame]:
+    hour_labels = [f"{num}:00" for num in range(24)]
+    week_labels = [str(num) for num in range(0, math.ceil(date_num / 7), 2)]
 
     return hour_labels, week_labels
 
 
-def format_24h_week_plot_horizontal(ax, date_num, title):
-    # Figure settings
-    TITLE_FONT_SIZE = 25
-    AXIS_FONT_SIZE = 15
-    TITLE_HEIGHT_ADJUST = 1.02
-
+def format_24h_week_plot_horizontal(fig_axis: plt.figure, date_num: int,
+                                    title: str) -> None:
     # Create the tick labels
     hour_labels, week_labels = enumerate_labels(date_num)
 
     # Set title and axis labels
-    ax.set_title(title, fontsize=TITLE_FONT_SIZE, y=TITLE_HEIGHT_ADJUST)
-    ax.set_xlabel('Age (weeks)', fontsize=AXIS_FONT_SIZE)
-    ax.set_ylabel('Time of Day', fontsize=AXIS_FONT_SIZE)
+    if config['output_format']['output_chart_labels_on']:
+        fig_axis.set_title(title,
+                           fontsize=TITLE_FONT_SIZE_LG,
+                           y=TITLE_HEIGHT_ADJUST)
+        fig_axis.set_xlabel('Age (weeks)', fontsize=AXIS_FONT_SIZE_LG)
+        fig_axis.set_ylabel('Time of Day', fontsize=AXIS_FONT_SIZE_LG)
 
     # Format y axis - clock time
-    ax.set_ylim(0, 24)
-    ax.yaxis.set_ticks(np.arange(0, 24, 1))
-    ax.set_yticklabels(hour_labels)
-    ax.invert_yaxis()
+    fig_axis.set_ylim(0, 24)
+    fig_axis.yaxis.set_ticks(np.arange(0, 24, 1))
+    fig_axis.set_yticklabels(hour_labels)
+    fig_axis.invert_yaxis()
 
     # Format x axis - bottom, week number
-    ax.set_xlim(1, date_num)
-    ax.xaxis.set_ticks(np.arange(1, date_num + 1, 14))
-    ax.set_xticklabels(week_labels)
+    fig_axis.set_xlim(1, date_num)
+    fig_axis.xaxis.set_ticks(np.arange(1, date_num + 1, 14))
+    fig_axis.set_xticklabels(week_labels)
 
 
-def format_24h_week_plot_vertical(ax, date_num, title):
-    # Figure settings
-    AXIS_FONT_SIZE = 15
-
+def format_24h_week_plot_vertical(fig_axis: plt.figure, date_num: int) -> None:
     # Create the tick labels
     hour_labels, week_labels = enumerate_labels(date_num)
 
     # Set title and axis labels
-    ax.set_xlabel('Age (weeks)', fontsize=AXIS_FONT_SIZE, rotation=180)
-    ax.set_ylabel('Time of Day', fontsize=AXIS_FONT_SIZE)
+    fig_axis.set_xlabel('Age (weeks)',
+                        fontsize=AXIS_FONT_SIZE_LG,
+                        rotation=180)
+    fig_axis.set_ylabel('Time of Day', fontsize=AXIS_FONT_SIZE_LG)
 
     # Format y axis - clock time
-    ax.set_ylim(24, 0)
-    ax.yaxis.set_ticks(np.arange(0, 24, 1))
-    ax.set_yticklabels(hour_labels, rotation=180)
-    ax.invert_yaxis()
+    fig_axis.set_ylim(24, 0)
+    fig_axis.yaxis.set_ticks(np.arange(0, 24, 1))
+    fig_axis.set_yticklabels(hour_labels, rotation=180)
+    fig_axis.invert_yaxis()
 
     # Format x axis - bottom, week number
-    ax.set_xlim(1, date_num)
-    ax.xaxis.set_ticks(np.arange(1, date_num + 1, 14))
-    ax.set_xticklabels(week_labels, rotation=90)
+    fig_axis.set_xlim(1, date_num)
+    fig_axis.xaxis.set_ticks(np.arange(1, date_num + 1, 14))
+    fig_axis.set_xticklabels(week_labels, rotation=90)
 
 
-def format_growth_chart_plot(plot_object):
-    # Figure settings
-    TITLE_FONT_SIZE = 14
-    AXIS_FONT_SIZE = 10
-
+def format_growth_chart_plot(plot_object: plt.figure) -> None:
     # Change label sizes
-    plot_object.title.set_size(TITLE_FONT_SIZE)
-    plot_object.xaxis.label.set_size(AXIS_FONT_SIZE)
-    plot_object.yaxis.label.set_size(AXIS_FONT_SIZE)
-    plot_object.tick_params(labelsize=AXIS_FONT_SIZE)
+    plot_object.title.set_size(TITLE_FONT_SIZE_MED)
+    plot_object.xaxis.label.set_size(AXIS_FONT_SIZE_MED)
+    plot_object.yaxis.label.set_size(AXIS_FONT_SIZE_MED)
+    plot_object.tick_params(labelsize=AXIS_FONT_SIZE_MED)
 
 
-def format_monthly_plot(plot_object, xlim_left, xlim_right):
-    # Figure settings
-    TITLE_FONT_SIZE = 10
-    AXIS_FONT_SIZE = 8
-
+def format_monthly_plot(plot_object: plt.figure, xlim_left: int,
+                        xlim_right: int) -> None:
     # Axis label
     plot_object.set_xlabel('Date')
 
@@ -105,10 +109,10 @@ def format_monthly_plot(plot_object, xlim_left, xlim_right):
     plot_object.autoscale(enable=True, axis='y', tight=True)
 
     # Change label sizes
-    plot_object.title.set_size(TITLE_FONT_SIZE)
-    plot_object.xaxis.label.set_size(AXIS_FONT_SIZE)
-    plot_object.yaxis.label.set_size(AXIS_FONT_SIZE)
-    plot_object.tick_params(labelsize=AXIS_FONT_SIZE)
+    plot_object.title.set_size(TITLE_FONT_SIZE_SM)
+    plot_object.xaxis.label.set_size(AXIS_FONT_SIZE_SM)
+    plot_object.yaxis.label.set_size(AXIS_FONT_SIZE_SM)
+    plot_object.tick_params(labelsize=AXIS_FONT_SIZE_SM)
 
     # Change tick spacing
     plot_object.set_xticks(plot_object.get_xticks()[::1])
@@ -117,8 +121,15 @@ def format_monthly_plot(plot_object, xlim_left, xlim_right):
     plot_object.xaxis.set_major_formatter(DateFormatter("%b"))
 
 
-def export_figure(figure, dim_x, dim_y, output_filename):
+def export_figure(figure: plt.figure, output_filename: str) -> None:
     # Export
-    figure.set_size_inches(dim_x, dim_y)
-    figure.savefig(output_filename, bbox_inches='tight')
+    filename = config['output_data']['output_directory'] + \
+        "/" + output_filename + config['output_format']['format']
+    figure.set_size_inches(config['output_format']['output_dim_x'],
+                           config['output_format']['output_dim_y'])
+    figure.savefig(filename, bbox_inches='tight')
+
+    if config['output_format']['plotly_on']:
+        plotly.plot_mpl(figure, filename="Agenoria - " + output_filename)
+
     figure.clf()
