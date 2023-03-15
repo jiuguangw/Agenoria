@@ -1,23 +1,11 @@
-import setuptools
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# Copyright 2019 by Jiuguang Wang (www.robo.guru)
+# All rights reserved.
+# This file is part of Agenoria and is released under the MIT License.
+# Please see the LICENSE file that should have been included as part of
+# this package.
 
-with open("README.md", "r", encoding="utf-8") as fh:
-    long_description = fh.read()
+from setuptools import setup
 
-setuptools.setup(
-    name="agenoria",  # Replace with your own username
-    version="0.0.1",
-    author="Jiuguang Wang",
-    author_email="jw@robo.guru",
-    description=
-    "Python utility for visualizing growth data from a newborn's first year.",
-    long_description=long_description,
-    long_description_content_type="text/markdown",
-    url="https://github.com/jiuguangw/Agenoria",
-    packages=setuptools.find_packages(),
-    classifiers=[
-        "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent",
-    ],
-    python_requires='>=3.8',
-)
+setup()

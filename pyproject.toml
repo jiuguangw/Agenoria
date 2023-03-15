@@ -1,0 +1,104 @@
+[project]
+name = "agenoria"
+version = "0.1.0"
+description = "Python utility for visualizing growth data from a newborn's first year."
+authors = [
+    {name = "Jiuguang Wang", email="jw@robo.guru"}
+]
+license = {file = "LICENSE"}
+readme = "README.md"
+requires-python = ">=3.10"
+
+keywords = ["baby", "visualization", "glow", "pandas", "matplotlib"]
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent"
+]
+
+dependencies = [
+    "tomli>=2.0.1",
+    "matplotlib>=3.7",
+    "pandas>=1.5",
+    "seaborn>=0.12.2",
+    "numpy>=1.22",
+    "chart_studio>=1.1.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pre-commit>=3.1.1",
+    "toml>=0.10.2",
+    "yapf>=0.32.0",
+    "isort>=5.11.5",
+    "pylint>=2.16.1",
+    "pytest>=7.2.1",
+    "pytest-cov>=4.0.0",
+    "mypy>=1.0.1",
+    "types-python-dateutil>=2.8.19.10"
+]
+
+[project.scripts]
+agenoria = "agenoria.__main__:main"
+
+[project.urls]
+homepage = "https://github.com/jiuguangw/Agenoria"
+documentation = "https://github.com/jiuguangw/Agenoria"
+repository = "https://github.com/jiuguangw/Agenoria"
+
+[tool.setuptools]
+packages = ["agenoria", "config", "data"]
+
+[build-system]
+requires = ["setuptools", "setuptools_scm"]
+build-backend = "setuptools.build_meta"
+
+[tool.pylint."MESSAGES CONTROL"]
+disable = '''
+    missing-module-docstring,
+    missing-class-docstring,
+    missing-function-docstring,
+    too-many-locals,
+    too-many-statements
+'''
+
+[tool.yapf]
+based_on_style = "pep8"
+split_before_logical_operator = true
+column_limit = 79
+spaces_before_comment = 2
+
+[tool.mypy]
+python_version = "3.10"
+strict_equality = true
+disallow_untyped_calls = true
+warn_unreachable = true
+
+[[tool.mypy.overrides]]
+module = "mypy-scripts.*"
+disallow_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = "matplotlib.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "setuptools.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "scipy.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "pandas.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "seaborn.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "chart_studio.*"
+ignore_missing_imports = true

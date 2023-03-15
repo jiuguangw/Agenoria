@@ -1,0 +1,31 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Agenoria - ZYW",
+            "type": "python",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "module": "agenoria",
+            "args": ["config/config_zyw.toml"]
+        },
+        {
+            "name": "Agenoria - ZLW",
+            "type": "python",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "module": "agenoria",
+            "args": ["config/config_zlw.toml"]
+        }
+    ],
+    "compounds": [
+        {
+          "name": "Agenoria - All",
+          "configurations": ["Agenoria - ZYW", "Agenoria - ZLW"],
+          "stopAll": true
+        }
+      ]
+}
