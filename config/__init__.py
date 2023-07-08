@@ -27,39 +27,46 @@ with path.open(mode="rb") as fp:
     param = tomli.load(fp)
 
 # Import diaper data
-diaper_data = pd.read_csv(param['input_data']['data_diaper'],
-                          parse_dates=['Diaper time'])
+diaper_data = pd.read_csv(
+    param["input_data"]["data_diaper"], parse_dates=["Diaper time"]
+)
 # Sort by date and time
-diaper_data = diaper_data.sort_values(by=['Diaper time'], ascending=False)
+diaper_data = diaper_data.sort_values(by=["Diaper time"], ascending=False)
 # Make a new column with date component only
-diaper_data['Date'] = diaper_data['Diaper time'].dt.normalize()
+diaper_data["Date"] = diaper_data["Diaper time"].dt.normalize()
 
 # Import sleep data
-sleep_data = pd.read_csv(param['input_data']['data_sleep'],
-                         parse_dates=['Begin time', 'End time'])
+sleep_data = pd.read_csv(
+    param["input_data"]["data_sleep"], parse_dates=["Begin time", "End time"]
+)
 # Make a new column with date component only
-sleep_data['Date'] = sleep_data['Begin time'].dt.normalize()
+sleep_data["Date"] = sleep_data["Begin time"].dt.normalize()
 
 # Import bottle data
-feeding_bottle_data = pd.read_csv(param['input_data']['data_feed_bottle'],
-                                  parse_dates=['Time of feeding'])
+feeding_bottle_data = pd.read_csv(
+    param["input_data"]["data_feed_bottle"], parse_dates=["Time of feeding"]
+)
 # Make a new column with date component only
-feeding_bottle_data['Date'] = feeding_bottle_data[
-    'Time of feeding'].dt.normalize()
+feeding_bottle_data["Date"] = feeding_bottle_data[
+    "Time of feeding"
+].dt.normalize()
 
 # Import solid data
-feeding_solid_data = pd.read_csv(param['input_data']['data_feed_solid'],
-                                 parse_dates=['Time of feeding'])
+feeding_solid_data = pd.read_csv(
+    param["input_data"]["data_feed_solid"], parse_dates=["Time of feeding"]
+)
 # Make a new column with date component only
-feeding_solid_data['Date'] = feeding_solid_data[
-    'Time of feeding'].dt.normalize()
+feeding_solid_data["Date"] = feeding_solid_data[
+    "Time of feeding"
+].dt.normalize()
 
 # Import growth data
-growth_data = pd.read_csv(param['input_data']['data_growth'],
-                          parse_dates=['Date'])
-hatch_data = pd.read_csv(param['input_data']['data_weight'])
+growth_data = pd.read_csv(
+    param["input_data"]["data_growth"], parse_dates=["Date"]
+)
+hatch_data = pd.read_csv(param["input_data"]["data_weight"])
 
 # Import misc data
-misc_data = pd.read_csv(param['input_data']['data_misc'], parse_dates=['Date'])
+misc_data = pd.read_csv(param["input_data"]["data_misc"], parse_dates=["Date"])
 misc_data.fillna(0, inplace=True)
-misc_data = misc_data.set_index(misc_data['Date'])
+misc_data = misc_data.set_index(misc_data["Date"])

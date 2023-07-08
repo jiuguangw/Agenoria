@@ -29,13 +29,6 @@ jobs:
     - name: Install Agenoria
       run: |
         pip install .[dev]
-    - name: Pylint
-      uses: wearerequired/lint-action@v2
-      with:
-        pylint: true
-    - name: Mypy
-      run: |
-        mypy ./agenoria
     - name: Pytest
       run: |
         pytest --cov=./ --cov-report=xml

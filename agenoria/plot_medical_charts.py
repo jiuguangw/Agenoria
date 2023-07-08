@@ -20,55 +20,60 @@ from .plot_settings import export_figure, format_monthly_plot
 
 def plot_daycare_days(plot_object: plt.figure, data: pd.DataFrame) -> None:
     # Group and compute sum by month. BMS gives 1st of month
-    daycare_monthly = data['Daycare'].resample('BMS').sum()
+    daycare_monthly = data["Daycare"].resample("BMS").sum()
 
     # Plot
     plot_object.plot(daycare_monthly.index, daycare_monthly)
-    plot_object.set_title('Number of Days in Daycare by Months')
-    plot_object.set_ylabel('Number of Days')
+    plot_object.set_title("Number of Days in Daycare by Months")
+    plot_object.set_ylabel("Number of Days")
     plot_object.yaxis.set_ticks(np.arange(0, 21, 2))
-    format_monthly_plot(plot_object, daycare_monthly.index[0],
-                        daycare_monthly.index[-1])
+    format_monthly_plot(
+        plot_object, daycare_monthly.index[0], daycare_monthly.index[-1]
+    )
 
 
-def plot_days_between_vomit(plot_object: plt.figure,
-                            data: pd.DataFrame) -> None:
+def plot_days_between_vomit(
+    plot_object: plt.figure, data: pd.DataFrame
+) -> None:
     # Look up vomit days and compute gaps
-    vomit_days = data.loc[data['Vomit'] == 1]
-    days_since_last_vomit = vomit_days['Date'].diff() / np.timedelta64(1, 'D')
+    vomit_days = data.loc[data["Vomit"] == 1]
+    days_since_last_vomit = vomit_days["Date"].diff() / np.timedelta64(1, "D")
 
     # Plots
-    plot_object.plot(vomit_days['Date'], days_since_last_vomit)
-    plot_object.set_title('Days Since Last Vomit')
-    plot_object.set_xlabel('Date')
-    plot_object.set_ylabel('Days Since Last Vomit')
+    plot_object.plot(vomit_days["Date"], days_since_last_vomit)
+    plot_object.set_title("Days Since Last Vomit")
+    plot_object.set_xlabel("Date")
+    plot_object.set_ylabel("Days Since Last Vomit")
     format_monthly_plot(plot_object, vomit_days.index[0], vomit_days.index[-1])
 
 
-def plot_doctor_visit_monthly(plot_object: plt.figure,
-                              data: pd.DataFrame) -> None:
+def plot_doctor_visit_monthly(
+    plot_object: plt.figure, data: pd.DataFrame
+) -> None:
     # Group and compute sum by month. BMS gives 1st of month
-    doctor_monthly = data['Doctor'].resample('BMS').sum()
+    doctor_monthly = data["Doctor"].resample("BMS").sum()
 
     # Plot
     plot_object.plot(doctor_monthly.index, doctor_monthly)
-    plot_object.set_title('Total Number of Doctor Visits by Months')
-    plot_object.set_ylabel('Total Number of Doctor Visits')
+    plot_object.set_title("Total Number of Doctor Visits by Months")
+    plot_object.set_ylabel("Total Number of Doctor Visits")
     plot_object.yaxis.set_ticks(np.arange(0, 5, 1))
-    format_monthly_plot(plot_object, doctor_monthly.index[0],
-                        doctor_monthly.index[-1])
+    format_monthly_plot(
+        plot_object, doctor_monthly.index[0], doctor_monthly.index[-1]
+    )
 
 
 def plot_monthly_vomit(plot_object: plt.figure, data: pd.DataFrame) -> None:
     # Group and compute sum by month. BMS gives 1st of month
-    vomit_monthly = data['Vomit'].resample('BMS').sum()
+    vomit_monthly = data["Vomit"].resample("BMS").sum()
 
     # Plot
     plot_object.plot(vomit_monthly.index, vomit_monthly)
-    plot_object.set_title('Total Number of Vomits by Months')
-    plot_object.set_ylabel('Total Number of Vomits')
-    format_monthly_plot(plot_object, vomit_monthly.index[0],
-                        vomit_monthly.index[-1])
+    plot_object.set_title("Total Number of Vomits by Months")
+    plot_object.set_ylabel("Total Number of Vomits")
+    format_monthly_plot(
+        plot_object, vomit_monthly.index[0], vomit_monthly.index[-1]
+    )
 
 
 def plot_medical_charts() -> None:
@@ -92,4 +97,4 @@ def plot_medical_charts() -> None:
 
     # Export
     fig.subplots_adjust(wspace=0.25, hspace=0.35)
-    export_figure(fig, config['output_data']['output_medical_charts'])
+    export_figure(fig, config["output_data"]["output_medical_charts"])

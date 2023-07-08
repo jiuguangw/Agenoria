@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use Agenoria, please cite it as below."
+authors:
+- family-names: "Wang"
+  given-names: "Jiuguang"
+  orcid: "https://orcid.org/0000-0001-6881-9918"
+title: "Agenoria"
+version: 0.1
+date-released: 2019-04-10
+url: "https://github.com/jiuguangw/Agenoria"

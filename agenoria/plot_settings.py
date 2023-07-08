@@ -29,9 +29,13 @@ AXIS_FONT_SIZE_SM = 8
 ALPHA_VALUE = 0.3
 
 
-def mmm_plot(plot_object: plt.figure, data_date: pd.DataFrame,
-             data_mean: pd.DataFrame, data_min: pd.DataFrame,
-             data_max: pd.DataFrame) -> None:
+def mmm_plot(
+    plot_object: plt.figure,
+    data_date: pd.DataFrame,
+    data_mean: pd.DataFrame,
+    data_min: pd.DataFrame,
+    data_max: pd.DataFrame,
+) -> None:
     plot_object.plot(data_date, data_mean)
     plot_object.fill_between(data_date, data_max, data_mean, alpha=ALPHA_VALUE)
     plot_object.fill_between(data_date, data_min, data_mean, alpha=ALPHA_VALUE)
@@ -44,18 +48,19 @@ def enumerate_labels(date_num: int) -> tuple[pd.DataFrame, pd.DataFrame]:
     return hour_labels, week_labels
 
 
-def format_24h_week_plot_horizontal(fig_axis: plt.figure, date_num: int,
-                                    title: str) -> None:
+def format_24h_week_plot_horizontal(
+    fig_axis: plt.figure, date_num: int, title: str
+) -> None:
     # Create the tick labels
     hour_labels, week_labels = enumerate_labels(date_num)
 
     # Set title and axis labels
-    if config['output_format']['output_chart_labels_on']:
-        fig_axis.set_title(title,
-                           fontsize=TITLE_FONT_SIZE_LG,
-                           y=TITLE_HEIGHT_ADJUST)
-        fig_axis.set_xlabel('Age (weeks)', fontsize=AXIS_FONT_SIZE_LG)
-        fig_axis.set_ylabel('Time of Day', fontsize=AXIS_FONT_SIZE_LG)
+    if config["output_format"]["output_chart_labels_on"]:
+        fig_axis.set_title(
+            title, fontsize=TITLE_FONT_SIZE_LG, y=TITLE_HEIGHT_ADJUST
+        )
+        fig_axis.set_xlabel("Age (weeks)", fontsize=AXIS_FONT_SIZE_LG)
+        fig_axis.set_ylabel("Time of Day", fontsize=AXIS_FONT_SIZE_LG)
 
     # Format y axis - clock time
     fig_axis.set_ylim(0, 24)
@@ -74,10 +79,10 @@ def format_24h_week_plot_vertical(fig_axis: plt.figure, date_num: int) -> None:
     hour_labels, week_labels = enumerate_labels(date_num)
 
     # Set title and axis labels
-    fig_axis.set_xlabel('Age (weeks)',
-                        fontsize=AXIS_FONT_SIZE_LG,
-                        rotation=180)
-    fig_axis.set_ylabel('Time of Day', fontsize=AXIS_FONT_SIZE_LG)
+    fig_axis.set_xlabel(
+        "Age (weeks)", fontsize=AXIS_FONT_SIZE_LG, rotation=180
+    )
+    fig_axis.set_ylabel("Time of Day", fontsize=AXIS_FONT_SIZE_LG)
 
     # Format y axis - clock time
     fig_axis.set_ylim(24, 0)
@@ -99,14 +104,15 @@ def format_growth_chart_plot(plot_object: plt.figure) -> None:
     plot_object.tick_params(labelsize=AXIS_FONT_SIZE_MED)
 
 
-def format_monthly_plot(plot_object: plt.figure, xlim_left: int,
-                        xlim_right: int) -> None:
+def format_monthly_plot(
+    plot_object: plt.figure, xlim_left: int, xlim_right: int
+) -> None:
     # Axis label
-    plot_object.set_xlabel('Date')
+    plot_object.set_xlabel("Date")
 
     # Change x-axis left and right limits
     plot_object.set_xlim(xlim_left, xlim_right)
-    plot_object.autoscale(enable=True, axis='y', tight=True)
+    plot_object.autoscale(enable=True, axis="y", tight=True)
 
     # Change label sizes
     plot_object.title.set_size(TITLE_FONT_SIZE_SM)
@@ -117,19 +123,26 @@ def format_monthly_plot(plot_object: plt.figure, xlim_left: int,
     # Change tick spacing
     plot_object.set_xticks(plot_object.get_xticks()[::1])
     plot_object.xaxis.set_major_locator(
-        MonthLocator(range(1, 13), bymonthday=1, interval=1))
+        MonthLocator(range(1, 13), bymonthday=1, interval=1)
+    )
     plot_object.xaxis.set_major_formatter(DateFormatter("%b"))
 
 
 def export_figure(figure: plt.figure, output_filename: str) -> None:
     # Export
-    filename = config['output_data']['output_directory'] + \
-        "/" + output_filename + config['output_format']['format']
-    figure.set_size_inches(config['output_format']['output_dim_x'],
-                           config['output_format']['output_dim_y'])
-    figure.savefig(filename, bbox_inches='tight')
+    filename = (
+        config["output_data"]["output_directory"]
+        + "/"
+        + output_filename
+        + config["output_format"]["format"]
+    )
+    figure.set_size_inches(
+        config["output_format"]["output_dim_x"],
+        config["output_format"]["output_dim_y"],
+    )
+    figure.savefig(filename, bbox_inches="tight")
 
-    if config['output_format']['plotly_on']:
+    if config["output_format"]["plotly_on"]:
         plotly.plot_mpl(figure, filename="Agenoria - " + output_filename)
 
     figure.clf()

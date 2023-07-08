@@ -9,11 +9,12 @@
     "customizations": {
         "vscode": {
             "extensions": [
-                "ms-python.python",
-                "analytic-signal.preview-pdf",
-                "ms-python.isort",
-                "ms-python.vscode-pylance"
-            ],
+				"ms-python.python",
+				"analytic-signal.preview-pdf",
+				"ms-python.isort",
+				"ms-python.vscode-pylance",
+				"github.vscode-github-actions"
+			],
             "settings": {
                 "python.testing.pytestArgs": [
                     "."

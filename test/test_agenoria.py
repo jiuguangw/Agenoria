@@ -14,19 +14,23 @@ from config import param as config
 # pylint: disable=no-member
 
 
-def get_filename(output_filename):
-    path = config['output_data']['output_directory'] + \
-        "/" + output_filename + config['output_format']['format']
+def get_filename(output_filename: str) -> str:
+    path = (
+        config["output_data"]["output_directory"]
+        + "/"
+        + output_filename
+        + config["output_format"]["format"]
+    )
 
     return path
 
 
-def test_diaper_charts():
+def test_diaper_charts() -> None:
     # Plot
     agenoria.plot_diaper_charts()
 
     # File
-    path = get_filename(config['output_data']['output_daily_diaper_charts'])
+    path = get_filename(config["output_data"]["output_daily_diaper_charts"])
 
     # Get the file size of the output PDF
     file_size = os.path.getsize(path)
@@ -35,13 +39,14 @@ def test_diaper_charts():
     assert file_size > 20 * 1024, "Test failed - diaper charts"
 
 
-def test_sleep_stats_charts():
+def test_sleep_stats_charts() -> None:
     # Plot
     agenoria.plot_sleep_stats_charts()
 
     # File
     path = get_filename(
-        config['output_data']['output_daily_sleep_stats_charts'])
+        config["output_data"]["output_daily_sleep_stats_charts"]
+    )
 
     # Get the file size of the output PDF
     file_size = os.path.getsize(path)
@@ -50,13 +55,14 @@ def test_sleep_stats_charts():
     assert file_size > 30 * 1024, "Test failed - diaper charts"
 
 
-def test_feeding_stats_charts():
+def test_feeding_stats_charts() -> None:
     # Plot
     agenoria.plot_feeding_stats_charts()
 
     # File
     path = get_filename(
-        config['output_data']['output_daily_feeding_stats_charts'])
+        config["output_data"]["output_daily_feeding_stats_charts"]
+    )
 
     # Get the file size of the output PDF
     file_size = os.path.getsize(path)
@@ -65,7 +71,7 @@ def test_feeding_stats_charts():
     assert file_size > 40 * 1024, "Test failed - diaper charts"
 
 
-def test_24h_viz():
+def test_24h_viz() -> None:
     # Plot
     agenoria.plot_sleep_24h_viz()
     agenoria.plot_feeding_24h_viz()
@@ -73,11 +79,14 @@ def test_24h_viz():
 
     # Get the file size of the output PDF
     file_size_sleep = os.path.getsize(
-        get_filename(config['output_data']['output_sleep_viz']))
+        get_filename(config["output_data"]["output_sleep_viz"])
+    )
     file_size_feeding = os.path.getsize(
-        get_filename(config['output_data']['output_feeding_viz']))
+        get_filename(config["output_data"]["output_feeding_viz"])
+    )
     file_size_diaper = os.path.getsize(
-        get_filename(config['output_data']['output_diaper_viz']))
+        get_filename(config["output_data"]["output_diaper_viz"])
+    )
 
     # Check the size is greater than 40 KB
     assert file_size_sleep > 90 * 1024, "Test failed - sleep viz"
@@ -85,12 +94,12 @@ def test_24h_viz():
     assert file_size_diaper > 25 * 1024, "Test failed - diaper viz"
 
 
-def test_growth_charts():
+def test_growth_charts() -> None:
     # Plot
     agenoria.plot_growth_charts()
 
     # File
-    path = get_filename(config['output_data']['output_growth_charts'])
+    path = get_filename(config["output_data"]["output_growth_charts"])
 
     # Get the file size of the output PDF
     file_size = os.path.getsize(path)
@@ -99,12 +108,12 @@ def test_growth_charts():
     assert file_size > 10 * 1024, "Test failed - growth charts"
 
 
-def test_medical_charts():
+def test_medical_charts() -> None:
     # Plot
     agenoria.plot_medical_charts()
 
     # File
-    path = get_filename(config['output_data']['output_medical_charts'])
+    path = get_filename(config["output_data"]["output_medical_charts"])
 
     # Get the file size of the output PDF
     file_size = os.path.getsize(path)

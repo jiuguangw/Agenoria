@@ -1,3 +1,9 @@
+# Copyright 2019 by Jiuguang Wang (www.robo.guru)
+# All rights reserved.
+# This file is part of Agenoria and is released under the MIT License.
+# Please see the LICENSE file that should have been included as part of
+# this package.
+
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v3.2.0
@@ -6,25 +12,25 @@ repos:
     -   id: check-yaml
     -   id: check-added-large-files
     -   id: check-toml
--   repo: local
+
+repos:
+-   repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: 'v0.0.263'
     hooks:
-    -   id: pylint
-        name: pylint
-        entry: pylint
-        language: system
-        types: [python]
--   repo: https://github.com/pre-commit/mirrors-yapf
-    rev: v0.32.0
+    -   id: ruff
+        args: ['--fix', '--config', 'pyproject.toml']
+
+
+-   repo: https://github.com/psf/black
+    rev: 23.3.0
     hooks:
-    -   id: yapf
-        additional_dependencies: [toml]
+    -   id: black
+        language_version: python3.10
+        args: ['--config', 'pyproject.toml']
+        verbose: true
+
 -   repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.1.1
     hooks:
     -   id: mypy
         additional_dependencies: [types-python-dateutil]
--   repo: https://github.com/pycqa/isort
-    rev: 5.12.0
-    hooks:
-    -   id: isort
-        name: isort (python)
