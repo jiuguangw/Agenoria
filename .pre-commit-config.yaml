@@ -6,23 +6,38 @@
 
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.2.0
+    rev: v4.4.0
     hooks:
     -   id: trailing-whitespace
     -   id: check-yaml
     -   id: check-added-large-files
+        args: ['--maxkb=2000']
     -   id: check-toml
+    -   id: end-of-file-fixer
+    -   id: debug-statements
+    -   id: check-case-conflict
+    -   id: check-docstring-first
+    -   id: check-executables-have-shebangs
+    -   id: check-merge-conflict
 
-repos:
+-   repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
+    rev: v2.10.0
+    hooks:
+    -   id: pretty-format-ini
+        args: [--autofix]
+    -   id: pretty-format-toml
+        args: [--autofix]
+        additional_dependencies:
+         - toml-sort==0.23.1
+
 -   repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: 'v0.0.263'
+    rev: 'v0.0.282'
     hooks:
     -   id: ruff
         args: ['--fix', '--config', 'pyproject.toml']
 
-
 -   repo: https://github.com/psf/black
-    rev: 23.3.0
+    rev: 23.7.0
     hooks:
     -   id: black
         language_version: python3.10
@@ -30,7 +45,12 @@ repos:
         verbose: true
 
 -   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.1.1
+    rev: v1.5.0
     hooks:
     -   id: mypy
         additional_dependencies: [types-python-dateutil]
+
+-   repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.9.0.5
+    hooks:
+    -   id: shellcheck

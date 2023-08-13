@@ -7,16 +7,24 @@
 name: Agenoria CI
 
 on:
+  workflow_call:
+    secrets:
+      CODECOV_TOKEN:
+        required: true
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         python-version: ['3.10']
         os: [macOS-latest, ubuntu-latest]

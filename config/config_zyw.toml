@@ -1,56 +1,51 @@
-[info]  # Basic info used to compute age and the growth curves
+[debug]  # Debug configuration to plot only selected dates
+debug_end_date = 2018-12-21
+debug_mode = false
+debug_start_date = 2018-11-21
 
+[info]  # Basic info used to compute age and the growth curves
 birthday = 2018-11-21  # All dates in YYYY-MM-DD
 gender = "boy"  # "boy" or "girl"
 
 [input_data]  # Paths to the source data files in CSV
-
+data_diaper = "data/zyw/glow_diaper.csv"
 data_feed_bottle = "data/zyw/glow_feed_bottle.csv"
 data_feed_solid = "data/zyw/glow_feed_solid.csv"
-data_diaper = "data/zyw/glow_diaper.csv"
-data_sleep = "data/zyw/glow_sleep.csv"
 data_growth = "data/zyw/glow_growth.csv"
-data_weight = "data/zyw/hatch.csv"
 data_misc = "data/zyw/misc.csv"
-growth_curve_weight = "data/cdc_growth_curves/wtageinf.csv"
-growth_curve_length = "data/cdc_growth_curves/lenageinf.csv"
+data_sleep = "data/zyw/glow_sleep.csv"
+data_weight = "data/zyw/hatch.csv"
 growth_curve_head = "data/cdc_growth_curves/hcageinf.csv"
+growth_curve_length = "data/cdc_growth_curves/lenageinf.csv"
+growth_curve_weight = "data/cdc_growth_curves/wtageinf.csv"
 growth_curve_weight_length = "data/cdc_growth_curves/wtleninf.csv"
 
 [output_data]  # Path and file names for the output charts
-
 # Enter false for any charts you do not wish to build.
 build_daily_diaper_charts = true
-build_daily_sleep_stats_charts = true
 build_daily_feeding_stats_charts = true
-build_sleep_viz = true
-build_feeding_viz = true
+build_daily_sleep_stats_charts = true
 build_diaper_viz = true
+build_feeding_viz = true
 build_growth_charts = true
 build_medical_charts = true
-
+build_sleep_viz = true
+output_daily_diaper_charts = "ZYW_Daily_Diaper_Charts"
+output_daily_feeding_stats_charts = "ZYW_Daily_Feeding_Stats_Charts"
+output_daily_sleep_stats_charts = "ZYW_Daily_Sleep_Stats_Charts"
+output_diaper_viz = "ZYW_24h_Diaper_Viz"
 # Specify output file names
 output_directory = "build"
-output_daily_diaper_charts = "ZYW_Daily_Diaper_Charts"
-output_daily_sleep_stats_charts = "ZYW_Daily_Sleep_Stats_Charts"
-output_daily_feeding_stats_charts = "ZYW_Daily_Feeding_Stats_Charts"
-output_sleep_viz = "ZYW_24h_Sleep_Viz"
 output_feeding_viz = "ZYW_24h_Feeding_Viz"
-output_diaper_viz = "ZYW_24h_Diaper_Viz"
 output_growth_charts = "ZYW_Growth_Charts"
 output_medical_charts = "ZYW_Medical_Charts"
+output_sleep_viz = "ZYW_24h_Sleep_Viz"
 
 [output_format]  # Formatting for the output
-
-output_sleep_viz_orientation = "horizontal"  # "horizontal" or "vertical"
-output_year_one_only = true  # Cut off plotting at 365 days
+format = ".pdf"  # Be sure to include the dot .
 output_chart_labels_on = false  # true to enable title/axis labels
 output_dim_x = 17  # Inches
 output_dim_y = 11  # Inches
-format = ".pdf"   # Be sure to include the dot .
+output_sleep_viz_orientation = "horizontal"  # "horizontal" or "vertical"
+output_year_one_only = true  # Cut off plotting at 365 days
 plotly_on = false  # export figures to Plotly / Chart Studio
-
-[debug]  # Debug configuration to plot only selected dates
-debug_mode = false
-debug_start_date = 2018-11-21
-debug_end_date = 2018-12-21

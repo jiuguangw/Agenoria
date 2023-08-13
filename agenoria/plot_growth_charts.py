@@ -119,7 +119,7 @@ def plot_weight_length(
     for _index, row in data_height.iterrows():
         date = row["Date"]
         match = hatch_data.loc[hatch_data["Start Time"] == date]
-        weight = float(match["Amount"].values)
+        weight = float(match["Amount"].values[0])
         if not np.isnan(weight):
             weight_length.append(
                 [row["Date"], row["Age"], row["Height(cm)"], weight]
