@@ -19,8 +19,8 @@ classifiers = [
 ]
 dependencies = [
   "tomli>=2.0.1",
-  "matplotlib>=3.7",
-  "pandas>=2.0.3",
+  "matplotlib>=3.8",
+  "pandas>=2.1.0",
   "seaborn>=0.12.2",
   "numpy>=1.25.2",
   "chart_studio>=1.1.0",
@@ -36,8 +36,8 @@ version = "0.1.0"
 
 [project.optional-dependencies]
 dev = [
-  "pre-commit>=3.3.3",
-  "pytest>=7.4.0",
+  "pre-commit>=3.5.0",
+  "pytest>=7.4.2",
   "pytest-cov>=4.1.0",
   "MonkeyType>=23.3.0"
 ]
@@ -74,34 +74,6 @@ strict_equality = true
 warn_redundant_casts = true
 warn_unreachable = true
 
-[[tool.mypy.overrides]]
-disallow_untyped_defs = true
-module = "mypy-scripts.*"
-
-[[tool.mypy.overrides]]
-ignore_missing_imports = true
-module = "matplotlib.*"
-
-[[tool.mypy.overrides]]
-ignore_missing_imports = true
-module = "setuptools.*"
-
-[[tool.mypy.overrides]]
-ignore_missing_imports = true
-module = "scipy.*"
-
-[[tool.mypy.overrides]]
-ignore_missing_imports = true
-module = "pandas.*"
-
-[[tool.mypy.overrides]]
-ignore_missing_imports = true
-module = "seaborn.*"
-
-[[tool.mypy.overrides]]
-ignore_missing_imports = true
-module = "chart_studio.*"
-
 [tool.ruff]
 # Allow unused variables when underscore-prefixed.
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
@@ -130,11 +102,10 @@ exclude = [
 ]
 # Allow autofix for all enabled rules (when `--fix`) is provided.
 fixable = ["A", "B", "C", "D", "E", "F", "G", "I", "N", "Q", "S", "T", "W", "ANN", "ARG", "BLE", "COM", "DJ", "DTZ", "EM", "ERA", "EXE", "FBT", "ICN", "INP", "ISC", "NPY", "PD", "PGH", "PIE", "PL", "PT", "PTH", "PYI", "RET", "RSE", "RUF", "SIM", "SLF", "TCH", "TID", "TRY", "UP", "YTT"]
-ignore = []
+ignore = ["D", "PLR2004", "T201", "S101"]
 # Same as Black.
 line-length = 79
-# Enable pycodestyle (`E`), Pyflakes (`F`), and import sorting (`I`)
-select = ["E", "F", "I"]
+select = ["ALL"]
 # Assume Python 3.10.
 target-version = "py310"
 unfixable = []

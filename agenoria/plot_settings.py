@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 # Copyright 2019 by Jiuguang Wang (www.robo.guru)
 # All rights reserved.
 # This file is part of Agenoria and is released under the MIT License.
@@ -8,7 +6,7 @@
 
 import math
 
-import matplotlib as plt
+import matplotlib as mpl
 import numpy as np
 import pandas as pd
 from chart_studio import plotly
@@ -30,7 +28,7 @@ ALPHA_VALUE = 0.3
 
 
 def mmm_plot(
-    plot_object: plt.figure,
+    plot_object: mpl.figure,
     data_date: pd.DataFrame,
     data_mean: pd.DataFrame,
     data_min: pd.DataFrame,
@@ -49,7 +47,9 @@ def enumerate_labels(date_num: int) -> tuple[pd.DataFrame, pd.DataFrame]:
 
 
 def format_24h_week_plot_horizontal(
-    fig_axis: plt.figure, date_num: int, title: str
+    fig_axis: mpl.figure,
+    date_num: int,
+    title: str,
 ) -> None:
     # Create the tick labels
     hour_labels, week_labels = enumerate_labels(date_num)
@@ -57,7 +57,9 @@ def format_24h_week_plot_horizontal(
     # Set title and axis labels
     if config["output_format"]["output_chart_labels_on"]:
         fig_axis.set_title(
-            title, fontsize=TITLE_FONT_SIZE_LG, y=TITLE_HEIGHT_ADJUST
+            title,
+            fontsize=TITLE_FONT_SIZE_LG,
+            y=TITLE_HEIGHT_ADJUST,
         )
         fig_axis.set_xlabel("Age (weeks)", fontsize=AXIS_FONT_SIZE_LG)
         fig_axis.set_ylabel("Time of Day", fontsize=AXIS_FONT_SIZE_LG)
@@ -74,13 +76,15 @@ def format_24h_week_plot_horizontal(
     fig_axis.set_xticklabels(week_labels)
 
 
-def format_24h_week_plot_vertical(fig_axis: plt.figure, date_num: int) -> None:
+def format_24h_week_plot_vertical(fig_axis: mpl.figure, date_num: int) -> None:
     # Create the tick labels
     hour_labels, week_labels = enumerate_labels(date_num)
 
     # Set title and axis labels
     fig_axis.set_xlabel(
-        "Age (weeks)", fontsize=AXIS_FONT_SIZE_LG, rotation=180
+        "Age (weeks)",
+        fontsize=AXIS_FONT_SIZE_LG,
+        rotation=180,
     )
     fig_axis.set_ylabel("Time of Day", fontsize=AXIS_FONT_SIZE_LG)
 
@@ -96,7 +100,7 @@ def format_24h_week_plot_vertical(fig_axis: plt.figure, date_num: int) -> None:
     fig_axis.set_xticklabels(week_labels, rotation=90)
 
 
-def format_growth_chart_plot(plot_object: plt.figure) -> None:
+def format_growth_chart_plot(plot_object: mpl.figure) -> None:
     # Change label sizes
     plot_object.title.set_size(TITLE_FONT_SIZE_MED)
     plot_object.xaxis.label.set_size(AXIS_FONT_SIZE_MED)
@@ -105,7 +109,9 @@ def format_growth_chart_plot(plot_object: plt.figure) -> None:
 
 
 def format_monthly_plot(
-    plot_object: plt.figure, xlim_left: int, xlim_right: int
+    plot_object: mpl.figure,
+    xlim_left: int,
+    xlim_right: int,
 ) -> None:
     # Axis label
     plot_object.set_xlabel("Date")
@@ -123,12 +129,12 @@ def format_monthly_plot(
     # Change tick spacing
     plot_object.set_xticks(plot_object.get_xticks()[::1])
     plot_object.xaxis.set_major_locator(
-        MonthLocator(range(1, 13), bymonthday=1, interval=1)
+        MonthLocator(range(1, 13), bymonthday=1, interval=1),
     )
     plot_object.xaxis.set_major_formatter(DateFormatter("%b"))
 
 
-def export_figure(figure: plt.figure, output_filename: str) -> None:
+def export_figure(figure: mpl.figure, output_filename: str) -> None:
     # Export
     filename = (
         config["output_data"]["output_directory"]

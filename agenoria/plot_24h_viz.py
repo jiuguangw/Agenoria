@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 # Copyright 2019 by Jiuguang Wang (www.robo.guru)
 # All rights reserved.
 # This file is part of Agenoria and is released under the MIT License.
@@ -29,11 +27,9 @@ from .plot_settings import (
 BAR_SIZE = 1
 
 
-def get_end_date(data: pd.DataFrame, first_year_only: bool) -> int:
+def get_end_date(data: pd.DataFrame, *, first_year_only: bool) -> int:
     # Assign the end date. Either 365 or actual day number.
-    end_date = 365 if first_year_only else data.iloc[0]
-
-    return end_date
+    return 365 if first_year_only else data.iloc[0]
 
 
 def parse_raw_data(data: pd.DataFrame, key: list[str]) -> pd.DataFrame:
@@ -78,7 +74,8 @@ def plot_sleep_24h_viz() -> None:
     # Find sessions with offsets and plot the offset with day_number+1
     data.loc[index].apply(
         lambda row: fig_ax.broken_barh(
-            [(row["day_number"] + 1, BAR_SIZE)], [0, row["offset"]]
+            [(row["day_number"] + 1, BAR_SIZE)],
+            [0, row["offset"]],
         ),
         axis=1,
     )
@@ -94,7 +91,8 @@ def plot_sleep_24h_viz() -> None:
 
     # End date - one year or full
     end_date = get_end_date(
-        data["day_number"], config["output_format"]["output_year_one_only"]
+        data["day_number"],
+        first_year_only=config["output_format"]["output_year_one_only"],
     )
 
     # Format plot - vertical or horizontal
@@ -119,13 +117,16 @@ def plot_feeding_24h_viz() -> None:
 
     # Compute offset from birthday
     offset = data_solid["Date"].iloc[-1] - pd.Timestamp(
-        config["info"]["birthday"]
+        config["info"]["birthday"],
     )
     offset = int(offset / np.timedelta64(1, "D"))  # Convert to day in int
 
     # Plot
     fig_ax.scatter(
-        data_bottle["day_number"], data_bottle["timestamp_hour"], s=25, c="r"
+        data_bottle["day_number"],
+        data_bottle["timestamp_hour"],
+        s=25,
+        c="r",
     )
     fig_ax.scatter(
         data_solid["day_number"] + offset,
@@ -142,7 +143,7 @@ def plot_feeding_24h_viz() -> None:
     # End date - one year or full
     end_date = get_end_date(
         data_bottle["day_number"],
-        config["output_format"]["output_year_one_only"],
+        first_year_only=config["output_format"]["output_year_one_only"],
     )
 
     # Format plot
@@ -154,7 +155,7 @@ def plot_feeding_24h_viz() -> None:
 
 def map_poop_color(color: str) -> str:
     # If input is null, then it's pee
-    if pd.isnull(color):  # pee only, yellow
+    if pd.isna(color):  # pee only, yellow
         return "y"
 
     # Map from Glow color to matplotlib color key
@@ -181,7 +182,10 @@ def plot_diapers_24h_viz() -> None:
 
     # Plot
     fig_ax.scatter(
-        data["day_number"], data["timestamp_hour"], s=25, c=data["Color key"]
+        data["day_number"],
+        data["timestamp_hour"],
+        s=25,
+        c=data["Color key"],
     )
 
     # Legend
@@ -191,12 +195,19 @@ def plot_diapers_24h_viz() -> None:
     red_patch = plot_patches.Patch(color="r", label="Poop, Others")
     yellow_patch = plot_patches.Patch(color="y", label="Pee")
     plt.legend(
-        handles=[blue_patch, green_patch, brown_patch, red_patch, yellow_patch]
+        handles=[
+            blue_patch,
+            green_patch,
+            brown_patch,
+            red_patch,
+            yellow_patch,
+        ],
     )
 
     # End date - one year or full
     end_date = get_end_date(
-        data["day_number"], config["output_format"]["output_year_one_only"]
+        data["day_number"],
+        first_year_only=config["output_format"]["output_year_one_only"],
     )
 
     # Format plot

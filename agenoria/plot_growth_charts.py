@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 # Copyright 2019 by Jiuguang Wang (www.robo.guru)
 # All rights reserved.
 # This file is part of Agenoria and is released under the MIT License.
@@ -23,21 +21,21 @@ ROC_WINDOW = 14
 
 
 def compute_age(date: pd.Series, birthday: pd.Series) -> int:
-    age = (date - birthday) / np.timedelta64(1, "M")
-    return age
+    return (date - birthday) / np.timedelta64(4, "W")
 
 
 def parse_glow_data(data: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
     # Compute age
     data["Age"] = compute_age(
-        data["Date"], pd.Timestamp(config["info"]["birthday"])
+        data["Date"],
+        pd.Timestamp(config["info"]["birthday"]),
     )
 
     # Get date and height columns
-    data_height = data[data["Height(cm)"].notnull()][
+    data_height = data[data["Height(cm)"].notna()][
         ["Date", "Age", "Height(cm)"]
     ]
-    data_head = data[data["Head Circ.(cm)"].notnull()][
+    data_head = data[data["Head Circ.(cm)"].notna()][
         ["Date", "Age", "Head Circ.(cm)"]
     ]
 
@@ -56,7 +54,8 @@ def parse_hatch_data(data: pd.DataFrame) -> pd.DataFrame:
 
     # Reindex and add missing days
     idx = pd.date_range(
-        start=data["Start Time"].min(), end=data["Start Time"].max()
+        start=data["Start Time"].min(),
+        end=data["Start Time"].max(),
     )
     data = (
         data.set_index("Start Time")
@@ -67,7 +66,8 @@ def parse_hatch_data(data: pd.DataFrame) -> pd.DataFrame:
 
     # Compute Age
     data["Age"] = compute_age(
-        data["Start Time"], pd.Timestamp(config["info"]["birthday"])
+        data["Start Time"],
+        pd.Timestamp(config["info"]["birthday"]),
     )
 
     # Compute diff
@@ -81,13 +81,13 @@ def parse_hatch_data(data: pd.DataFrame) -> pd.DataFrame:
     # Convert to oz
     data["Weight Average RoC"] = data["Weight Average RoC"] * 35.274
 
-    # data.to_csv('test.csv')
-
     return data
 
 
 def plot_growth_curves(
-    curve_file: pd.DataFrame, index: str, plot_object: plt.figure
+    curve_file: pd.DataFrame,
+    index: str,
+    plot_object: plt.figure,
 ) -> None:
     # Import growth curves data file
     data_raw = pd.read_csv(curve_file)
@@ -119,20 +119,22 @@ def plot_weight_length(
     for _index, row in data_height.iterrows():
         date = row["Date"]
         match = hatch_data.loc[hatch_data["Start Time"] == date]
-        weight = float(match["Amount"].values[0])
+        weight = float(match["Amount"].to_numpy()[0])
         if not np.isnan(weight):
             weight_length.append(
-                [row["Date"], row["Age"], row["Height(cm)"], weight]
+                [row["Date"], row["Age"], row["Height(cm)"], weight],
             )
 
     # Assemble into dataframe
     data_weight_length = pd.DataFrame(
-        weight_length, columns=["Date", "Age", "Height(cm)", "Weight"]
+        weight_length,
+        columns=["Date", "Age", "Height(cm)", "Weight"],
     )
 
     # Plot data
     plot_object.plot(
-        data_weight_length["Height(cm)"], data_weight_length["Weight"]
+        data_weight_length["Height(cm)"],
+        data_weight_length["Weight"],
     )
     # Labels
     plot_object.set_title("Weight vs. Length")
@@ -144,7 +146,7 @@ def plot_weight_length(
     format_growth_chart_plot(plot_object)
 
 
-def plot_growth_charts() -> None:
+def plot_growth_charts() -> None:  # noqa: PLR0915
     # Settings
     sns.set(style="darkgrid")
     plt.rcParams["lines.linewidth"] = 2
@@ -163,7 +165,9 @@ def plot_growth_charts() -> None:
 
     # Chart 1 - Weight / Age
     plot_growth_curves(
-        config["input_data"]["growth_curve_weight"], "Agemos", axarr[0, 0]
+        config["input_data"]["growth_curve_weight"],
+        "Agemos",
+        axarr[0, 0],
     )
     axarr[0, 0].plot(hatch_data["Age"], hatch_data["Amount"])
     axarr[0, 0].set_title("Weight vs. Age")
@@ -199,7 +203,9 @@ def plot_growth_charts() -> None:
 
     # Chart 4 - Length / Age
     plot_growth_curves(
-        config["input_data"]["growth_curve_length"], "Agemos", axarr[1, 0]
+        config["input_data"]["growth_curve_length"],
+        "Agemos",
+        axarr[1, 0],
     )
     axarr[1, 0].plot(data_height["Age"], data_height["Height(cm)"])
     axarr[1, 0].set_title("Length vs. Age")
@@ -212,7 +218,9 @@ def plot_growth_charts() -> None:
 
     # Chart 5 - Head Circumference / Age
     plot_growth_curves(
-        config["input_data"]["growth_curve_head"], "Agemos", axarr[1, 1]
+        config["input_data"]["growth_curve_head"],
+        "Agemos",
+        axarr[1, 1],
     )
     axarr[1, 1].plot(data_head["Age"], data_head["Head Circ.(cm)"])
     axarr[1, 1].set_title("Head Circumference vs. Age")

@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 # Copyright 2019 by Jiuguang Wang (www.robo.guru)
 # All rights reserved.
 # This file is part of Agenoria and is released under the MIT License.
@@ -28,12 +26,15 @@ def plot_daycare_days(plot_object: plt.figure, data: pd.DataFrame) -> None:
     plot_object.set_ylabel("Number of Days")
     plot_object.yaxis.set_ticks(np.arange(0, 21, 2))
     format_monthly_plot(
-        plot_object, daycare_monthly.index[0], daycare_monthly.index[-1]
+        plot_object,
+        daycare_monthly.index[0],
+        daycare_monthly.index[-1],
     )
 
 
 def plot_days_between_vomit(
-    plot_object: plt.figure, data: pd.DataFrame
+    plot_object: plt.figure,
+    data: pd.DataFrame,
 ) -> None:
     # Look up vomit days and compute gaps
     vomit_days = data.loc[data["Vomit"] == 1]
@@ -48,7 +49,8 @@ def plot_days_between_vomit(
 
 
 def plot_doctor_visit_monthly(
-    plot_object: plt.figure, data: pd.DataFrame
+    plot_object: plt.figure,
+    data: pd.DataFrame,
 ) -> None:
     # Group and compute sum by month. BMS gives 1st of month
     doctor_monthly = data["Doctor"].resample("BMS").sum()
@@ -59,7 +61,9 @@ def plot_doctor_visit_monthly(
     plot_object.set_ylabel("Total Number of Doctor Visits")
     plot_object.yaxis.set_ticks(np.arange(0, 5, 1))
     format_monthly_plot(
-        plot_object, doctor_monthly.index[0], doctor_monthly.index[-1]
+        plot_object,
+        doctor_monthly.index[0],
+        doctor_monthly.index[-1],
     )
 
 
@@ -72,7 +76,9 @@ def plot_monthly_vomit(plot_object: plt.figure, data: pd.DataFrame) -> None:
     plot_object.set_title("Total Number of Vomits by Months")
     plot_object.set_ylabel("Total Number of Vomits")
     format_monthly_plot(
-        plot_object, vomit_monthly.index[0], vomit_monthly.index[-1]
+        plot_object,
+        vomit_monthly.index[0],
+        vomit_monthly.index[-1],
     )
 
 

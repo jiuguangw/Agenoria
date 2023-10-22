@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 # Copyright 2019 by Jiuguang Wang (www.robo.guru)
 # All rights reserved.
 # This file is part of Agenoria and is released under the MIT License.
@@ -103,11 +101,11 @@ def parse_glow_sleep_data(data_sleep: pd.DataFrame) -> pd.DataFrame:
                 nighttime_duration,
                 longest_session,
                 max_awake_duration,
-            ]
+            ],
         )
 
     # Convert list to dataframe
-    data_sleep_daily = pd.DataFrame(
+    return pd.DataFrame(
         sleep_data_list,
         columns=[
             "date",
@@ -119,8 +117,6 @@ def parse_glow_sleep_data(data_sleep: pd.DataFrame) -> pd.DataFrame:
             "max_awake_duration",
         ],
     )
-
-    return data_sleep_daily
 
 
 def plot_sleep_stats_charts() -> None:
@@ -150,7 +146,8 @@ def plot_sleep_stats_charts() -> None:
 
     # Chart 2 - Sleep: Daily Longest Duration of Uninterrupted Sleep (Hours)
     axarr[0, 1].plot(
-        data_sleep_daily["date"], data_sleep_daily["longest_session"]
+        data_sleep_daily["date"],
+        data_sleep_daily["longest_session"],
     )
     axarr[0, 1].set_title("Sleep: Daily Longest Sleep Duration (Hr)")
     axarr[0, 1].set_ylabel("Longest Sleep Duration (Hr)")
@@ -158,7 +155,8 @@ def plot_sleep_stats_charts() -> None:
 
     # Chart 3 - Sleep: Daily Total Sleep (Hours)
     axarr[0, 2].plot(
-        data_sleep_daily["date"], data_sleep_daily["total_sleep_duration"]
+        data_sleep_daily["date"],
+        data_sleep_daily["total_sleep_duration"],
     )
     axarr[0, 2].set_title("Sleep: Daily Total Sleep (Hr)")
     axarr[0, 2].set_ylabel("Total Sleep (Hr)")
@@ -166,7 +164,8 @@ def plot_sleep_stats_charts() -> None:
 
     # Chart 4 - Sleep: Daily Daytime Sleep (Hours)
     axarr[1, 0].plot(
-        data_sleep_daily["date"], data_sleep_daily["total_nap_duration"]
+        data_sleep_daily["date"],
+        data_sleep_daily["total_nap_duration"],
     )
     axarr[1, 0].set_title("Sleep: Daily Total Daytime Sleep (Hr)")
     axarr[1, 0].set_ylabel("Total Sleep (Hr)")
@@ -174,7 +173,8 @@ def plot_sleep_stats_charts() -> None:
 
     # Chart 5 - Sleep: Daily Nighttime Sleep (Hours)
     axarr[1, 1].plot(
-        data_sleep_daily["date"], data_sleep_daily["total_nighttime_duration"]
+        data_sleep_daily["date"],
+        data_sleep_daily["total_nighttime_duration"],
     )
     axarr[1, 1].set_title("Sleep: Daily Total Nighttime Sleep (Hr)")
     axarr[1, 1].set_ylabel("Total Sleep (Hr)")
@@ -182,7 +182,8 @@ def plot_sleep_stats_charts() -> None:
 
     # Chart 6 - Daily Maximum Awake Duration (Hr)
     axarr[1, 2].plot(
-        data_sleep_daily["date"], data_sleep_daily["max_awake_duration"]
+        data_sleep_daily["date"],
+        data_sleep_daily["max_awake_duration"],
     )
     axarr[1, 2].set_title("Daily Maximum Awake Duration (Hr)")
     axarr[1, 2].set_ylabel("Maximum Awake Duration (Hr)")
@@ -191,5 +192,6 @@ def plot_sleep_stats_charts() -> None:
     # Export
     fig.subplots_adjust(wspace=0.2, hspace=0.35)
     export_figure(
-        fig, config["output_data"]["output_daily_sleep_stats_charts"]
+        fig,
+        config["output_data"]["output_daily_sleep_stats_charts"],
     )

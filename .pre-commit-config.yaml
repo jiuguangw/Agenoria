@@ -6,7 +6,7 @@
 
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
     -   id: trailing-whitespace
     -   id: check-yaml
@@ -31,13 +31,13 @@ repos:
          - toml-sort==0.23.1
 
 -   repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: 'v0.0.282'
+    rev: 'v0.1.0'
     hooks:
     -   id: ruff
         args: ['--fix', '--config', 'pyproject.toml']
 
 -   repo: https://github.com/psf/black
-    rev: 23.7.0
+    rev: 23.10.0
     hooks:
     -   id: black
         language_version: python3.10
@@ -45,12 +45,12 @@ repos:
         verbose: true
 
 -   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.5.0
+    rev: v1.6.1
     hooks:
     -   id: mypy
         additional_dependencies: [types-python-dateutil]
 
 -   repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.9.0.5
+    rev: v0.9.0.6
     hooks:
     -   id: shellcheck

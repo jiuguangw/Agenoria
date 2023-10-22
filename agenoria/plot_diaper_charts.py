@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 # Copyright 2019 by Jiuguang Wang (www.robo.guru)
 # All rights reserved.
 # This file is part of Agenoria and is released under the MIT License.
@@ -91,11 +89,11 @@ def parse_glow_diaper_data(data_diaper: pd.DataFrame) -> pd.DataFrame:
                 total_poop_count,
                 poop_ratio,
                 diaper_change_time_avg,
-            ]
+            ],
         )
 
     # Convert list to dataframe
-    daily_diaper_data = pd.DataFrame(
+    return pd.DataFrame(
         diaper_data_list,
         columns=[
             "date",
@@ -108,12 +106,10 @@ def parse_glow_diaper_data(data_diaper: pd.DataFrame) -> pd.DataFrame:
         ],
     )
 
-    return daily_diaper_data
-
 
 def get_abnormal_days(
     daily_diaper_data: pd.DataFrame,
-) -> pd.DataFrame | pd.DataFrame:
+) -> pd.DataFrame:
     # Constipation monthly - days with zero poop
     constipation_days = daily_diaper_data.loc[
         daily_diaper_data["poop_count"] == 0
@@ -140,11 +136,7 @@ def get_diaper_monthly_data(daily_diaper_data: pd.DataFrame) -> pd.DataFrame:
     monthly_data = daily_diaper_data.set_index(daily_diaper_data["date"])
 
     # Compute monthly total
-    diaper_monthly_data = (
-        monthly_data["daily_total_diaper_count"].resample("BMS").sum()
-    )
-
-    return diaper_monthly_data
+    return monthly_data["daily_total_diaper_count"].resample("BMS").sum()
 
 
 def plot_diaper_charts() -> None:
@@ -159,7 +151,7 @@ def plot_diaper_charts() -> None:
     daily_diaper_data = parse_glow_diaper_data(diaper_data)
     diaper_monthly_data = get_diaper_monthly_data(daily_diaper_data)
     constipation_monthly_data, diarrhea_monthly_data = get_abnormal_days(
-        daily_diaper_data
+        daily_diaper_data,
     )
 
     # Start date
@@ -172,7 +164,8 @@ def plot_diaper_charts() -> None:
 
     # Chart 1 - Diaper: Total Diapers (Cumulative)
     axarr[0, 0].plot(
-        daily_diaper_data["date"], daily_diaper_data["cumulative_diaper_count"]
+        daily_diaper_data["date"],
+        daily_diaper_data["cumulative_diaper_count"],
     )
     axarr[0, 0].set_title("Diaper: Total Diapers (Cumulative)")
     axarr[0, 0].set_ylabel("Total Diapers")
@@ -201,7 +194,8 @@ def plot_diaper_charts() -> None:
 
     # Chart 5 - Diaper: Daily Total Poops
     axarr[1, 1].plot(
-        daily_diaper_data["date"], daily_diaper_data["poop_count"]
+        daily_diaper_data["date"],
+        daily_diaper_data["poop_count"],
     )
     axarr[1, 1].set_title("Diaper: Daily Total Poops")
     axarr[1, 1].set_ylabel("Total Poops")
@@ -209,17 +203,19 @@ def plot_diaper_charts() -> None:
 
     # Chart 6 - Diaper: Average Time Between Diaper Changes
     axarr[1, 2].plot(
-        daily_diaper_data["date"], daily_diaper_data["diaper_change_time_avg"]
+        daily_diaper_data["date"],
+        daily_diaper_data["diaper_change_time_avg"],
     )
     axarr[1, 2].set_title(
-        "Diaper: Average Time Between Diaper Changes (Hours)"
+        "Diaper: Average Time Between Diaper Changes (Hours)",
     )
     axarr[1, 2].set_ylabel("Average Time Between Diaper Changes (Hours)")
     format_monthly_plot(axarr[1, 2], xlim_left, xlim_right)
 
     # Chart 7 - Diaper: Poop Ratio
     axarr[2, 0].plot(
-        daily_diaper_data["date"], daily_diaper_data["poop_ratio"]
+        daily_diaper_data["date"],
+        daily_diaper_data["poop_ratio"],
     )
     axarr[2, 0].set_title("Diaper: Poop as Percentage of Diaper Changes")
     axarr[2, 0].set_ylabel("Poop as Percentage of Diaper Changes")
@@ -227,7 +223,8 @@ def plot_diaper_charts() -> None:
 
     # Chart 8 - Diaper: Constipation
     axarr[2, 1].plot(
-        constipation_monthly_data.index, constipation_monthly_data
+        constipation_monthly_data.index,
+        constipation_monthly_data,
     )
     axarr[2, 1].set_title("Diaper: Number of Constipated Days by Month")
     axarr[2, 1].set_ylabel("Number of Constipated Days")

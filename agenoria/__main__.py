@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 # Copyright 2019 by Jiuguang Wang (www.robo.guru)
 # All rights reserved.
 # This file is part of Agenoria and is released under the MIT License.
@@ -7,9 +5,9 @@
 # this package.
 
 import multiprocessing
-import os
 import timeit
 from multiprocessing import Process
+from pathlib import Path
 
 from config import param as config
 
@@ -25,13 +23,13 @@ from .plot_medical_charts import plot_medical_charts
 from .plot_sleep_stats_charts import plot_sleep_stats_charts
 
 
-def main() -> None:
+def main() -> None:  # noqa: C901
     # Create a timer
     start = timeit.default_timer()
 
     # Create the output directory
-    if not os.path.exists(config["output_data"]["output_directory"]):
-        os.makedirs(config["output_data"]["output_directory"])
+    if not Path.exists(config["output_data"]["output_directory"]):
+        Path.mkdir(config["output_data"]["output_directory"], parents=True)
 
     # Spin off multi-process plotting
     procs = []

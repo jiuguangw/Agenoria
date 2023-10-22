@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 # Copyright 2019 by Jiuguang Wang (www.robo.guru)
 # All rights reserved.
 # This file is part of Agenoria and is released under the MIT License.
@@ -21,7 +19,9 @@ from .plot_settings import export_figure, format_monthly_plot, mmm_plot
 
 
 def export_feeding_text(
-    feeding_data: pd.DataFrame, key_amount: str, label: str
+    feeding_data: pd.DataFrame,
+    key_amount: str,
+    label: str,
 ) -> None:
     print(label + ": ", end="")
     for _index, row in feeding_data.iterrows():
@@ -31,7 +31,8 @@ def export_feeding_text(
 
 
 def parse_glow_feeding_data(
-    data: pd.DataFrame, key_amount: str
+    data: pd.DataFrame,
+    key_amount: str,
 ) -> pd.DataFrame:
     # Find first and last entry in column
     start_date = data["Date"].iloc[-1]
@@ -50,7 +51,8 @@ def parse_glow_feeding_data(
 
         # For some reason raw feeding data is not sorted by time
         rows_on_date = rows_on_date.sort_values(
-            ["Time of feeding"], ascending=True
+            ["Time of feeding"],
+            ascending=True,
         )
 
         # Compute statistics
@@ -101,11 +103,11 @@ def parse_glow_feeding_data(
                 daytime_sum,
                 nighttime_sum,
                 nighttime_feeding_count,
-            ]
+            ],
         )
 
     # Convert list to dataframe
-    daily_data_new = pd.DataFrame(
+    return pd.DataFrame(
         feeding_data_list,
         columns=[
             "date",
@@ -123,11 +125,10 @@ def parse_glow_feeding_data(
         ],
     )
 
-    return daily_data_new
-
 
 def combine_bottle_solid(
-    data_bottle: pd.DataFrame, data_solid: pd.DataFrame
+    data_bottle: pd.DataFrame,
+    data_solid: pd.DataFrame,
 ) -> pd.DataFrame:
     # Compute the difference in size between bottle and solids
     size_missing = data_bottle["date"].size - data_solid["date"].size
@@ -137,14 +138,15 @@ def combine_bottle_solid(
 
     # Append it to the front of the solid data
     solid_new = pd.concat(
-        [zero_data["sum"], data_solid["sum"]], axis=0, ignore_index=True
+        [zero_data["sum"], data_solid["sum"]],
+        axis=0,
+        ignore_index=True,
     )
 
     # Convert bottle feeding from mL to oz and add the solids
-    combined = data_bottle["sum"] + solid_new
+    return data_bottle["sum"] + solid_new
 
     # Return combined data
-    return combined
 
 
 def plot_feeding_stats_charts() -> None:
@@ -247,5 +249,6 @@ def plot_feeding_stats_charts() -> None:
     # Export
     fig.subplots_adjust(wspace=0.2, hspace=0.35)
     export_figure(
-        fig, config["output_data"]["output_daily_feeding_stats_charts"]
+        fig,
+        config["output_data"]["output_daily_feeding_stats_charts"],
     )
