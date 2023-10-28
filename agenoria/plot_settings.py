@@ -5,6 +5,7 @@
 # this package.
 
 import math
+from pathlib import Path
 
 import matplotlib as mpl
 import numpy as np
@@ -135,13 +136,19 @@ def format_monthly_plot(
 
 
 def export_figure(figure: mpl.figure, output_filename: str) -> None:
-    # Export
+    # Create the directory if it didn't exist already
+    directory_path = Path(config["output_data"]["output_directory"])
+    directory_path.mkdir(parents=True, exist_ok=True)
+
+    # Form the file name
     filename = (
         config["output_data"]["output_directory"]
         + "/"
         + output_filename
         + config["output_format"]["format"]
     )
+
+    # Page settings
     figure.set_size_inches(
         config["output_format"]["output_dim_x"],
         config["output_format"]["output_dim_y"],
