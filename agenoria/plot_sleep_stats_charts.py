@@ -22,6 +22,8 @@ SLEEP_THRESHOLD = 0.0333333  # two minutes -> hours
 
 
 def parse_glow_sleep_data(data_sleep: pd.DataFrame) -> pd.DataFrame:
+    data_sleep = data_sleep.copy()
+
     # Find first and last entry in column
     start_date = data_sleep["Date"].iloc[-1]
     end_date = data_sleep["Date"].iloc[0]
@@ -45,13 +47,13 @@ def parse_glow_sleep_data(data_sleep: pd.DataFrame) -> pd.DataFrame:
 
     # Compute the offset duration to be plotted the next day
     sleep_offset = data_sleep.loc[index, "End time"]
-    data_sleep.loc[index, "offset"] = (
-        sleep_offset.dt.hour + sleep_offset.dt.minute / 60
-    )
+    data_sleep.loc[index, "offset"] = sleep_offset.dt.hour + sleep_offset.dt.minute / 60
+
+    grouped_by_day = {current_day: current_rows for current_day, current_rows in data_sleep.groupby("Date", sort=False)}
+    empty_rows = data_sleep.iloc[0:0]
 
     for current_date in pd.date_range(start_date, end_date):
-        # Get all entires on this date
-        rows_on_date = data_sleep[data_sleep["Date"].isin([current_date])]
+        rows_on_date = grouped_by_day.get(current_date, empty_rows)
 
         # Remove all sleep sessions less than two minutes
         filtered = rows_on_date[rows_on_date["duration"] > SLEEP_THRESHOLD]
@@ -75,9 +77,7 @@ def parse_glow_sleep_data(data_sleep: pd.DataFrame) -> pd.DataFrame:
         max_awake_duration = awake_duration.max() / np.timedelta64(1, "h")
 
         # Remove session that extends into other days
-        filtered2 = filtered[
-            filtered["End time"].dt.normalize() == current_date
-        ]
+        filtered2 = filtered[filtered["End time"].dt.normalize() == current_date]
 
         # Nap sessions must begin and end within the defined window
         nap_index1 = get_daytime_index(filtered2["Begin time"])

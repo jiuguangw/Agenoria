@@ -7,9 +7,9 @@
 import pandas as pd
 
 
-def get_daytime_index(data: pd.Series) -> pd.DataFrame:
+def get_daytime_index(data: pd.Series) -> pd.Series:
     return (data.dt.hour >= 7) & (data.dt.hour < 20)
 
 
-def get_nighttime_index(data: pd.Series) -> pd.DataFrame:
+def get_nighttime_index(data: pd.Series) -> pd.Series:
     return (data.dt.hour < 7) | (data.dt.hour >= 21)

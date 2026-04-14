@@ -18,24 +18,6 @@ from .plot_settings import export_figure, format_monthly_plot
 CUTOFF = 65
 
 
-def count_pee_poop(row: pd.DataFrame) -> tuple[int, int]:
-    # Return variables
-    pee = 0
-    poop = 0
-
-    # Parse
-    key = row["In the diaper"]
-    if key == "pee":  # Pee only
-        pee += 1
-    elif key == "poo":
-        poop += 1
-    elif key == "pee and poo":
-        pee += 1
-        poop += 1
-
-    return pee, poop
-
-
 def parse_glow_diaper_data(data_diaper: pd.DataFrame) -> pd.DataFrame:
     # Find first and last entry in column
     start_date = data_diaper["Date"].iloc[-1]
@@ -49,22 +31,39 @@ def parse_glow_diaper_data(data_diaper: pd.DataFrame) -> pd.DataFrame:
     diaper_data_list = []
     cumulative_diaper_count = 0
 
+    grouped_by_day = {
+        current_day: current_rows for current_day, current_rows in data_diaper.groupby("Date", sort=False)
+    }
+
     # Diaper
     for current_date in pd.date_range(start_date, end_date):
-        # Get all entires on this date
-        rows_on_date = data_diaper[data_diaper["Date"].isin([current_date])]
+        rows_on_date = grouped_by_day.get(current_date)
+        if rows_on_date is None or rows_on_date.empty:
+            diaper_data_list.append(
+                [
+                    current_date,
+                    0,
+                    cumulative_diaper_count,
+                    0,
+                    0,
+                    float("nan"),
+                    float("nan"),
+                ],
+            )
+            continue
 
         # Compute total diaper count
-        daily_total_diaper_count = rows_on_date["In the diaper"].count()
-        cumulative_diaper_count += rows_on_date["In the diaper"].count()
+        daily_total_diaper_count = int(rows_on_date["In the diaper"].count())
+        cumulative_diaper_count += daily_total_diaper_count
 
         # Separate pees and poops
-        total_pee_count = 0
-        total_poop_count = 0
-        for _index, diaper_event in rows_on_date.iterrows():
-            pee, poop = count_pee_poop(diaper_event)
-            total_pee_count += pee
-            total_poop_count += poop
+        diaper_counts = rows_on_date["In the diaper"].value_counts()
+        total_pee_count = int(
+            diaper_counts.get("pee", 0) + diaper_counts.get("pee and poo", 0),
+        )
+        total_poop_count = int(
+            diaper_counts.get("poo", 0) + diaper_counts.get("pee and poo", 0),
+        )
 
         # Compute poop to total diaper change ratio
         poop_ratio = (total_poop_count / daily_total_diaper_count) * 100
@@ -72,9 +71,7 @@ def parse_glow_diaper_data(data_diaper: pd.DataFrame) -> pd.DataFrame:
         # Compute diaper day duration
         diaper_final = rows_on_date["Diaper time"].iloc[0]
         diaper_first = rows_on_date["Diaper time"].iloc[-1]
-        diaper_day_duration = (
-            diaper_final - diaper_first
-        ).total_seconds() / 3600
+        diaper_day_duration = (diaper_final - diaper_first).total_seconds() / 3600
 
         # Compute average time between diaper changes
         diaper_change_time_avg = diaper_day_duration / daily_total_diaper_count
@@ -109,31 +106,23 @@ def parse_glow_diaper_data(data_diaper: pd.DataFrame) -> pd.DataFrame:
 
 def get_abnormal_days(
     daily_diaper_data: pd.DataFrame,
-) -> pd.DataFrame:
+) -> tuple[pd.Series, pd.Series]:
     # Constipation monthly - days with zero poop
-    constipation_days = daily_diaper_data.loc[
-        daily_diaper_data["poop_count"] == 0
-    ]
-    constipation_days = constipation_days.set_index(constipation_days["date"])
-    constipation_monthly = (
-        constipation_days["daily_total_diaper_count"].resample("BMS").count()
-    )
+    constipation_days = daily_diaper_data.loc[daily_diaper_data["poop_count"] == 0]
+    constipation_days = constipation_days.set_index("date")
+    constipation_monthly = constipation_days["daily_total_diaper_count"].resample("BMS").count()
 
     # Diarrhea monthly - days with high percentage of poops
-    diarrhea_days = daily_diaper_data.loc[
-        daily_diaper_data["poop_ratio"] >= CUTOFF
-    ]
-    diarrhea_days = diarrhea_days.set_index(diarrhea_days["date"])
-    diarrhea_monthly = (
-        diarrhea_days["daily_total_diaper_count"].resample("BMS").count()
-    )
+    diarrhea_days = daily_diaper_data.loc[daily_diaper_data["poop_ratio"] >= CUTOFF]
+    diarrhea_days = diarrhea_days.set_index("date")
+    diarrhea_monthly = diarrhea_days["daily_total_diaper_count"].resample("BMS").count()
 
     return constipation_monthly, diarrhea_monthly
 
 
-def get_diaper_monthly_data(daily_diaper_data: pd.DataFrame) -> pd.DataFrame:
+def get_diaper_monthly_data(daily_diaper_data: pd.DataFrame) -> pd.Series:
     # Reindex
-    monthly_data = daily_diaper_data.set_index(daily_diaper_data["date"])
+    monthly_data = daily_diaper_data.set_index("date")
 
     # Compute monthly total
     return monthly_data["daily_total_diaper_count"].resample("BMS").sum()

@@ -7,11 +7,12 @@
 import math
 from pathlib import Path
 
-import matplotlib as mpl
 import numpy as np
 import pandas as pd
 from chart_studio import plotly
+from matplotlib.axes import Axes
 from matplotlib.dates import DateFormatter, MonthLocator
+from matplotlib.figure import Figure
 
 from config import param as config
 
@@ -29,18 +30,18 @@ ALPHA_VALUE = 0.3
 
 
 def mmm_plot(
-    plot_object: mpl.figure,
-    data_date: pd.DataFrame,
-    data_mean: pd.DataFrame,
-    data_min: pd.DataFrame,
-    data_max: pd.DataFrame,
+    plot_object: Axes,
+    data_date: pd.Series,
+    data_mean: pd.Series,
+    data_min: pd.Series,
+    data_max: pd.Series,
 ) -> None:
     plot_object.plot(data_date, data_mean)
     plot_object.fill_between(data_date, data_max, data_mean, alpha=ALPHA_VALUE)
     plot_object.fill_between(data_date, data_min, data_mean, alpha=ALPHA_VALUE)
 
 
-def enumerate_labels(date_num: int) -> tuple[pd.DataFrame, pd.DataFrame]:
+def enumerate_labels(date_num: int) -> tuple[list[str], list[str]]:
     hour_labels = [f"{num}:00" for num in range(24)]
     week_labels = [str(num) for num in range(0, math.ceil(date_num / 7), 2)]
 
@@ -48,7 +49,7 @@ def enumerate_labels(date_num: int) -> tuple[pd.DataFrame, pd.DataFrame]:
 
 
 def format_24h_week_plot_horizontal(
-    fig_axis: mpl.figure,
+    fig_axis: Axes,
     date_num: int,
     title: str,
 ) -> None:
@@ -77,7 +78,7 @@ def format_24h_week_plot_horizontal(
     fig_axis.set_xticklabels(week_labels)
 
 
-def format_24h_week_plot_vertical(fig_axis: mpl.figure, date_num: int) -> None:
+def format_24h_week_plot_vertical(fig_axis: Axes, date_num: int) -> None:
     # Create the tick labels
     hour_labels, week_labels = enumerate_labels(date_num)
 
@@ -101,7 +102,7 @@ def format_24h_week_plot_vertical(fig_axis: mpl.figure, date_num: int) -> None:
     fig_axis.set_xticklabels(week_labels, rotation=90)
 
 
-def format_growth_chart_plot(plot_object: mpl.figure) -> None:
+def format_growth_chart_plot(plot_object: Axes) -> None:
     # Change label sizes
     plot_object.title.set_size(TITLE_FONT_SIZE_MED)
     plot_object.xaxis.label.set_size(AXIS_FONT_SIZE_MED)
@@ -110,9 +111,9 @@ def format_growth_chart_plot(plot_object: mpl.figure) -> None:
 
 
 def format_monthly_plot(
-    plot_object: mpl.figure,
-    xlim_left: int,
-    xlim_right: int,
+    plot_object: Axes,
+    xlim_left: pd.Timestamp,
+    xlim_right: pd.Timestamp,
 ) -> None:
     # Axis label
     plot_object.set_xlabel("Date")
@@ -135,18 +136,13 @@ def format_monthly_plot(
     plot_object.xaxis.set_major_formatter(DateFormatter("%b"))
 
 
-def export_figure(figure: mpl.figure, output_filename: str) -> None:
+def export_figure(figure: Figure, output_filename: str) -> None:
     # Create the directory if it didn't exist already
     directory_path = Path(config["output_data"]["output_directory"])
     directory_path.mkdir(parents=True, exist_ok=True)
 
     # Form the file name
-    filename = (
-        config["output_data"]["output_directory"]
-        + "/"
-        + output_filename
-        + config["output_format"]["format"]
-    )
+    filename = directory_path / f'{output_filename}{config["output_format"]["format"]}'
 
     # Page settings
     figure.set_size_inches(
@@ -156,6 +152,6 @@ def export_figure(figure: mpl.figure, output_filename: str) -> None:
     figure.savefig(filename, bbox_inches="tight")
 
     if config["output_format"]["plotly_on"]:
-        plotly.plot_mpl(figure, filename="Agenoria - " + output_filename)
+        plotly.plot_mpl(figure, filename=f"Agenoria - {output_filename}")
 
     figure.clf()

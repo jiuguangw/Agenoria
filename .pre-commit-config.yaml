@@ -1,56 +1,42 @@
-# Copyright 2019 by Jiuguang Wang (www.robo.guru)
-# All rights reserved.
-# This file is part of Agenoria and is released under the MIT License.
-# Please see the LICENSE file that should have been included as part of
-# this package.
+default_stages: [pre-commit]
+default_install_hook_types: [pre-commit, pre-push]
 
 repos:
--   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
-    hooks:
-    -   id: trailing-whitespace
-    -   id: check-yaml
-    -   id: check-added-large-files
-        args: ['--maxkb=2000']
-    -   id: check-toml
-    -   id: end-of-file-fixer
-    -   id: debug-statements
-    -   id: check-case-conflict
-    -   id: check-docstring-first
-    -   id: check-executables-have-shebangs
-    -   id: check-merge-conflict
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.15.10
+  hooks:
+    - id: ruff-check
+      args: ['--fix', '--config', 'pyproject.toml']
 
--   repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
-    rev: v2.10.0
-    hooks:
-    -   id: pretty-format-ini
-        args: [--autofix]
-    -   id: pretty-format-toml
-        args: [--autofix]
-        additional_dependencies:
-         - toml-sort==0.23.1
+- repo: https://github.com/psf/black
+  rev: 26.3.1
+  hooks:
+    - id: black
+      language_version: python3.10
+      args: ['--config', 'pyproject.toml']
+      verbose: true
 
--   repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: 'v0.1.0'
-    hooks:
-    -   id: ruff
-        args: ['--fix', '--config', 'pyproject.toml']
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v6.0.0
+  hooks:
+    - id: check-yaml
+    - id: check-toml
+    - id: end-of-file-fixer
+    - id: check-merge-conflict
+    - id: check-executables-have-shebangs
+    - id: check-shebang-scripts-are-executable
+    - id: debug-statements
+    - id: trailing-whitespace
+    - id: check-added-large-files
+      args: ['--maxkb', '2000']
+      exclude: |
+        (?x)^(
+          .*pixi\.lock$
+        )$
 
--   repo: https://github.com/psf/black
-    rev: 23.10.0
-    hooks:
-    -   id: black
-        language_version: python3.10
-        args: ['--config', 'pyproject.toml']
-        verbose: true
-
--   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.6.1
-    hooks:
-    -   id: mypy
-        additional_dependencies: [types-python-dateutil]
-
--   repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.9.0.6
-    hooks:
-    -   id: shellcheck
+- repo: https://github.com/rhysd/actionlint
+  rev: v1.7.12
+  hooks:
+    - id: actionlint
+      args:
+        - "-ignore=shellcheck.*info"

@@ -18,13 +18,12 @@ classifiers = [
   "Operating System :: OS Independent"
 ]
 dependencies = [
-  "tomli>=2.0.1",
-  "matplotlib>=3.8",
-  "pandas>=2.1.0",
-  "seaborn>=0.12.2",
-  "numpy>=1.25.2",
+  "matplotlib>=3.10",
+  "numpy>=2.2",
+  "pandas>=2.3",
+  "seaborn>=0.13.2",
   "chart_studio>=1.1.0",
-  "toml>=0.10.2"
+  "tomli>=2.0.1; python_version < \"3.11\""
 ]
 description = "Python utility for visualizing growth data from a newborn's first year."
 keywords = ["baby", "visualization", "glow", "pandas", "matplotlib"]
@@ -36,9 +35,10 @@ version = "0.1.0"
 
 [project.optional-dependencies]
 dev = [
-  "pre-commit>=3.5.0",
-  "pytest>=7.4.2",
-  "pytest-cov>=4.1.0",
+  "pre-commit>=4.0.1",
+  "pytest>=8.3.4",
+  "pytest-cov>=6.0.0",
+  "pytest-xdist>=3.6.1",
   "MonkeyType>=23.3.0"
 ]
 
@@ -50,16 +50,27 @@ documentation = "https://github.com/jiuguangw/Agenoria"
 homepage = "https://github.com/jiuguangw/Agenoria"
 repository = "https://github.com/jiuguangw/Agenoria"
 
+[tool.pixi.workspace]
+name = "agenoria"
+channels = ["conda-forge"]
+platforms = ["linux-64", "osx-arm64", "linux-aarch64"]
+
+[tool.pixi.dependencies]
+python = ">=3.10,<3.11"
+
+[tool.pixi.pypi-dependencies]
+agenoria = { path = ".", editable = true, extras = ["dev"] }
+
+[tool.pixi.tasks]
+lint = "pre-commit run --all-files"
+test = "pytest -q"
+test-cov = "pytest -n auto --cov=./ --cov-report=xml -q"
+plot = "agenoria config/config_zyw.toml"
+plot-zlw = "agenoria config/config_zlw.toml"
+plot-all = { depends-on = ["plot", "plot-zlw"] }
+
 [tool.black]
-# `extend-exclude` is not honored when `black` is passed a file path explicitly,
-# as is typical when `black` is invoked via `pre-commit`.
-force-exclude = '''
-/(
-  build/.*
-)/
-'''
-include = '\.pyi?$'
-line-length = 79
+line-length = 120
 preview = true
 target-version = ['py310']
 
@@ -75,47 +86,127 @@ warn_redundant_casts = true
 warn_unreachable = true
 
 [tool.ruff]
-# Allow unused variables when underscore-prefixed.
-dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+line-length = 120
+target-version = "py310"
+
 # Exclude a variety of commonly ignored directories.
 exclude = [
-  ".bzr",
-  ".direnv",
-  ".eggs",
-  ".git",
-  ".hg",
-  ".mypy_cache",
-  ".nox",
-  ".pants.d",
-  ".pytype",
-  ".ruff_cache",
-  ".svn",
-  ".tox",
-  ".venv",
-  "__pypackages__",
-  "_build",
-  "buck-out",
-  "build",
-  "dist",
-  "node_modules",
-  "venv"
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
 ]
+
+[tool.ruff.lint]
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+select = [
+    "E",
+    "W",
+    "F",
+    "I",
+    "B",
+    "SLF001",
+    "RET501",
+    "RET502",
+    "RET503",
+    "RUF",
+    "PLC",
+    "PLE",
+    "PLW",
+    "PIE",
+    "FLY",
+]
+
+ignore = [
+    "E731",
+    "PLC0105",
+    "PLW0603",
+    "PLW2901",
+    "RUF010",
+    "B035",
+    "RUF012",
+    "PLC2401",
+]
+
 # Allow autofix for all enabled rules (when `--fix`) is provided.
-fixable = ["A", "B", "C", "D", "E", "F", "G", "I", "N", "Q", "S", "T", "W", "ANN", "ARG", "BLE", "COM", "DJ", "DTZ", "EM", "ERA", "EXE", "FBT", "ICN", "INP", "ISC", "NPY", "PD", "PGH", "PIE", "PL", "PT", "PTH", "PYI", "RET", "RSE", "RUF", "SIM", "SLF", "TCH", "TID", "TRY", "UP", "YTT"]
-ignore = ["D", "PLR2004", "T201", "S101"]
-# Same as Black.
-line-length = 79
-select = ["ALL"]
-# Assume Python 3.10.
-target-version = "py310"
+fixable = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "I",
+    "N",
+    "Q",
+    "S",
+    "T",
+    "W",
+    "ANN",
+    "ARG",
+    "BLE",
+    "COM",
+    "DJ",
+    "DTZ",
+    "EM",
+    "ERA",
+    "EXE",
+    "FBT",
+    "ICN",
+    "INP",
+    "ISC",
+    "NPY",
+    "PD",
+    "PGH",
+    "PIE",
+    "PL",
+    "PT",
+    "PTH",
+    "PYI",
+    "RET",
+    "RSE",
+    "RUF",
+    "SIM",
+    "SLF",
+    "TCH",
+    "TID",
+    "TRY",
+    "UP",
+    "YTT",
+]
 unfixable = []
 
-[tool.ruff.mccabe]
-# Unlike Flake8, default to a complexity level of 10.
+[tool.ruff.lint.isort]
+known-first-party = ["agenoria", "config"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.ruff.lint.mccabe]
 max-complexity = 10
 
-[tool.ruff.per-file-ignores]
-"__init__.py" = ["F401"]
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
 [tool.setuptools]
 packages = ["agenoria", "config", "data"]

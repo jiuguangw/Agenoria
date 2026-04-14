@@ -27,32 +27,32 @@ from .plot_settings import (
 BAR_SIZE = 1
 
 
-def get_end_date(data: pd.DataFrame, *, first_year_only: bool) -> int:
+def get_end_date(data: pd.Series, *, first_year_only: bool) -> int:
     # Assign the end date. Either 365 or actual day number.
-    return 365 if first_year_only else data.iloc[0]
+    return 365 if first_year_only else int(data.iloc[0])
 
 
-def parse_raw_data(data: pd.DataFrame, key: list[str]) -> pd.DataFrame:
+def parse_raw_data(data: pd.DataFrame, timestamp_column: str) -> pd.DataFrame:
+    parsed = data.copy()
+
     # Get start and end dates
-    start_date = data["Date"].iloc[-1]
+    start_date = parsed["Date"].iloc[-1]
 
     # Convert timesteamp to decimal hour
-    data["timestamp_hour"] = data[key[0]].dt.hour + data[key[0]].dt.minute / 60
+    parsed["timestamp_hour"] = parsed[timestamp_column].dt.hour + parsed[timestamp_column].dt.minute / 60
 
     # Convert date to day number
-    data["day_number"] = (data["Date"] - start_date).dt.days + 1
+    parsed["day_number"] = (parsed["Date"] - start_date).dt.days + 1
 
-    return data
+    return parsed
 
 
 def plot_sleep_24h_viz() -> None:
     # Import and extract sleep data
-    data = parse_raw_data(sleep_data, ["Begin time", "End time"])
+    data = parse_raw_data(sleep_data, "Begin time")
 
     # Convert end time timestamp to decimal hours
-    data["end_timestamp_hour"] = (
-        data["End time"].dt.hour + data["End time"].dt.minute / 60
-    )
+    data["end_timestamp_hour"] = data["End time"].dt.hour + data["End time"].dt.minute / 60
 
     # Compute duration in decimal hours
     data["duration"] = data["end_timestamp_hour"] - data["timestamp_hour"]
@@ -72,22 +72,21 @@ def plot_sleep_24h_viz() -> None:
     fig_ax = figure.add_subplot(111)
 
     # Find sessions with offsets and plot the offset with day_number+1
-    data.loc[index].apply(
-        lambda row: fig_ax.broken_barh(
-            [(row["day_number"] + 1, BAR_SIZE)],
-            [0, row["offset"]],
-        ),
-        axis=1,
-    )
+    for day_number, offset in zip(
+        data.loc[index, "day_number"],
+        data.loc[index, "offset"],
+        strict=False,
+    ):
+        fig_ax.broken_barh([(day_number + 1, BAR_SIZE)], (0, offset))
 
     # Loop through each row and plot the duration
-    data.apply(
-        lambda row: fig_ax.broken_barh(
-            [(row["day_number"], BAR_SIZE)],
-            [row["timestamp_hour"], row["duration"]],
-        ),
-        axis=1,
-    )
+    for day_number, start_hour, duration in zip(
+        data["day_number"],
+        data["timestamp_hour"],
+        data["duration"],
+        strict=False,
+    ):
+        fig_ax.broken_barh([(day_number, BAR_SIZE)], (start_hour, duration))
 
     # End date - one year or full
     end_date = get_end_date(
@@ -107,8 +106,8 @@ def plot_sleep_24h_viz() -> None:
 
 def plot_feeding_24h_viz() -> None:
     # Import and extract feeding data
-    data_bottle = parse_raw_data(feeding_bottle_data, ["Time of feeding"])
-    data_solid = parse_raw_data(feeding_solid_data, ["Time of feeding"])
+    data_bottle = parse_raw_data(feeding_bottle_data, "Time of feeding")
+    data_solid = parse_raw_data(feeding_solid_data, "Time of feeding")
 
     # Plot setup
     sns.set(style="darkgrid")
@@ -153,7 +152,7 @@ def plot_feeding_24h_viz() -> None:
     export_figure(figure, config["output_data"]["output_feeding_viz"])
 
 
-def map_poop_color(color: str) -> str:
+def map_poop_color(color: object) -> str:
     # If input is null, then it's pee
     if pd.isna(color):  # pee only, yellow
         return "y"
@@ -163,14 +162,13 @@ def map_poop_color(color: str) -> str:
         "yellow": "b",  # poop, yellow
         "green": "g",  # poop, green
         "brown": "m",  # poop, brown
-        pd.NaT: "y",  # pee only, yellow
     }
-    return color_map.get(color, "r")  # poop, other colors
+    return color_map.get(str(color).strip().lower(), "r")  # poop, other colors
 
 
 def plot_diapers_24h_viz() -> None:
     # Import and extract feeding data
-    data = parse_raw_data(diaper_data, ["Diaper time"])
+    data = parse_raw_data(diaper_data, "Diaper time")
 
     # Go through poop colors and map to matplotlib color keys
     data["Color key"] = data["Color"].apply(map_poop_color)

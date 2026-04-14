@@ -23,10 +23,10 @@ def export_feeding_text(
     key_amount: str,
     label: str,
 ) -> None:
-    print(label + ": ", end="")
-    for _index, row in feeding_data.iterrows():
-        print(row["Time of feeding"].strftime("%I:%M%p").lower(), end="")
-        print(": " + str(int(row[key_amount])) + " mL; ", end="")
+    print(f"{label}: ", end="")
+    for feeding_time, amount in feeding_data[["Time of feeding", key_amount]].itertuples(index=False, name=None):
+        print(feeding_time.strftime("%I:%M%p").lower(), end="")
+        print(f": {int(amount)} mL; ", end="")
     print("\n", end="")
 
 
@@ -44,16 +44,31 @@ def parse_glow_feeding_data(
 
     # Final data
     feeding_data_list = []
+    data_sorted = data.sort_values(["Time of feeding"], ascending=True)
+    grouped_by_day = {
+        current_day: current_rows for current_day, current_rows in data_sorted.groupby("Date", sort=False)
+    }
 
     for current_date in pd.date_range(start_date, end_date):
-        # Get all entires on this date
-        rows_on_date = data[data["Date"].isin([current_date])]
-
-        # For some reason raw feeding data is not sorted by time
-        rows_on_date = rows_on_date.sort_values(
-            ["Time of feeding"],
-            ascending=True,
-        )
+        rows_on_date = grouped_by_day.get(current_date)
+        if rows_on_date is None or rows_on_date.empty:
+            feeding_data_list.append(
+                [
+                    current_date,
+                    0.0,
+                    float("nan"),
+                    float("nan"),
+                    float("nan"),
+                    0,
+                    float("nan"),
+                    float("nan"),
+                    float("nan"),
+                    0.0,
+                    0.0,
+                    0,
+                ],
+            )
+            continue
 
         # Compute statistics
         sum_on_date = rows_on_date[key_amount].sum()
@@ -129,24 +144,22 @@ def parse_glow_feeding_data(
 def combine_bottle_solid(
     data_bottle: pd.DataFrame,
     data_solid: pd.DataFrame,
-) -> pd.DataFrame:
-    # Compute the difference in size between bottle and solids
-    size_missing = data_bottle["date"].size - data_solid["date"].size
+) -> pd.Series:
+    size_missing = max(data_bottle["date"].size - data_solid["date"].size, 0)
 
-    # Create rows of zero
-    zero_data = pd.DataFrame(0, index=np.arange(size_missing), columns=["sum"])
-
-    # Append it to the front of the solid data
-    solid_new = pd.concat(
-        [zero_data["sum"], data_solid["sum"]],
+    zero_padding = pd.Series(0, index=np.arange(size_missing), dtype=float)
+    solid_aligned = pd.concat(
+        [zero_padding, data_solid["sum"].reset_index(drop=True)],
         axis=0,
         ignore_index=True,
     )
+    solid_aligned = solid_aligned.iloc[: data_bottle["sum"].size]
+    solid_aligned = solid_aligned.reindex(
+        range(data_bottle["sum"].size),
+        fill_value=0,
+    )
 
-    # Convert bottle feeding from mL to oz and add the solids
-    return data_bottle["sum"] + solid_new
-
-    # Return combined data
+    return data_bottle["sum"].reset_index(drop=True) + solid_aligned
 
 
 def plot_feeding_stats_charts() -> None:

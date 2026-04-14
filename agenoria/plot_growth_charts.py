@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 from matplotlib import ticker
+from matplotlib.axes import Axes
 
 from config import growth_data
 from config import hatch_data as hatch_weight_data
@@ -20,74 +21,69 @@ LINE_ALPHA = 0.4
 ROC_WINDOW = 14
 
 
-def compute_age(date: pd.Series, birthday: pd.Series) -> int:
+def compute_age(date: pd.Series, birthday: pd.Timestamp) -> pd.Series:
     return (date - birthday) / np.timedelta64(4, "W")
 
 
 def parse_glow_data(data: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    parsed = data.copy()
+
     # Compute age
-    data["Age"] = compute_age(
-        data["Date"],
+    parsed["Age"] = compute_age(
+        parsed["Date"],
         pd.Timestamp(config["info"]["birthday"]),
     )
 
     # Get date and height columns
-    data_height = data[data["Height(cm)"].notna()][
-        ["Date", "Age", "Height(cm)"]
-    ]
-    data_head = data[data["Head Circ.(cm)"].notna()][
-        ["Date", "Age", "Head Circ.(cm)"]
-    ]
+    data_height = parsed[parsed["Height(cm)"].notna()][["Date", "Age", "Height(cm)"]]
+    data_head = parsed[parsed["Head Circ.(cm)"].notna()][["Date", "Age", "Head Circ.(cm)"]]
 
     return data_height, data_head
 
 
 def parse_hatch_data(data: pd.DataFrame) -> pd.DataFrame:
+    parsed = data.copy()
+
     # Keep date only, remove time. Hatch invalid format: redundant AM/PM
-    hatch_dates = data["Start Time"].astype(str).str[0:10]
+    hatch_dates = parsed["Start Time"].astype(str).str[0:10]
     # Convert to datetime
-    data["Start Time"] = pd.to_datetime(hatch_dates, format="%m/%d/%Y")
+    parsed["Start Time"] = pd.to_datetime(hatch_dates, format="%m/%d/%Y")
 
     # Sort and remove duplicates
-    data = data.sort_values(by=["Start Time"], ascending=True)
-    data = data.drop_duplicates(subset=["Start Time"], keep=False)
+    parsed = parsed.sort_values(by=["Start Time"], ascending=True)
+    parsed = parsed.drop_duplicates(subset=["Start Time"], keep=False)
 
     # Reindex and add missing days
     idx = pd.date_range(
-        start=data["Start Time"].min(),
-        end=data["Start Time"].max(),
+        start=parsed["Start Time"].min(),
+        end=parsed["Start Time"].max(),
     )
-    data = (
-        data.set_index("Start Time")
-        .reindex(idx)
-        .rename_axis("Start Time")
-        .reset_index()
-    )
+    parsed = parsed.set_index("Start Time").reindex(idx).rename_axis("Start Time").reset_index()
 
     # Compute Age
-    data["Age"] = compute_age(
-        data["Start Time"],
+    parsed["Age"] = compute_age(
+        parsed["Start Time"],
         pd.Timestamp(config["info"]["birthday"]),
     )
 
     # Compute diff
-    data["ROC"] = data["Amount"].diff()
+    parsed["ROC"] = parsed["Amount"].diff()
     # Fill empty rows with 0
-    data["ROC"] = data["ROC"].fillna(0)
+    parsed["ROC"] = parsed["ROC"].fillna(0)
 
     # Compute average on a rolling window
-    data["Weight Average RoC"] = data["ROC"].rolling(window=ROC_WINDOW).mean()
+    parsed["Weight Average RoC"] = parsed["ROC"].rolling(window=ROC_WINDOW).mean()
 
     # Convert to oz
-    data["Weight Average RoC"] = data["Weight Average RoC"] * 35.274
+    parsed["Weight Average RoC"] = parsed["Weight Average RoC"] * 35.274
 
-    return data
+    return parsed
 
 
 def plot_growth_curves(
-    curve_file: pd.DataFrame,
+    curve_file: str,
     index: str,
-    plot_object: plt.figure,
+    plot_object: Axes,
 ) -> None:
     # Import growth curves data file
     data_raw = pd.read_csv(curve_file)
@@ -97,38 +93,24 @@ def plot_growth_curves(
     data = data_raw.loc[data_raw["Sex"] == sex]
 
     # Plot percentile lines
-    plot_object.plot(data[index], data["P3"], alpha=LINE_ALPHA)
-    plot_object.plot(data[index], data["P5"], alpha=LINE_ALPHA)
-    plot_object.plot(data[index], data["P10"], alpha=LINE_ALPHA)
-    plot_object.plot(data[index], data["P25"], alpha=LINE_ALPHA)
-    plot_object.plot(data[index], data["P50"], alpha=LINE_ALPHA)
-    plot_object.plot(data[index], data["P75"], alpha=LINE_ALPHA)
-    plot_object.plot(data[index], data["P90"], alpha=LINE_ALPHA)
-    plot_object.plot(data[index], data["P95"], alpha=LINE_ALPHA)
-    plot_object.plot(data[index], data["P97"], alpha=LINE_ALPHA)
+    for percentile in ("P3", "P5", "P10", "P25", "P50", "P75", "P90", "P95", "P97"):
+        plot_object.plot(data[index], data[percentile], alpha=LINE_ALPHA)
 
 
 def plot_weight_length(
-    plot_object: plt.figure,
+    plot_object: Axes,
     data_height: pd.DataFrame,
     hatch_data: pd.DataFrame,
 ) -> None:
-    weight_length = []
-
-    # Search for weight on given date
-    for _index, row in data_height.iterrows():
-        date = row["Date"]
-        match = hatch_data.loc[hatch_data["Start Time"] == date]
-        weight = float(match["Amount"].to_numpy()[0])
-        if not np.isnan(weight):
-            weight_length.append(
-                [row["Date"], row["Age"], row["Height(cm)"], weight],
-            )
-
-    # Assemble into dataframe
-    data_weight_length = pd.DataFrame(
-        weight_length,
-        columns=["Date", "Age", "Height(cm)", "Weight"],
+    data_weight_length = (
+        data_height.merge(
+            hatch_data[["Start Time", "Amount"]],
+            left_on="Date",
+            right_on="Start Time",
+            how="left",
+        )
+        .dropna(subset=["Amount"])
+        .rename(columns={"Amount": "Weight"})
     )
 
     # Plot data
@@ -146,7 +128,7 @@ def plot_weight_length(
     format_growth_chart_plot(plot_object)
 
 
-def plot_growth_charts() -> None:  # noqa: PLR0915
+def plot_growth_charts() -> None:
     # Settings
     sns.set(style="darkgrid")
     plt.rcParams["lines.linewidth"] = 2

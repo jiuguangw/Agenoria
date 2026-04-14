@@ -14,12 +14,7 @@ from config import param as config
 
 
 def get_filename(output_filename: str) -> str:
-    return (
-        config["output_data"]["output_directory"]
-        + "/"
-        + output_filename
-        + config["output_format"]["format"]
-    )
+    return config["output_data"]["output_directory"] + "/" + output_filename + config["output_format"]["format"]
 
 
 def test_diaper_charts() -> None:
@@ -75,21 +70,9 @@ def test_24h_viz() -> None:
     agenoria.plot_diapers_24h_viz()
 
     # Get the file size of the output PDF
-    file_size_sleep = (
-        Path(get_filename(config["output_data"]["output_sleep_viz"]))
-        .stat()
-        .st_size
-    )
-    file_size_feeding = (
-        Path(get_filename(config["output_data"]["output_feeding_viz"]))
-        .stat()
-        .st_size
-    )
-    file_size_diaper = (
-        Path(get_filename(config["output_data"]["output_diaper_viz"]))
-        .stat()
-        .st_size
-    )
+    file_size_sleep = Path(get_filename(config["output_data"]["output_sleep_viz"])).stat().st_size
+    file_size_feeding = Path(get_filename(config["output_data"]["output_feeding_viz"])).stat().st_size
+    file_size_diaper = Path(get_filename(config["output_data"]["output_diaper_viz"])).stat().st_size
 
     # Check the size is greater than 40 KB
     assert file_size_sleep > 90 * 1024, "Test failed - sleep viz"

@@ -6,6 +6,7 @@
 
 import multiprocessing
 import timeit
+from collections.abc import Callable
 from multiprocessing import Process
 from pathlib import Path
 
@@ -22,56 +23,35 @@ from .plot_growth_charts import plot_growth_charts
 from .plot_medical_charts import plot_medical_charts
 from .plot_sleep_stats_charts import plot_sleep_stats_charts
 
+PLOT_TASKS: tuple[tuple[str, Callable[[], None]], ...] = (
+    ("build_daily_diaper_charts", plot_diaper_charts),
+    ("build_daily_sleep_stats_charts", plot_sleep_stats_charts),
+    ("build_daily_feeding_stats_charts", plot_feeding_stats_charts),
+    ("build_growth_charts", plot_growth_charts),
+    ("build_medical_charts", plot_medical_charts),
+    ("build_sleep_viz", plot_sleep_24h_viz),
+    ("build_feeding_viz", plot_feeding_24h_viz),
+    ("build_diaper_viz", plot_diapers_24h_viz),
+)
 
-def main() -> None:  # noqa: C901
+
+def get_enabled_plot_tasks() -> list[Callable[[], None]]:
+    return [plot_fn for config_key, plot_fn in PLOT_TASKS if config["output_data"][config_key]]
+
+
+def main() -> None:
     # Create a timer
     start = timeit.default_timer()
 
     # Create the output directory
-    if not Path.exists(config["output_data"]["output_directory"]):
-        Path.mkdir(config["output_data"]["output_directory"], parents=True)
+    Path(config["output_data"]["output_directory"]).mkdir(
+        parents=True,
+        exist_ok=True,
+    )
 
     # Spin off multi-process plotting
-    procs = []
-
-    if config["output_data"]["build_daily_diaper_charts"]:
-        proc = Process(target=plot_diaper_charts)
-        procs.append(proc)
-        proc.start()
-
-    if config["output_data"]["build_daily_sleep_stats_charts"]:
-        proc = Process(target=plot_sleep_stats_charts)
-        procs.append(proc)
-        proc.start()
-
-    if config["output_data"]["build_daily_feeding_stats_charts"]:
-        proc = Process(target=plot_feeding_stats_charts)
-        procs.append(proc)
-        proc.start()
-
-    if config["output_data"]["build_growth_charts"]:
-        proc = Process(target=plot_growth_charts)
-        procs.append(proc)
-        proc.start()
-
-    if config["output_data"]["build_medical_charts"]:
-        proc = Process(target=plot_medical_charts)
-        procs.append(proc)
-        proc.start()
-
-    if config["output_data"]["build_sleep_viz"]:
-        proc = Process(target=plot_sleep_24h_viz)
-        procs.append(proc)
-        proc.start()
-
-    if config["output_data"]["build_feeding_viz"]:
-        proc = Process(target=plot_feeding_24h_viz)
-        procs.append(proc)
-        proc.start()
-
-    if config["output_data"]["build_diaper_viz"]:
-        proc = Process(target=plot_diapers_24h_viz)
-        procs.append(proc)
+    procs = [Process(target=plot_task) for plot_task in get_enabled_plot_tasks()]
+    for proc in procs:
         proc.start()
 
     # Complete the processes

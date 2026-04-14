@@ -11,6 +11,8 @@ on:
     secrets:
       CODECOV_TOKEN:
         required: true
+      PREFIX_DEV_TOKEN:
+        required: false
   push:
     branches: [ main ]
   pull_request:
@@ -26,35 +28,32 @@ jobs:
     strategy:
       fail-fast: true
     steps:
-    - uses: earthly/actions-setup@v1
+    - uses: actions/checkout@v4
+    - name: Install pixi
+      uses: prefix-dev/setup-pixi@v0.9.4
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        version: "latest"
-    - uses: actions/checkout@v3
-    - name: Git branch (Earthly uses it for tagging)
+        pixi-version: v0.67.0
+        cache: true
+        environments: default
+        auth-host: prefix.dev
+        auth-token: ${{ secrets.PREFIX_DEV_TOKEN }}
+    - name: Install dependencies
+      run: pixi install
+    - name: Run lint
+      run: pixi run lint
+    - name: Run tests with coverage
+      run: pixi run test-cov
+    - name: Generate PDFs
       run: |
-        branch=""
-        if [ -n "$GITHUB_HEAD_REF" ]; then
-          branch="$GITHUB_HEAD_REF"
-        else
-          branch="${GITHUB_REF##*/}"
-        fi
-        git checkout -b "$branch" || true
-    - name: Earthly version
-      run: earthly --version
-    - name: Run build
-      run: |
-        earthly +lint
-        earthly --allow-privileged +test
+        rm -rf build
+        pixi run plot-all
     - name: Codecov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        directory: ./coverage/reports/
         env_vars: OS,PYTHON
         fail_ci_if_error: true
         files: ./coverage.xml
         flags: unittests
         name: codecov-umbrella
-        path_to_write_report: ./coverage/codecov_report.txt
         verbose: true

@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from matplotlib.axes import Axes
 from pandas.plotting import register_matplotlib_converters
 
 from config import misc_data
@@ -16,7 +17,7 @@ from config import param as config
 from .plot_settings import export_figure, format_monthly_plot
 
 
-def plot_daycare_days(plot_object: plt.figure, data: pd.DataFrame) -> None:
+def plot_daycare_days(plot_object: Axes, data: pd.DataFrame) -> None:
     # Group and compute sum by month. BMS gives 1st of month
     daycare_monthly = data["Daycare"].resample("BMS").sum()
 
@@ -33,7 +34,7 @@ def plot_daycare_days(plot_object: plt.figure, data: pd.DataFrame) -> None:
 
 
 def plot_days_between_vomit(
-    plot_object: plt.figure,
+    plot_object: Axes,
     data: pd.DataFrame,
 ) -> None:
     # Look up vomit days and compute gaps
@@ -49,7 +50,7 @@ def plot_days_between_vomit(
 
 
 def plot_doctor_visit_monthly(
-    plot_object: plt.figure,
+    plot_object: Axes,
     data: pd.DataFrame,
 ) -> None:
     # Group and compute sum by month. BMS gives 1st of month
@@ -67,7 +68,7 @@ def plot_doctor_visit_monthly(
     )
 
 
-def plot_monthly_vomit(plot_object: plt.figure, data: pd.DataFrame) -> None:
+def plot_monthly_vomit(plot_object: Axes, data: pd.DataFrame) -> None:
     # Group and compute sum by month. BMS gives 1st of month
     vomit_monthly = data["Vomit"].resample("BMS").sum()
 
