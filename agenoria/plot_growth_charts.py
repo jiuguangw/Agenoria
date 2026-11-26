@@ -49,9 +49,9 @@ def parse_hatch_data(data: pd.DataFrame) -> pd.DataFrame:
     # Convert to datetime
     parsed["Start Time"] = pd.to_datetime(hatch_dates, format="%m/%d/%Y")
 
-    # Sort and remove duplicates
+    # Sort and remove duplicates, keeping the first measurement per day
     parsed = parsed.sort_values(by=["Start Time"], ascending=True)
-    parsed = parsed.drop_duplicates(subset=["Start Time"], keep=False)
+    parsed = parsed.drop_duplicates(subset=["Start Time"], keep="first")
 
     # Reindex and add missing days
     idx = pd.date_range(
